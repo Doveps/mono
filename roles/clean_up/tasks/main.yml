@@ -1,0 +1,10 @@
+---
+- name: Removing SSH fingerprint trust, IFF we added it
+  lineinfile:
+    dest: ~/.ssh/known_hosts
+    line: '{{ item }}'
+    state: absent
+  with_items:
+    ssh_keyscan_command.stdout_lines
+  when:
+    trust_ssh_lineinfile.changed

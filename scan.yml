@@ -1,0 +1,18 @@
+---
+- hosts: localhost
+  gather_facts: false
+  roles:
+    - detect
+
+- hosts: scanned
+  gather_facts: false
+  roles:
+    - scan
+  sudo: true
+  vars:
+    results_dir: "{{ hostvars['localhost'].pwd_command.stdout }}/local"
+
+- hosts: localhost
+  gather_facts: false
+  roles:
+    - clean_up

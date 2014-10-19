@@ -1,0 +1,26 @@
+---
+- debug:
+    msg: 'Connecting to host {{ host }} as user {{ user }}'
+
+- name: Retrieving host SSH fingerprint
+  command: 'ssh-keyscan {{ host }}'
+  register: ssh_keyscan_command
+
+- name: Trusting SSH fingerprint
+  lineinfile:
+    dest: ~/.ssh/known_hosts
+    line: '{{ item }}'
+  with_items:
+    ssh_keyscan_command.stdout_lines
+  register:
+    trust_ssh_lineinfile
+
+- name: Setting up host connection
+  add_host:
+    name: '{{ host }}'
+    groups: scanned
+    ansible_ssh_user: '{{ user }}'
+
+- name: Recording where I am in the local filesystem
+  command: pwd
+  register: pwd_command
