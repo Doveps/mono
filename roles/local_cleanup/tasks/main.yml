@@ -1,0 +1,20 @@
+---
+- name: Create results files
+  copy:
+    dest: 'local/{{ item.0 }}/{{ item.1 }}_{{ item.2 }}.log'
+    content: '{{ hostvars[item.0][item.1][item.2] }}'
+  when: hostvars[item.0][item.1]['changed']
+  with_nested:
+    - groups['scanned']
+    - ['find_processes', 'find_files']
+    - ['stderr', 'stdout']
+
+- name: Remove SSH fingerprint trust, IFF we added it
+  lineinfile:
+    dest: ~/.ssh/known_hosts
+    line: '{{ item }}'
+    state: absent
+  with_items:
+    ssh_keyscan_command.stdout_lines
+  when:
+    trust_ssh_lineinfile.changed

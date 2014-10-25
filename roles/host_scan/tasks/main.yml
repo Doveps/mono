@@ -1,0 +1,12 @@
+---
+# TODO: expand these to work using "raw", so that we cover systems
+# without python
+
+- name: Find all running processes
+  shell: ps -ef
+  register: find_processes
+
+- name: Find all files
+  shell: find / -ls || exit 0
+  register: find_files
+  when: not hostvars['localhost']['scans']['hosts'][inventory_hostname]['find_files']

@@ -1,12 +1,12 @@
 ---
 - debug:
-    msg: 'Connecting to host {{ host }} as user {{ user }}'
+    msg: 'Connect to host {{ host }} as user {{ user }}'
 
-- name: Retrieving host SSH fingerprint
+- name: Retrieve host SSH fingerprint
   command: 'ssh-keyscan {{ host }}'
   register: ssh_keyscan_command
 
-- name: Trusting SSH fingerprint
+- name: Trust SSH fingerprint
   lineinfile:
     dest: ~/.ssh/known_hosts
     line: '{{ item }}'
@@ -15,12 +15,17 @@
   register:
     trust_ssh_lineinfile
 
-- name: Setting up host connection
+- name: Set up host connection
   add_host:
     name: '{{ host }}'
     groups: scanned
     ansible_ssh_user: '{{ user }}'
 
-- name: Recording where I am in the local filesystem
+- name: Record where I am in the filesystem
   command: pwd
   register: pwd_command
+
+- name: Find existing host scans
+  find_host_scans:
+    directory: local
+  register: scans

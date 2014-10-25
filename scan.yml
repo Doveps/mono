@@ -2,12 +2,12 @@
 - hosts: localhost
   gather_facts: false
   roles:
-    - detect
+    - local_prepare
 
 - hosts: scanned
   gather_facts: false
   roles:
-    - scan
+    - host_scan
   sudo: true
   vars:
     results_dir: "{{ hostvars['localhost'].pwd_command.stdout }}/local"
@@ -15,4 +15,4 @@
 - hosts: localhost
   gather_facts: false
   roles:
-    - clean_up
+    - local_cleanup
