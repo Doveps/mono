@@ -9,10 +9,10 @@
   roles:
     - host_scan
   sudo: true
-  vars:
-    results_dir: "{{ hostvars['localhost'].pwd_command.stdout }}/local"
 
 - hosts: localhost
   gather_facts: false
   roles:
     - local_cleanup
+  vars:
+    results_dir: "{{ hostvars['localhost'].pwd_command.stdout }}/local"

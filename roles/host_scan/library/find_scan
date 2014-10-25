@@ -1,0 +1,24 @@
+#!/usr/bin/env python
+# look for 'host_scan' that matches host name and key
+def main():
+    module = AnsibleModule(argument_spec=dict(
+        hostvars=dict(required=True), key=dict(required=True),
+        of_host=dict(required=True)
+    ))
+    hostvars = module.params['hostvars']
+    of_host = module.params['of_host']
+    key = module.params['key']
+
+    if not hostvars.has_key('host_scans'):
+        module.exit_json(ansible_facts={'scanned_'+key:False})
+
+    if not hostvars['host_scans'].has_key(of_host):
+        module.exit_json(ansible_facts={'scanned_'+key:False})
+
+    if not hostvars['host_scans'][of_host].has_key(key):
+        module.exit_json(ansible_facts={'scanned_'+key:False})
+
+    module.exit_json(ansible_facts={'scanned_'+key:True})
+
+from ansible.module_utils.basic import *
+main()

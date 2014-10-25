@@ -1,4 +1,10 @@
 ---
+- name: Create results directories
+  file:
+    dest: '{{ results_dir }}/{{ item }}'
+    state: directory
+  with_items: groups['scanned']
+
 - name: Create results files
   copy:
     dest: 'local/{{ item.0 }}/{{ item.1 }}_{{ item.2 }}.log'

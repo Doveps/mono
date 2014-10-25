@@ -28,4 +28,3 @@
 - name: Find existing host scans
   find_host_scans:
     directory: local
-  register: scans

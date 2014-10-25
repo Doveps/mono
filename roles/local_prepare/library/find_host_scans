@@ -44,7 +44,8 @@ def main():
                 valid_results[result] = True
         scans_by_host[host] = valid_results
 
-    module.exit_json(changed=False, hosts=scans_by_host)
+    module.exit_json(changed=False,
+            ansible_facts={'host_scans':scans_by_host})
 
 from ansible.module_utils.basic import *
 main()
