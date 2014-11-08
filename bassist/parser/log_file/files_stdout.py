@@ -1,3 +1,4 @@
-class FilesStdoutLog(object):
-    def __init__(self, path):
-        self.path = path
+import bassist.parser.log_file.common as common
+
+class FilesStdoutLog(common.LogFile):
+    pass
