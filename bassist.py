@@ -28,11 +28,12 @@ arg_parser.add_argument(
         help='The path to the directory containing scanner results')
 args = arg_parser.parse_args()
 
-logger.debug('creating a parser')
+logger.debug('importing parsers')
 parsed = parser.directory.Directory(args.scanner_directory)
-logger.debug('finished creating parser')
+logger.debug('finished importing parsers')
 
 for host in parsed.hosts:
     logger.info('host: %s', host.path)
     for parser in host.parsers:
         logger.info('parsing: %s', parser.path)
+        parser.get_line_count()
