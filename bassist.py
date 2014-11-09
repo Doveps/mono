@@ -4,7 +4,7 @@
 import argparse
 import logging
 
-import bassist
+import parser.directory
 
 # define a Handler which writes to a log file
 fh = logging.FileHandler('bassist.log')
@@ -29,10 +29,10 @@ arg_parser.add_argument(
 args = arg_parser.parse_args()
 
 logger.debug('creating a parser')
-parsed = bassist.parser.directory.Directory(args.scanner_directory)
+parsed = parser.directory.Directory(args.scanner_directory)
 logger.debug('finished creating parser')
 
 for host in parsed.hosts:
     logger.info('host: %s', host.path)
     for parser in host.parsers:
-        logger.info('%s: %s', parser.__class__, parser.path)
+        logger.info('parsing: %s', parser.path)

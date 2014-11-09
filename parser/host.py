@@ -20,7 +20,7 @@ class Host(object):
                 continue
             self.logger.debug('it is a file')
 
-            retrieved_file = log_file.get_from_name(full)
+            retrieved_file = log_file.get_parser(full)
             if retrieved_file is None:
                 continue
 

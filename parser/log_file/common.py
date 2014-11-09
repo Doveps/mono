@@ -1,9 +1,9 @@
 import logging
 
-class ParserLogFileException(Exception):
+class ParserLogException(Exception):
     pass
 
-class LogFile(object):
+class Log(object):
     def __init__(self, path):
         self.path = path
         self.logger = logging.getLogger(__name__)
