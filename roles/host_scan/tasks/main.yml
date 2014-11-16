@@ -15,3 +15,47 @@
   shell: find / -ls || exit 0
   register: find_files
   when: not scanned_find_files
+
+- name: Find installed .deb packages
+  shell: dpkg -l || exit 0
+  register: find_debs
+
+- name: Find service status
+  shell: service --status-all || exit 0
+  register: find_service_status
+
+- name: Find users
+  shell: getent passwd || exit 0
+  register: find_users
+
+- name: Find shadow
+  shell: getent shadow || exit 0
+  register: find_shadow
+
+- name: Find groups
+  shell: getent group || exit 0
+  register: find_groups
+
+- name: Find network interfaces
+  shell: ip addr list || exit 0
+  register: find_network_interfaces
+
+- name: Find network routes
+  shell: netstat -nr || exit 0
+  register: find_network_routes
+
+- name: Find network connections
+  shell: netstat -nap || exit 0
+  register: find_network_connections
+
+- name: Find firewall rules
+  shell: iptables-save || exit 0
+  register: find_firewall_rules
+
+- name: Find kernel version
+  shell: uname -a || exit 0
+  register: find_kernel_version
+
+- name: Find kernel extensions
+  shell: lsmod || exit 0
+  register: find_kernel_extensions

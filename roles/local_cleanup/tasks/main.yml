@@ -12,7 +12,20 @@
   when: hostvars[item.0][item.1]['changed']
   with_nested:
     - groups['scanned']
-    - ['find_processes', 'find_files']
+    -
+      - 'find_processes'
+      - 'find_files'
+      - 'find_debs'
+      - 'find_service_status'
+      - 'find_users'
+      - 'find_shadow'
+      - 'find_groups'
+      - 'find_network_interfaces'
+      - 'find_network_routes'
+      - 'find_network_connections'
+      - 'find_firewall_rules'
+      - 'find_kernel_version'
+      - 'find_kernel_extensions'
     - ['stderr', 'stdout']
 
 - name: Remove SSH fingerprint trust, IFF we added it
