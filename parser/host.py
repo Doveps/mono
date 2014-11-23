@@ -9,7 +9,7 @@ class ParserHostException(Exception):
 class Host(object):
     def __init__(self, path):
         self.path = path
-        self.logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger(__name__ + '.' + type(self).__name__)
         self.parsers = []
 
         for entry in os.listdir(self.path):

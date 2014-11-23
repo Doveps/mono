@@ -1,4 +1,6 @@
 from . import common
 
 class FilesStdoutLog(common.Log):
-    pass
+
+    def parse(self):
+        self.logger.debug('parsing')
