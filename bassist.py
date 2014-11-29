@@ -43,9 +43,9 @@ args = arg_parser.parse_args()
 
 logger.debug('reading flavors')
 flavors = flavor.directory.Directory(args.flavor_directory).db
-flavor_id = None
+flavor = None
 if args.flavor_name:
-    flavor_id = flavors.get_id_from_name(args.flavor_name)
+    flavor = flavors.get_obj_from_name(args.flavor_name)
 
 #fh.setLevel(logging.WARNING)
 
