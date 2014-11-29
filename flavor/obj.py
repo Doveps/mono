@@ -13,6 +13,7 @@ class Obj(persistent.Persistent):
         self.uuid = uuid
         self.logger = logging.getLogger(__name__ + '.' + type(self).__name__)
         self.logger.debug('creating object from uuid %s',self.uuid)
+        self.systems = {}
 
     def __getstate__(self):
         """logger can not be pickled, so exclude it."""
@@ -24,6 +25,12 @@ class Obj(persistent.Persistent):
         """Restore logger which was excluded from pickling."""
         self.__dict__.update(dict)
         self.logger = logging.getLogger(__name__ + '.' + type(self).__name__)
+
+    def record(self, system_name, status):
+        self.logger.debug('setting system %s',system_name)
+        self.systems[system_name] = status
+        self._p_changed = 1
+        transaction.commit()
 
 def get(db, uuid):
     if not uuid in db:
