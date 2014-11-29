@@ -46,6 +46,7 @@ flavors = flavor.directory.Directory(args.flavor_directory).db
 flavor = None
 if args.flavor_name:
     flavor = flavors.get_obj_from_name(args.flavor_name)
+logger.debug('retrieved flavor %s', flavor)
 
 #fh.setLevel(logging.WARNING)
 
@@ -60,7 +61,7 @@ for host in parsed.hosts:
     for parser in host.parsers:
         logger.info('parsing: %s', parser.path)
         parser.parse()
-        #if args.flavor_name:
-        #    flavors.add_parsed(flavor_id, parser)
+        if flavor:
+            parser.record(flavor)
 
 flavors.close()

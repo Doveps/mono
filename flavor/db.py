@@ -44,7 +44,8 @@ class DB(object):
         '''Check if the flavor object referenced by the given ID exists. If
         not, create it. Then return the flavor object.'''
         self.logger.debug('flavor_id: %s',flavor_id)
-        obj.get(self.dbroot['uuids'], flavor_id)
+        uuid_obj = obj.get(self.dbroot['uuids'], flavor_id)
+        return(uuid_obj)
 
     def get_obj_from_name(self, flavor_name):
         '''Return a flavor object from a given name.'''
