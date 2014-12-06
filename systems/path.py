@@ -1,4 +1,4 @@
-class File(object):
+class Path(object):
     def __init__(self, *args, **kwargs):
         # initialize all fields as None
         (self.inode, self.blocks, self.perms, self.link_count, self.owner,

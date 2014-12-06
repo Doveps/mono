@@ -1,8 +1,9 @@
 import logging
 import shlex
+import time
 
 from . import common
-from systems import os_file
+from systems import path
 
 class ParsedFileException(Exception):
     pass
@@ -23,9 +24,7 @@ class ParsedFileLine(object):
         # have to use shlex to split, otherwise escape codes in path
         # mess us up
         self.parts = shlex.split(line)
-
-        # sacrifice a bit of name clarity to reduce a lot of repetition
-        self.of = os_file.File()
+        self.path = path.Path()
 
         if len(self.parts) < 11:
             self.set_without_size()
@@ -39,19 +38,19 @@ class ParsedFileLine(object):
         files, etc. Note the missing size right before "Oct":
            6320    0 crw-rw-rw-   1 root     root              Oct 19 17:23 /sys/kernel/security/apparmor/.null
         '''
-        (self.of.inode, self.of.blocks, self.of.perms,
-                self.of.link_count, self.of.owner, self.of.group,
-                self.of.month, self.of.day, self.of.more_time,
-                self.of.path) = self.parts[0:10]
+        (self.path.inode, self.path.blocks, self.path.perms,
+                self.path.link_count, self.path.owner, self.path.group,
+                self.path.month, self.path.day, self.path.more_time,
+                self.path.path) = self.parts[0:10]
 
     def set_fields_before_path(self):
         '''Set fields up to a path:
          523431    4 drwxr-xr-x   9 root     root         4096 Apr 19  2014
         '''
-        (self.of.inode, self.of.blocks, self.of.perms,
-                self.of.link_count, self.of.owner, self.of.group,
-                self.of.size, self.of.month, self.of.day,
-                self.of.more_time) = self.parts[0:10]
+        (self.path.inode, self.path.blocks, self.path.perms,
+                self.path.link_count, self.path.owner, self.path.group,
+                self.path.size, self.path.month, self.path.day,
+                self.path.more_time) = self.parts[0:10]
 
     def set_path(self, path_parts):
         '''Set a path and possibly also a symlink target. There's room
@@ -61,14 +60,14 @@ class ParsedFileLine(object):
         count = len(path_parts)
         if count == 1:
             # /opt/VBoxGuestAdditions-4.3.8
-            self.of.path = path_parts[0]
+            self.path.path = path_parts[0]
             return
 
         if count == 3:
             if path_parts[1] == '->':
                 # /bin/dnsdomainname -> hostname
-                self.of.path = path_parts[0]
-                self.of.link_target = path_parts[2]
+                self.path.path = path_parts[0]
+                self.path.link_target = path_parts[2]
                 return
 
         raise ParsedFileException('Unable to understand path: %s',self.parts)
@@ -84,19 +83,27 @@ class FilesStdoutLog(common.Log):
 
         self.files = {}
         with open(self.path, 'r') as f:
+            start_time = time.time()
             for line in f.readlines():
                 self.parse_line(line)
+
+            self.logger.debug('completed parsing in %d seconds',
+                    time.time() - start_time)
 
     def parse_line(self, line):
         parsed = ParsedFileLine(line)
 
-        path_parts = parsed.of.path.split('/')
+        path_parts = parsed.path.path.split('/')
         if path_parts[1] in self.ignored_top: return
 
-        self.files[parsed.of.path] = parsed.of
+        self.files[parsed.path.path] = parsed.path
 
-        #self.logger.debug('path: %s',parsed.of.path)
+        #self.logger.debug('path: %s',parsed.path.path)
 
     def record(self, flavor):
         self.logger.debug('recording %d files',len(self.files))
+
+        start_time = time.time()
         flavor.record('files', self.files)
+        self.logger.debug('completed recording in %d seconds',
+                time.time() - start_time)
