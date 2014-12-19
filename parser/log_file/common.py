@@ -1,13 +1,12 @@
 import logging
 
-import persistent
-
 class ParserLogException(Exception):
     pass
 
-class Log(persistent.Persistent):
+class Log(object):
     def __init__(self, path):
         self.path = path
+        self.log = self.__module__.split('.')[-1]
         self.logger = logging.getLogger(self.__module__ + '.' + type(self).__name__)
 
     def get_line_count(self):
@@ -27,14 +26,3 @@ class Log(persistent.Persistent):
         overridden by a subclass method.'''
         self.logger.debug('skipping record due to empty method')
         pass
-
-    def __getstate__(self):
-        """logger can not be pickled, so exclude it."""
-        out_dict = self.__dict__.copy()
-        del out_dict['logger']
-        return(out_dict)
-
-    def __setstate__(self, dict):
-        """Restore logger which was excluded from pickling."""
-        self.__dict__.update(dict)
-        self.logger = logging.getLogger(self.__module__ + '.' + type(self).__name__)

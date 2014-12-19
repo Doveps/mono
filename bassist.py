@@ -33,12 +33,16 @@ arg_parser.add_argument(
         required=True,
         help='The path to the directory containing bassist flavors')
 arg_parser.add_argument(
-        '-s', '--scanner-directory',
-        required=True,
-        help='The path to the directory containing scanner results')
+        '-l', '--parse-logs',
+        nargs='*', metavar='LOG',
+        help='Only parse the given logs, for example "debs_stdout"')
 arg_parser.add_argument(
         '-n', '--flavor-name',
         help='Generates a flavor from scanner results using the given name')
+arg_parser.add_argument(
+        '-s', '--scanner-directory',
+        required=True,
+        help='The path to the directory containing scanner results')
 args = arg_parser.parse_args()
 
 logger.debug('reading flavors')
@@ -59,6 +63,15 @@ logger.debug('finished importing parsers')
 for host in parsed.hosts:
     logger.info('host: %s', host.path)
     for parser in host.parsers:
+
+        logger.debug('parser log: %s', parser.log)
+        if args.parse_logs:
+            if not parser.log in args.parse_logs:
+                logger.info(
+                        'skipping parse of %s since you requested only %s',
+                        parser.path, args.parse_logs)
+                continue
+
         logger.info('parsing: %s', parser.path)
         parser.parse()
         if flavor:

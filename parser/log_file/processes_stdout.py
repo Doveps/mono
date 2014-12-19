@@ -1,7 +1,13 @@
+import re
+
 from . import common
 from systems import process
 
 class ProcessesStdoutLog(common.Log):
+    # .ansible/tmp/ansible-tmp-1417897614.23-199064374829668/
+    observer_timestamp_re = re.compile('\.ansible/tmp/ansible-tmp-\d+.\d+-\d+/')
+    # /bin/sh -c ps -eo pid,ppid,uid,gid,cgroup,f,ni,pri,tty,args -www
+    observer_pslist_re = re.compile('^(/bin/sh -c )?ps -eo ([a-z]{1,6},){9,}[a-z]{1,6} -www$')
 
     def parse(self):
         self.logger.debug('parsing')
@@ -24,6 +30,12 @@ class ProcessesStdoutLog(common.Log):
         parts = line.split()
 
         command = ' '.join(parts[9:])
+
+        # ignore "observer effect" commands, that is: Ansible
+        if self.observer_timestamp_re.search(command):
+            return
+        if self.observer_pslist_re.search(command):
+            return
 
         if not self.processes.has_key(command):
             self.processes[command] = process.Process(command)
