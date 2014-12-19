@@ -3,27 +3,16 @@
 # see README.md
 import argparse
 import logging
+import logging.config
+import os
 
 import parser.directory
 import flavor.directory
 
-# define a Handler which writes to a log file
-fh = logging.FileHandler('bassist.log')
-fh.setLevel(logging.DEBUG)
-fh_formatter = logging.Formatter('%(asctime)s %(name)s %(levelname)-8s %(message)s',
-                    datefmt='%m-%d %H:%M')
-fh.setFormatter(fh_formatter)
-
-# define a Handler which writes INFO messages or higher to the sys.stderr
-ch = logging.StreamHandler()
-ch.setLevel(logging.INFO)
-ch_formatter = logging.Formatter('%(levelname)-8s %(message)s')
-ch.setFormatter(ch_formatter)
-
-root_logger = logging.getLogger()
-root_logger.setLevel(logging.DEBUG)
-root_logger.addHandler(fh)
-root_logger.addHandler(ch)
+logging.config.fileConfig('log.conf')
+if os.path.isfile('log_override.py'):
+    from log_override import LOG_OVERRIDES
+    logging.config.dictConfig(LOG_OVERRIDES)
 
 logger = logging.getLogger('bassist')
 
@@ -52,13 +41,9 @@ if args.flavor_name:
     flavor = flavors.get_obj_from_name(args.flavor_name)
 logger.debug('retrieved flavor %s', flavor)
 
-#fh.setLevel(logging.WARNING)
-
 logger.debug('importing parsers')
 parsed = parser.directory.Directory(args.scanner_directory)
 logger.debug('finished importing parsers')
-
-#fh.setLevel(logging.DEBUG)
 
 for host in parsed.hosts:
     logger.info('host: %s', host.path)
