@@ -24,6 +24,10 @@
   shell: service --status-all || exit 0
   register: find_service_status
 
+- name: Find initctl list
+  shell: initctl list || exit 0
+  register: find_initctl_list
+
 - name: Find users
   shell: getent passwd || exit 0
   register: find_users

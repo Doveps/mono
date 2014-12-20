@@ -17,6 +17,7 @@
       - 'find_files'
       - 'find_debs'
       - 'find_service_status'
+      - 'find_initctl_list'
       - 'find_users'
       - 'find_shadow'
       - 'find_groups'
