@@ -8,13 +8,12 @@ baseline for a host, plus modifications made to that host.
 * Find out where your flavor database is (for example: `~/flavors`).
 
 ## Comparison
-Pass the scanner and flavor directories to the bassist:
-`./bassist.py -s ~/scanner/local -f ~/flavors`
-
-## Flavor creation
-Pass the scanner and flavor directories to the bassist. Also specify
-flavor name:
+Pass the scanner, flavor directory, and flavor name to the bassist:
 `./bassist.py -s ~/scanner/local -f ~/flavors -n ubuntu-14.04`
+
+## Flavor creation and modification
+Specify as above, and also pass -r or --record:
+`./bassist.py -s ~/scanner/local -f ~/flavors -n ubuntu-14.04 -r`
 
 # Setup
 Bassist requires Python 2. Other modules include:
@@ -22,9 +21,10 @@ Bassist requires Python 2. Other modules include:
 
 ## OS X
 ```sh
-brew install python3
+mkvirtualenv bassist
 pip install zodb
 ```
+
 ## Python 2
 Why are we using Python 2 and not Python 3? The answer: there is no
 working zodb viewer under Python 3 at the moment. Thus, using Python 3
