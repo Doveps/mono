@@ -10,35 +10,46 @@ import parser.directory
 import flavor.directory
 
 logging.config.fileConfig('log.conf')
-if os.path.isfile('log_override.py'):
-    from log_override import LOG_OVERRIDES
-    logging.config.dictConfig(LOG_OVERRIDES)
-
 logger = logging.getLogger('bassist')
 
-arg_parser = argparse.ArgumentParser()
-arg_parser.add_argument(
-        '-f', '--flavor-directory',
-        required=True,
-        help='The path to the directory containing bassist flavors')
+try:
+    from log_override import LOG_OVERRIDES
+    logging.config.dictConfig(LOG_OVERRIDES)
+except:
+    logger.debug('unable to load log_override; ignoring')
+
+arg_parser = argparse.ArgumentParser(
+        description='Generate either a new flavor, or compare to an existing \
+                flavor by parsing scanner results.')
 arg_parser.add_argument(
         '-l', '--parse-logs',
         nargs='*', metavar='LOG',
         help='Only parse the given logs, for example "debs_stdout"')
 arg_parser.add_argument(
+        '-r', '--record',
+        action='store_true',
+        help='When set, record to the given flavor name; otherwise compare to \
+                the given flavor name')
+
+required_args = arg_parser.add_argument_group('required arguments')
+required_args.add_argument(
+        '-f', '--flavor-directory',
+        required=True,
+        help='The path to the directory containing bassist flavors')
+required_args.add_argument(
         '-n', '--flavor-name',
-        help='Generates a flavor from scanner results using the given name')
-arg_parser.add_argument(
+        required=True,
+        help='Compare with or record to the given flavor name')
+required_args.add_argument(
         '-s', '--scanner-directory',
         required=True,
         help='The path to the directory containing scanner results')
+
 args = arg_parser.parse_args()
 
 logger.debug('reading flavors')
 flavors = flavor.directory.Directory(args.flavor_directory).db
-flavor = None
-if args.flavor_name:
-    flavor = flavors.get_obj_from_name(args.flavor_name)
+flavor = flavors.get_obj_from_name(args.flavor_name)
 logger.debug('retrieved flavor %s', flavor)
 
 logger.debug('importing parsers')
@@ -59,7 +70,7 @@ for host in parsed.hosts:
 
         logger.info('parsing: %s', parser.path)
         parser.parse()
-        if flavor:
+        if args.record:
             parser.record(flavor)
 
 flavors.close()
