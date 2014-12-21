@@ -13,6 +13,8 @@ class DebsStdoutLog(common.Log):
                 if line_number < 5: continue
 
                 parts = line.split()
+
+                assert len(parts) > 4
                 (stat, name, vers, arch) = parts[0:4]
                 self.packages[name] = package.Package()
                 self.packages[name].add_deb(stat, vers, arch)

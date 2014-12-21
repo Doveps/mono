@@ -9,12 +9,6 @@ class Log(object):
         self.log = self.__module__.split('.')[-1]
         self.logger = logging.getLogger(self.__module__ + '.' + type(self).__name__)
 
-    def get_line_count(self):
-        self.line_count = None
-        with open(self.path, 'r') as f:
-            self.line_count = len(f.readlines())
-        self.logger.debug('line count: %d', self.line_count)
-
     def parse(self):
         '''The default parse method does nothing. It should be
         overridden by a subclass method.'''
