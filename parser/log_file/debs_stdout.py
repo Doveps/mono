@@ -6,7 +6,7 @@ class DebsStdoutLog(common.Log):
     def parse(self):
         self.logger.debug('parsing')
 
-        self.pkgs = {}
+        self.debs = deb.Debs()
         with open(self.path, 'r') as f:
             for line_number, line in enumerate(f.readlines()):
                 # ignore header lines
@@ -14,8 +14,8 @@ class DebsStdoutLog(common.Log):
 
                 parts = line.split()
                 (stat, name, vers, arch) = parts[0:4]
-                self.pkgs[name] = deb.Deb(stat, vers, arch)
+                self.debs[name] = deb.Deb(stat, vers, arch)
 
     def record(self, flavor):
-        self.logger.debug('recording %d packages',len(self.pkgs))
-        flavor.record('debs', self.pkgs)
+        self.logger.debug('recording %d packages',len(self.debs))
+        flavor.record('debs', self.debs)

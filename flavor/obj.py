@@ -27,8 +27,12 @@ class Obj(persistent.Persistent):
         self.logger = logging.getLogger(__name__ + '.' + type(self).__name__)
 
     def record(self, system_name, status):
-        self.logger.debug('setting system %s',system_name)
-        self.systems[system_name] = status
+        if system_name in self.systems:
+            self.logger.debug('merging system %s',system_name)
+            self.systems[system_name].merge(status)
+        else:
+            self.logger.debug('setting system %s',system_name)
+            self.systems[system_name] = status
         self._p_changed = 1
         transaction.commit()
 

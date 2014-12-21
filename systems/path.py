@@ -1,3 +1,5 @@
+from . import common
+
 class Path(object):
     def __init__(self, *args, **kwargs):
         # initialize all fields as None
@@ -6,3 +8,6 @@ class Path(object):
             self.more_time, self.path, self.link_target) = [None] * 12
 
         # TODO: allow fields to be passed in __init__
+
+class Paths(common.MergeableDict):
+    pass

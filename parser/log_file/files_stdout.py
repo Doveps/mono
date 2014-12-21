@@ -81,7 +81,7 @@ class FilesStdoutLog(common.Log):
     def parse(self):
         self.logger.debug('parsing')
 
-        self.files = {}
+        self.paths = path.Paths()
         with open(self.path, 'r') as f:
             start_time = time.time()
             for line in f.readlines():
@@ -96,14 +96,14 @@ class FilesStdoutLog(common.Log):
         path_parts = parsed.path.path.split('/')
         if path_parts[1] in self.ignored_top: return
 
-        self.files[parsed.path.path] = parsed.path
+        self.paths[parsed.path.path] = parsed.path
 
         #self.logger.debug('path: %s',parsed.path.path)
 
     def record(self, flavor):
-        self.logger.debug('recording %d files',len(self.files))
+        self.logger.debug('recording %d paths',len(self.paths))
 
         start_time = time.time()
-        flavor.record('files', self.files)
+        flavor.record('paths', self.paths)
         self.logger.debug('completed recording in %d seconds',
                 time.time() - start_time)

@@ -1,3 +1,5 @@
+from . import common
+
 class ProcessInstance(object):
     def __init__(self, fields):
         (self.pid, self.ppid, self.uid, self.gid, self.cgroup,
@@ -12,3 +14,5 @@ class Process(object):
     def add(self, fields):
         self.instances.append(ProcessInstance(fields))
 
+class Processes(common.MergeableDict):
+    pass

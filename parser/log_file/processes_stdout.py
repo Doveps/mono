@@ -12,7 +12,7 @@ class ProcessesStdoutLog(common.Log):
     def parse(self):
         self.logger.debug('parsing')
 
-        self.processes = {}
+        self.processes = process.Processes()
 
         # since processes can overlap, resulting in >1 process in a
         # self.processes key, manually keep track of the count:
@@ -37,7 +37,7 @@ class ProcessesStdoutLog(common.Log):
         if self.observer_pslist_re.search(command):
             return
 
-        if not self.processes.has_key(command):
+        if command not in self.processes:
             self.processes[command] = process.Process(command)
 
         self.processes[command].add(parts[0:9])
