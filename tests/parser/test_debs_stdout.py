@@ -39,3 +39,29 @@ def test_package_deb_vers(good_deb):
 
 def test_package_deb_arch(good_deb):
     assert good_deb.arch == 'amd64'
+
+short_debs_text = '''Desired=Unknown/Install/Remove/Purge/Hold
+| Status=Not/Inst/Conf-files/Unpacked/halF-conf/Half-inst/trig-aWait/Trig-pend
+'''
+
+def test_short_debs(tmpdir):
+    p = tmpdir.join('debs.log')
+    p.write(short_debs_text)
+    o = parser.log_file.debs_stdout.DebsStdoutLog(str(p))
+    o.parse()
+    assert len(o.packages) is 0
+
+bad_debs_text = '''Desired=Unknown/Install/Remove/Purge/Hold
+| Status=Not/Inst/Conf-files/Unpacked/halF-conf/Half-inst/trig-aWait/Trig-pend
+|/ Err?=(none)/Reinst-required (Status,Err: uppercase=bad)
+||/ Name                                Version                       Architecture Description
++++-===================================-=============================-============-===================================================================
+ii  accountsservice                     
+'''
+
+def test_missing_deb_part(tmpdir):
+    p = tmpdir.join('debs.log')
+    p.write(bad_debs_text)
+    o = parser.log_file.debs_stdout.DebsStdoutLog(str(p))
+    with pytest.raises(AssertionError):
+        o.parse()
