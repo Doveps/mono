@@ -65,3 +65,19 @@ def test_missing_deb_part(tmpdir):
     o = parser.log_file.debs_stdout.DebsStdoutLog(str(p))
     with pytest.raises(AssertionError):
         o.parse()
+
+duplicates_text = '''Desired=Unknown/Install/Remove/Purge/Hold
+| Status=Not/Inst/Conf-files/Unpacked/halF-conf/Half-inst/trig-aWait/Trig-pend
+|/ Err?=(none)/Reinst-required (Status,Err: uppercase=bad)
+||/ Name                                Version                       Architecture Description
++++-===================================-=============================-============-===================================================================
+ii  accountsservice                     0.6.35-0ubuntu7               amd64        query and manipulate user account information
+ii  accountsservice                     0.6.35-0ubuntu7               amd64        query and manipulate user account information
+'''
+
+def test_duplicates(tmpdir):
+    p = tmpdir.join('debs.log')
+    p.write(duplicates_text)
+    o = parser.log_file.debs_stdout.DebsStdoutLog(str(p))
+    with pytest.raises(AssertionError):
+        o.parse()

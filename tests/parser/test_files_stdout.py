@@ -82,3 +82,14 @@ def test_broken_path(tmpdir):
     o = parser.log_file.files_stdout.FilesStdoutLog(str(p))
     with pytest.raises(parser.log_file.files_stdout.ParsedFileException):
         o.parse()
+
+duplicates_text = '''     2    4 drwxr-xr-x  23 root     root         4096 Oct 19 17:23 /
+     3    4 drwxr-xr-x  23 root     root         4096 Oct 19 17:23 /
+'''
+
+def test_duplicates(tmpdir):
+    p = tmpdir.join('files.log')
+    p.write(duplicates_text)
+    o = parser.log_file.files_stdout.FilesStdoutLog(str(p))
+    with pytest.raises(AssertionError):
+        o.parse()

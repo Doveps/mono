@@ -16,6 +16,8 @@ class DebsStdoutLog(common.Log):
 
                 assert len(parts) > 4
                 (stat, name, vers, arch) = parts[0:4]
+
+                assert name not in self.packages
                 self.packages[name] = package.Package()
                 self.packages[name].add_deb(stat, vers, arch)
 

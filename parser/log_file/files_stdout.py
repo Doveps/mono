@@ -96,6 +96,7 @@ class FilesStdoutLog(common.Log):
         path_parts = parsed.path.path.split('/')
         if path_parts[1] in self.ignored_top: return
 
+        assert parsed.path.path not in self.paths
         self.paths[parsed.path.path] = parsed.path
 
         #self.logger.debug('path: %s',parsed.path.path)
