@@ -36,3 +36,17 @@ If you want to read the flavor database in a friendly format:
 * `eye /path/to/flavor.zodb`
 * point your web browser at http://localhost:8080
 
+# Testing
+`bassist` tests using pytest and optionally pytest-cov. For the former:
+
+```
+py.test
+```
+
+To also test code coverage:
+
+```
+py.test --cov-report html --cov-config .coveragerc --cov .
+```
+
+The test report is in the `htmlcov` directory; use a web browser to view it.

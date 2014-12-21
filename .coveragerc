@@ -1,0 +1,2 @@
+[run]
+omit = tests/*,log_override*,conftest.py

@@ -1,2 +1,4 @@
 *.log
 log_override.py
+.coverage
+htmlcov
