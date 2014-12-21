@@ -1,12 +1,12 @@
 from . import common
-from systems import deb
+from systems import package
 
 class DebsStdoutLog(common.Log):
 
     def parse(self):
         self.logger.debug('parsing')
 
-        self.debs = deb.Debs()
+        self.packages = package.Packages()
         with open(self.path, 'r') as f:
             for line_number, line in enumerate(f.readlines()):
                 # ignore header lines
@@ -14,8 +14,9 @@ class DebsStdoutLog(common.Log):
 
                 parts = line.split()
                 (stat, name, vers, arch) = parts[0:4]
-                self.debs[name] = deb.Deb(stat, vers, arch)
+                self.packages[name] = package.Package()
+                self.packages[name].add_deb(stat, vers, arch)
 
     def record(self, flavor):
-        self.logger.debug('recording %d packages',len(self.debs))
-        flavor.record('debs', self.debs)
+        self.logger.debug('recording %d packages',len(self.packages))
+        flavor.record('packages', self.packages)
