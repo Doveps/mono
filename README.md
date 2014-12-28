@@ -4,16 +4,17 @@ baseline for a host, plus modifications made to that host.
 
 # Usage
 * Find out where your scanner put its output (for example:
-`~/scanner/local`). 
+`~/scanner/local/33.33.33.50`).
 * Find out where your flavor database is (for example: `~/flavors`).
 
 ## Comparison
-Pass the scanner, flavor directory, and flavor name to the bassist:
-`./bassist.py -s ~/scanner/local -f ~/flavors -n ubuntu-14.04`
+Pass the scanner directory, flavor directory, and flavor name to the
+bassist:
+`./bassist.py -s ~/scanner/local/33.33.33.50 -f ~/flavors -n ubuntu-14.04`
 
 ## Flavor creation and modification
 Specify as above, and also pass -r or --record:
-`./bassist.py -s ~/scanner/local -f ~/flavors -n ubuntu-14.04 -r`
+`./bassist.py -s ~/scanner/local/33.33.33.50 -f ~/flavors -n ubuntu-14.04 -r`
 
 # Setup
 Bassist requires Python 2. Other modules include:

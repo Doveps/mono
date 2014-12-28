@@ -6,7 +6,7 @@ import logging
 import logging.config
 import os
 
-import parser.directory
+import parser.host
 import flavor.directory
 
 logging.config.fileConfig('log.conf')
@@ -53,24 +53,22 @@ flavor = flavors.get_obj_from_name(args.flavor_name)
 logger.debug('retrieved flavor %s', flavor)
 
 logger.debug('importing parsers')
-parsed = parser.directory.Directory(args.scanner_directory)
+host = parser.host.Host(args.scanner_directory)
 logger.debug('finished importing parsers')
 
-for host in parsed.hosts:
-    logger.info('host: %s', host.path)
-    for parser in host.parsers:
+for parser in host.parsers:
 
-        logger.debug('parser log: %s', parser.log)
-        if args.parse_logs:
-            if not parser.log in args.parse_logs:
-                logger.info(
-                        'skipping parse of %s since you requested only %s',
-                        parser.path, args.parse_logs)
-                continue
+    logger.debug('parser log: %s', parser.log)
+    if args.parse_logs:
+        if not parser.log in args.parse_logs:
+            logger.info(
+                    'skipping parse of %s since you requested only %s',
+                    parser.path, args.parse_logs)
+            continue
 
-        logger.info('parsing: %s', parser.path)
-        parser.parse()
-        if args.record:
-            parser.record(flavor)
+    logger.info('parsing: %s', parser.path)
+    parser.parse()
+    if args.record:
+        parser.record(flavor)
 
 flavors.close()
