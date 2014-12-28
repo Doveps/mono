@@ -17,6 +17,7 @@ class ProcessesStdoutLog(common.Log):
         # since processes can overlap, resulting in >1 process in a
         # self.processes key, manually keep track of the count:
         self.process_count = 0
+        self.recorded_process_count = 0
 
         with open(self.path, 'r') as f:
             for line_number, line in enumerate(f.readlines()):
@@ -29,6 +30,8 @@ class ProcessesStdoutLog(common.Log):
     def parse_line(self, line):
         parts = line.split()
 
+        assert len(parts) >= 10
+
         command = ' '.join(parts[9:])
 
         # ignore "observer effect" commands, that is: Ansible
@@ -37,6 +40,7 @@ class ProcessesStdoutLog(common.Log):
         if self.observer_pslist_re.search(command):
             return
 
+        self.recorded_process_count += 1
         if command not in self.processes:
             self.processes[command] = process.Process(command)
 
