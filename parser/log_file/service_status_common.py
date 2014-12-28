@@ -12,6 +12,8 @@ class ServiceStatusCommonLog(common.Log):
                 self.parse_line(line)
 
     def parse_line(self, line):
+        assert hasattr(self, 'states')
+
         parts = line.split()
         assert len(parts) is 4
 
