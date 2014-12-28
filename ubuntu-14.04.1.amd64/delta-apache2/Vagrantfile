@@ -20,12 +20,12 @@ Vagrant.configure('2') do |config|
     puts 'WARN:  Vagrant-cachier plugin not detected. Continuing unoptimized.'
   end
 
-  config.vm.hostname = 'ubuntu-14-04'
+  config.vm.hostname = 'ubuntu-14-04-delta-apache2'
 
   config.vm.box = 'opscode-ubuntu-14.04'
   config.vm.box_url = 'http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_ubuntu-14.04_chef-provisionerless.box'
 
-  config.vm.network :private_network, :ip => '33.33.33.50'
+  config.vm.network :private_network, :ip => '33.33.33.51'
 
   config.vm.provider :virtualbox do |vb|
     vb.customize [
@@ -40,5 +40,8 @@ Vagrant.configure('2') do |config|
 
   # remove apt auto-updates, otherwise our VM gets into an unpredictable state
   config.vm.provision "shell", inline: $script
+
+  config.vm.provision 'shell',
+    inline: 'sudo apt-get -y install apache2'
 
 end
