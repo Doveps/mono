@@ -14,6 +14,7 @@ class UsersStdoutLog(common.Log):
 
                 (user_name, password, uid, gid, description, path, shell) = parts[0:7]
 
+                # TODO: passwd spec does allow duplicate names, but not IDs!
                 assert user_name not in self.users
 
                 self.users[user_name] = user.User()
