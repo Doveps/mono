@@ -17,16 +17,15 @@ def get_parser(path):
     try:
         parser_module = importlib.import_module('..'+parser_name, __name__)
     except ImportError:
-        module_logger.debug('failed import; skipping')
+        module_logger.debug('failed parser import for %s; skipping', path)
+        return None
+    except KeyError:
+        module_logger.debug('malformed log file %s; skipping', path)
         return None
 
     # files_stderr -> FileStderrLog
     module_name = ''.join([w.capitalize() for w in parser_name.split('_')]) + 'Log'
     module_logger.debug('module: %s', module_name)
-
-    if not hasattr(parser_module, module_name):
-        module_logger.debug('missing module; skipping')
-        return None
 
     module_logger.debug('loaded')
     return getattr(parser_module, module_name)(path)
