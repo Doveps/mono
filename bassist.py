@@ -70,5 +70,7 @@ for parser in host.parsers:
     parser.parse()
     if args.record:
         parser.record(flavor)
+    else:
+        parser.diff(flavor)
 
 flavors.close()

@@ -33,7 +33,14 @@ class Log(object):
 
         start_time = time.time()
 
-        flavor.record(self.name, self.data)
+        flavor.record_system(self.name, self.data)
 
         self.logger.debug('completed recording in %d seconds',
                 time.time() - start_time)
+
+    def diff(self, flavor):
+
+        assert self.name is not None
+        assert self.data is not None
+
+        return flavor.diff_system(self.name, self.data)

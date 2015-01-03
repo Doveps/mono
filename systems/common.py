@@ -23,7 +23,7 @@ class MergeableDict(collections.MutableMapping):
         return len(self.data)
 
     def merge(self, other):
-        for key, val in other.iteritems():
+        for key, val in other.items():
             if key not in self:
                 self[key] = val
                 continue
