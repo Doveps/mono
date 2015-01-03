@@ -6,7 +6,9 @@ class ShadowStdoutLog(common.Log):
     def parse(self):
         self.logger.debug('parsing')
 
-        self.users = user.Users()
+        self.data = user.Users()
+        self.name = 'users'
+
         with open(self.path, 'r') as f:
             for line in f.readlines():
                 parts = line.rstrip('\n').split(':')
@@ -15,13 +17,9 @@ class ShadowStdoutLog(common.Log):
                 (user_name, password, lastchanged, minimum, maximum,
                         warn, inactive, expire, reserved) = parts[0:9]
 
-                assert user_name not in self.users
+                assert user_name not in self.data
 
-                self.users[user_name] = user.User()
-                self.users[user_name].add_shadow(password, lastchanged,
+                self.data[user_name] = user.User()
+                self.data[user_name].add_shadow(password, lastchanged,
                         minimum, maximum, warn, inactive, expire,
                         reserved)
-
-    def record(self, flavor):
-        self.logger.debug('recording %d users',len(self.users))
-        flavor.record('users', self.users)

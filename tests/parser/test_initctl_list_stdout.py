@@ -17,14 +17,14 @@ def good_initctl_list(tmpdir):
     return o
 
 def test_length(good_initctl_list):
-    assert len(good_initctl_list.services) is 4
+    assert len(good_initctl_list.data) is 4
 
 def test_service_name(good_initctl_list):
-    assert 'mountall-net' in good_initctl_list.services
+    assert 'mountall-net' in good_initctl_list.data
 
 @pytest.fixture(scope='function')
 def rsyslog_service(good_initctl_list):
-    return good_initctl_list.services['rsyslog'].upstart
+    return good_initctl_list.data['rsyslog'].upstart
 
 def test_good_service_wanted(rsyslog_service):
     assert rsyslog_service.wanted == 'start'
@@ -36,15 +36,16 @@ def test_good_service_pid(rsyslog_service):
     assert rsyslog_service.pid == '456'
 
 def test_good_service_without_pid(good_initctl_list):
-    m = good_initctl_list.services['mountnfs-bootclean.sh'].upstart
+    m = good_initctl_list.data['mountnfs-bootclean.sh'].upstart
     assert m.pid is None
 
 def test_good_multipart_named_service(good_initctl_list):
-    assert 'network-interface-security (networking)' in good_initctl_list.services
+    assert 'network-interface-security (networking)' in \
+            good_initctl_list.data
 
 @pytest.fixture(scope='function')
 def rsyslog_stopped_service(good_initctl_list):
-    return good_initctl_list.services['mountall-net'].upstart
+    return good_initctl_list.data['mountall-net'].upstart
 
 def test_stopped_service_wanted(rsyslog_stopped_service):
     assert rsyslog_stopped_service.wanted == 'stop'

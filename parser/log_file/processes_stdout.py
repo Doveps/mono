@@ -12,7 +12,8 @@ class ProcessesStdoutLog(common.Log):
     def parse(self):
         self.logger.debug('parsing')
 
-        self.processes = process.Processes()
+        self.data = process.Processes()
+        self.name = 'processes'
 
         # since processes can overlap, resulting in >1 process in a
         # self.processes key, manually keep track of the count:
@@ -41,11 +42,7 @@ class ProcessesStdoutLog(common.Log):
             return
 
         self.recorded_process_count += 1
-        if command not in self.processes:
-            self.processes[command] = process.Process(command)
+        if command not in self.data:
+            self.data[command] = process.Process(command)
 
-        self.processes[command].add(parts[0:9])
-
-    def record(self, flavor):
-        self.logger.debug('recording %d processes',self.process_count)
-        flavor.record('processes', self.processes)
+        self.data[command].add(parts[0:9])

@@ -12,7 +12,9 @@ class InitctlListStdoutLog(common.Log):
     def parse(self):
         self.logger.debug('parsing')
 
-        self.services = service.Services()
+        self.data = service.Services()
+        self.name = 'services'
+
         with open(self.path, 'r') as f:
             for line in f.readlines():
                 self.parse_line(line)
@@ -24,10 +26,6 @@ class InitctlListStdoutLog(common.Log):
         if instance is not None:
             name = name + ' ' + instance
 
-        assert name not in self.services
-        self.services[name] = service.Service(name)
-        self.services[name].add_upstart(wanted, state, pid)
-
-    def record(self, flavor):
-        self.logger.debug('recording %d upstart services',len(self.services))
-        flavor.record('services', self.services)
+        assert name not in self.data
+        self.data[name] = service.Service(name)
+        self.data[name].add_upstart(wanted, state, pid)

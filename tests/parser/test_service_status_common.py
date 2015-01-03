@@ -16,13 +16,13 @@ def good_service_status(tmpdir):
     return o
 
 def test_count(good_service_status):
-    assert len(good_service_status.services) is 2
+    assert len(good_service_status.data) is 2
 
 def test_service_name(good_service_status):
-    assert 'console-setup' in good_service_status.services
+    assert 'console-setup' in good_service_status.data
 
 def test_good_service_state(good_service_status):
-    assert good_service_status.services['console-setup'].upstart_init.state == '?'
+    assert good_service_status.data['console-setup'].upstart_init.state == '?'
 
 def test_bad_field_count(tmpdir):
     p = tmpdir.join('service_status.log')

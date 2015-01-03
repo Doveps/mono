@@ -16,14 +16,14 @@ def good_groups(tmpdir):
     return o
 
 def test_length(good_groups):
-    assert len(good_groups.groups) is 3
+    assert len(good_groups.data) is 3
 
 def test_group_name(good_groups):
-    assert 'root' in good_groups.groups
+    assert 'root' in good_groups.data
 
 @pytest.fixture(scope='function')
 def adm_group(good_groups):
-    return good_groups.groups['adm']
+    return good_groups.data['adm']
 
 def test_good_group_users(adm_group):
     assert adm_group.users == ['syslog', 'vagrant']
@@ -35,7 +35,7 @@ def test_good_group_gid(adm_group):
     assert adm_group.gid == '4'
 
 def test_empty_group_users(good_groups):
-    assert good_groups.groups['root'].users is None
+    assert good_groups.data['root'].users is None
 
 bad_field_count_text = '''cdrom:x:24
 '''

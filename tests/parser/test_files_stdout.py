@@ -19,17 +19,17 @@ def good_files(tmpdir):
     return o
 
 def test_length(good_files):
-    assert len(good_files.paths) is 5
+    assert len(good_files.data) is 5
 
 def test_in_path(good_files):
-    assert '/' in good_files.paths
+    assert '/' in good_files.data
 
 def test_dev_not_in_path(good_files):
-    assert '/dev/stderr' not in good_files.paths
+    assert '/dev/stderr' not in good_files.data
 
 @pytest.fixture(scope='function')
 def slash(good_files):
-    return good_files.paths['/']
+    return good_files.data['/']
 
 def test_slash_path(slash):
     assert slash.path == '/'
@@ -68,10 +68,10 @@ def test_slash_no_target(slash):
     assert slash.link_target is None
 
 def test_link_target(good_files):
-    assert good_files.paths['/a/symlink'].link_target == '../target'
+    assert good_files.data['/a/symlink'].link_target == '../target'
 
 def test_char_no_size(good_files):
-    assert good_files.paths['/a/charfile'].size is None
+    assert good_files.data['/a/charfile'].size is None
 
 broken_files_text = '''     2    4 -rwxr-xr-x  23 root     root         4096 Oct 19 17:23 /why so spacey?
 '''

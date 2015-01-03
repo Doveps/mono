@@ -6,7 +6,9 @@ class ServiceStatusCommonLog(common.Log):
     def parse(self):
         self.logger.debug('parsing')
 
-        self.services = service.Services()
+        self.data = service.Services()
+        self.name = 'services'
+
         with open(self.path, 'r') as f:
             for line in f.readlines():
                 self.parse_line(line)
@@ -22,10 +24,6 @@ class ServiceStatusCommonLog(common.Log):
 
         name = parts[3]
 
-        assert name not in self.services
-        self.services[name] = service.Service(name)
-        self.services[name].add_upstart_init(state)
-
-    def record(self, flavor):
-        self.logger.debug('recording %d services',len(self.services))
-        flavor.record('services', self.services)
+        assert name not in self.data
+        self.data[name] = service.Service(name)
+        self.data[name].add_upstart_init(state)

@@ -34,17 +34,19 @@ def test_recorded_count(good_processes):
     assert good_processes.recorded_process_count is 8
 
 def test_process_name(good_processes):
-    assert '/sbin/init' in good_processes.processes
+    assert '/sbin/init' in good_processes.data
 
 def test_no_ansible(good_processes):
-    assert 'sudo -H -S -p [sudo via ansible, key=auksipccnwlfnchfnplywdkzysxjlucb] password:  -u root /bin/sh -c echo SUDO-SUCCESS-auksipccnwlfnchfnplywdkzysxjlucb; LANG=C LC_CTYPE=C /usr/bin/python /home/vagrant/.ansible/tmp/ansible-tmp-1419040447.65-238273699227159/command; rm -rf /home/vagrant/.ansible/tmp/ansible-tmp-1419040447.65-238273699227159/ >/dev/null 2>&1' not in good_processes.processes
+    assert 'sudo -H -S -p [sudo via ansible, key=auksipccnwlfnchfnplywdkzysxjlucb] password:  -u root /bin/sh -c echo SUDO-SUCCESS-auksipccnwlfnchfnplywdkzysxjlucb; LANG=C LC_CTYPE=C /usr/bin/python /home/vagrant/.ansible/tmp/ansible-tmp-1419040447.65-238273699227159/command; rm -rf /home/vagrant/.ansible/tmp/ansible-tmp-1419040447.65-238273699227159/ >/dev/null 2>&1' \
+            not in good_processes.data
 
 def test_no_ps(good_processes):
-    assert 'ps -eo pid,ppid,uid,gid,cgroup,f,ni,pri,tty,args -www' not in good_processes.processes
+    assert 'ps -eo pid,ppid,uid,gid,cgroup,f,ni,pri,tty,args -www' \
+            not in good_processes.data
 
 @pytest.fixture(scope='function')
 def init_process(good_processes):
-    return good_processes.processes['/sbin/init'].instances[0]
+    return good_processes.data['/sbin/init'].instances[0]
 
 def test_good_process_pid(init_process):
     assert init_process.pid == '1'
@@ -75,7 +77,7 @@ def test_good_process_tty(init_process):
 
 @pytest.fixture(scope='function')
 def multi_instance_process(good_processes):
-    return good_processes.processes['sshd: vagrant [priv]'].instances
+    return good_processes.data['sshd: vagrant [priv]'].instances
 
 def test_has_two_instances(multi_instance_process):
     assert len(multi_instance_process) == 2

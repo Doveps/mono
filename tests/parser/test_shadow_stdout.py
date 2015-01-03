@@ -16,14 +16,14 @@ def good_shadow(tmpdir):
     return o
 
 def test_length(good_shadow):
-    assert len(good_shadow.users) is 3
+    assert len(good_shadow.data) is 3
 
 def test_user_name(good_shadow):
-    assert 'root' in good_shadow.users
+    assert 'root' in good_shadow.data
 
 @pytest.fixture(scope='function')
 def root_user(good_shadow):
-    return good_shadow.users['root'].shadow
+    return good_shadow.data['root'].shadow
 
 def test_good_user_password(root_user):
     assert root_user.password == '!'

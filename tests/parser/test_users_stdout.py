@@ -16,14 +16,14 @@ def good_users(tmpdir):
     return o
 
 def test_length(good_users):
-    assert len(good_users.users) is 3
+    assert len(good_users.data) is 3
 
 def test_user_name(good_users):
-    assert 'root' in good_users.users
+    assert 'root' in good_users.data
 
 @pytest.fixture(scope='function')
 def root_user(good_users):
-    return good_users.users['root'].passwd
+    return good_users.data['root'].passwd
 
 def test_good_user_password(root_user):
     assert root_user.password == 'x'
@@ -44,7 +44,7 @@ def test_good_user_shell(root_user):
     assert root_user.shell == '/bin/bash'
 
 def test_empty_user_description(good_users):
-    assert good_users.users['vboxadd'].passwd.description == ''
+    assert good_users.data['vboxadd'].passwd.description == ''
 
 def test_bad_field_count(tmpdir):
     p = tmpdir.join('users.log')
