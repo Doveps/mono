@@ -1,10 +1,10 @@
 import pytest
 
-import diff.system
+import lib.diff.system
 
 @pytest.fixture(scope='function')
 def type_missing():
-    return diff.system.System({})
+    return lib.diff.system.System({})
 
 def test_missing_type_different(type_missing):
     assert type_missing.different() is True
@@ -14,7 +14,7 @@ def test_missing_type_matches(type_missing):
 
 @pytest.fixture(scope='function')
 def type_mismatch():
-    return diff.system.System({}, 1)
+    return lib.diff.system.System({}, 1)
 
 def test_type_mismatch_different(type_mismatch):
     assert type_mismatch.different() is True
@@ -24,7 +24,7 @@ def test_type_mismatch_matches(type_mismatch):
 
 @pytest.fixture(scope='function')
 def only_in():
-    return diff.system.System({'a': 1}, {'b': 1})
+    return lib.diff.system.System({'a': 1}, {'b': 1})
 
 def test_only_in_different(only_in):
     assert only_in.different() is True
@@ -37,7 +37,7 @@ def test_only_in_2_matches(only_in):
 
 @pytest.fixture(scope='function')
 def both_match():
-    return diff.system.System({'a': 1}, {'a': 1})
+    return lib.diff.system.System({'a': 1}, {'a': 1})
 
 def test_both_match_same(both_match):
     assert both_match.different() is False

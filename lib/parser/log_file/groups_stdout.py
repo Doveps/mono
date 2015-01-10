@@ -1,5 +1,5 @@
 from . import common
-from systems import group
+from ...systems import group
 
 class GroupsStdoutLog(common.Log):
 

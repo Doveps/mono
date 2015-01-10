@@ -1,6 +1,6 @@
 import pytest
 
-import parser.log_file.processes_stdout
+import lib.parser.log_file.processes_stdout
 
 good_processes_text = '''  PID  PPID   UID   GID CGROUP                      F  NI PRI TT       COMMAND
     1     0     0     0 -                           4   0  19 ?        /sbin/init
@@ -23,7 +23,7 @@ good_processes_text = '''  PID  PPID   UID   GID CGROUP                      F  
 def good_processes(tmpdir):
     p = tmpdir.join('processes.log')
     p.write(good_processes_text)
-    o = parser.log_file.processes_stdout.ProcessesStdoutLog(str(p))
+    o = lib.parser.log_file.processes_stdout.ProcessesStdoutLog(str(p))
     o.parse()
     return o
 
@@ -91,6 +91,6 @@ def test_instance2_pid(multi_instance_process):
 def test_bad_field_count(tmpdir):
     p = tmpdir.join('processes.log')
     p.write('junk\n  1  0  0  0')
-    o = parser.log_file.processes_stdout.ProcessesStdoutLog(str(p))
+    o = lib.parser.log_file.processes_stdout.ProcessesStdoutLog(str(p))
     with pytest.raises(AssertionError):
         o.parse()

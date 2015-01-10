@@ -1,6 +1,6 @@
 import pytest
 
-import parser.log_file.groups_stdout
+import lib.parser.log_file.groups_stdout
 
 good_groups_text = '''root:x:0:
 adm:x:4:syslog,vagrant
@@ -11,7 +11,7 @@ cdrom:x:24:vagrant
 def good_groups(tmpdir):
     p = tmpdir.join('groups.log')
     p.write(good_groups_text)
-    o = parser.log_file.groups_stdout.GroupsStdoutLog(str(p))
+    o = lib.parser.log_file.groups_stdout.GroupsStdoutLog(str(p))
     o.parse()
     return o
 
@@ -43,7 +43,7 @@ bad_field_count_text = '''cdrom:x:24
 def test_bad_field_count(tmpdir):
     p = tmpdir.join('groups.log')
     p.write(bad_field_count_text)
-    o = parser.log_file.groups_stdout.GroupsStdoutLog(str(p))
+    o = lib.parser.log_file.groups_stdout.GroupsStdoutLog(str(p))
     with pytest.raises(AssertionError):
         o.parse()
 
@@ -54,6 +54,6 @@ root:x:1:
 def test_duplicates(tmpdir):
     p = tmpdir.join('groups.log')
     p.write(duplicates_text)
-    o = parser.log_file.groups_stdout.GroupsStdoutLog(str(p))
+    o = lib.parser.log_file.groups_stdout.GroupsStdoutLog(str(p))
     with pytest.raises(AssertionError):
         o.parse()

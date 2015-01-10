@@ -1,5 +1,5 @@
 from . import common
-from systems import package
+from ...systems import package
 
 class DebsStdoutLog(common.Log):
 

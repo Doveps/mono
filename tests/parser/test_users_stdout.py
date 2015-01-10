@@ -1,6 +1,6 @@
 import pytest
 
-import parser.log_file.users_stdout
+import lib.parser.log_file.users_stdout
 
 good_users_text = '''root:x:0:0:root:/root:/bin/bash
 vagrant:x:900:900:vagrant,,,:/home/vagrant:/bin/bash
@@ -11,7 +11,7 @@ vboxadd:x:999:1::/var/run/vboxadd:/bin/false
 def good_users(tmpdir):
     p = tmpdir.join('users.log')
     p.write(good_users_text)
-    o = parser.log_file.users_stdout.UsersStdoutLog(str(p))
+    o = lib.parser.log_file.users_stdout.UsersStdoutLog(str(p))
     o.parse()
     return o
 
@@ -49,13 +49,13 @@ def test_empty_user_description(good_users):
 def test_bad_field_count(tmpdir):
     p = tmpdir.join('users.log')
     p.write('root:x:0:0')
-    o = parser.log_file.users_stdout.UsersStdoutLog(str(p))
+    o = lib.parser.log_file.users_stdout.UsersStdoutLog(str(p))
     with pytest.raises(AssertionError):
         o.parse()
 
 def test_duplicates(tmpdir):
     p = tmpdir.join('users.log')
     p.write('root:x:0:0:root:/root:/bin/bash\nroot:x:0:0:root:/root:/bin/bash')
-    o = parser.log_file.users_stdout.UsersStdoutLog(str(p))
+    o = lib.parser.log_file.users_stdout.UsersStdoutLog(str(p))
     with pytest.raises(AssertionError):
         o.parse()

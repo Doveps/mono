@@ -1,7 +1,7 @@
 import re
 
 from . import common
-from systems import service
+from ...systems import service
 
 class InitctlListStdoutLog(common.Log):
     # tty5 start/running, process 856

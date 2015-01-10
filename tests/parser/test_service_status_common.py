@@ -1,7 +1,7 @@
 import pytest
 
-import parser.log_file.service_status_common
-import parser.log_file.service_status_stderr
+import lib.parser.log_file.service_status_common
+import lib.parser.log_file.service_status_stderr
 
 good_service_status_text = ''' [ ? ]  console-setup
  [ ? ]  cryptdisks
@@ -11,7 +11,7 @@ good_service_status_text = ''' [ ? ]  console-setup
 def good_service_status(tmpdir):
     p = tmpdir.join('service_status.log')
     p.write(good_service_status_text)
-    o = parser.log_file.service_status_stderr.ServiceStatusStderrLog(str(p))
+    o = lib.parser.log_file.service_status_stderr.ServiceStatusStderrLog(str(p))
     o.parse()
     return o
 
@@ -27,13 +27,13 @@ def test_good_service_state(good_service_status):
 def test_bad_field_count(tmpdir):
     p = tmpdir.join('service_status.log')
     p.write(' [ ? ]')
-    o = parser.log_file.service_status_stderr.ServiceStatusStderrLog(str(p))
+    o = lib.parser.log_file.service_status_stderr.ServiceStatusStderrLog(str(p))
     with pytest.raises(AssertionError):
         o.parse()
 
 def test_duplicates(tmpdir):
     p = tmpdir.join('service_status.log')
     p.write(' [ ? ]  svc1\n [ ? ]  svc2')
-    o = parser.log_file.service_status_common.ServiceStatusCommonLog(str(p))
+    o = lib.parser.log_file.service_status_common.ServiceStatusCommonLog(str(p))
     with pytest.raises(AssertionError):
         o.parse()

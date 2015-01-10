@@ -1,5 +1,5 @@
 from . import common
-from systems import service
+from ...systems import service
 
 class ServiceStatusCommonLog(common.Log):
 

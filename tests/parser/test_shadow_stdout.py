@@ -1,6 +1,6 @@
 import pytest
 
-import parser.log_file.shadow_stdout
+import lib.parser.log_file.shadow_stdout
 
 good_shadow_text = '''root:!:16179:0:99999:7:::
 vagrant:$6$5M8f9rEy$nFWJvEnn2KFQwFsm6oRMyxva3mVixbyxZIE3cYTJ.ARFMt6Nq6gsnqScUkZ/slZ8tQzhZovx1M2CnmSsF71JA1:16179:0:99999:7:::
@@ -11,7 +11,7 @@ vboxadd:!:16179::::::
 def good_shadow(tmpdir):
     p = tmpdir.join('shadow.log')
     p.write(good_shadow_text)
-    o = parser.log_file.shadow_stdout.ShadowStdoutLog(str(p))
+    o = lib.parser.log_file.shadow_stdout.ShadowStdoutLog(str(p))
     o.parse()
     return o
 
@@ -52,13 +52,13 @@ def test_good_user_reserved(root_user):
 def test_bad_field_count(tmpdir):
     p = tmpdir.join('shadow.log')
     p.write('root:!:16179:0')
-    o = parser.log_file.shadow_stdout.ShadowStdoutLog(str(p))
+    o = lib.parser.log_file.shadow_stdout.ShadowStdoutLog(str(p))
     with pytest.raises(AssertionError):
         o.parse()
 
 def test_duplicates(tmpdir):
     p = tmpdir.join('shadow.log')
     p.write('root:!:16179:0:99999:7:::\nroot:!:16179:0:99999:7:::')
-    o = parser.log_file.shadow_stdout.ShadowStdoutLog(str(p))
+    o = lib.parser.log_file.shadow_stdout.ShadowStdoutLog(str(p))
     with pytest.raises(AssertionError):
         o.parse()

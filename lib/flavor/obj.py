@@ -3,7 +3,7 @@ import logging
 import persistent
 import transaction
 
-import diff.system
+from ..diff import system
 
 module_logger = logging.getLogger(__name__)
 
@@ -40,9 +40,9 @@ class Obj(persistent.Persistent):
 
     def diff_system(self, system_name, new_data):
         if system_name not in self.systems:
-            return diff.system.System(new_data)
+            return system.System(new_data)
 
-        return diff.system.System(self.systems[system_name], new_data)
+        return system.System(self.systems[system_name], new_data)
 
 def get(db, uuid):
     if not uuid in db:

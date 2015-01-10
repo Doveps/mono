@@ -6,8 +6,8 @@ import logging
 import logging.config
 import os
 
-import parser.host
-import flavor.directory
+import lib.parser.host
+import lib.flavor.directory
 
 logging.config.fileConfig('log.conf')
 logger = logging.getLogger('bassist')
@@ -48,12 +48,12 @@ required_args.add_argument(
 args = arg_parser.parse_args()
 
 logger.debug('reading flavors')
-flavors = flavor.directory.Directory(args.flavor_directory).db
+flavors = lib.flavor.directory.Directory(args.flavor_directory).db
 flavor = flavors.get_obj_from_name(args.flavor_name)
 logger.debug('retrieved flavor %s', flavor)
 
 logger.debug('importing parsers')
-host = parser.host.Host(args.scanner_directory)
+host = lib.parser.host.Host(args.scanner_directory)
 logger.debug('finished importing parsers')
 
 for parser in host.parsers:

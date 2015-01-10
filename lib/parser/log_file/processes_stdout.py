@@ -1,7 +1,7 @@
 import re
 
 from . import common
-from systems import process
+from ...systems import process
 
 class ProcessesStdoutLog(common.Log):
     # .ansible/tmp/ansible-tmp-1417897614.23-199064374829668/

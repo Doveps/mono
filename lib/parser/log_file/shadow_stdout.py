@@ -1,5 +1,5 @@
 from . import common
-from systems import user
+from ...systems import user
 
 class ShadowStdoutLog(common.Log):
 

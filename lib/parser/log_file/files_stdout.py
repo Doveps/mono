@@ -3,7 +3,7 @@ import shlex
 import time
 
 from . import common
-from systems import path
+from ...systems import path
 
 class ParsedFileException(Exception):
     pass
