@@ -1,6 +1,8 @@
 import logging
 
-class System(object):
+from . import common
+
+class System(common.Diff):
     '''Compare two systems data objects. It is valid to pass a
     mismatched data type, or None as the second data object. In this
     case, the types will evaluate as different.'''
@@ -26,19 +28,6 @@ class System(object):
         self.find_missing()
 
         self.logger.debug('different? %s', self.different())
-
-    def different(self):
-        for val in self.matches.values():
-            if val is False:
-                return True
-
-        return False
-
-    def set_mismatch(self, kind):
-        self.matches[kind] = False
-
-    def set_match(self, kind):
-        self.matches[kind] = True
 
     def find_missing(self):
         self.only_in_data2 = {}

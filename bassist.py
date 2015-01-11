@@ -8,6 +8,7 @@ import os
 
 import lib.parser.host
 import lib.flavor.directory
+import lib.diff.flavor
 
 logging.config.fileConfig('log.conf')
 logger = logging.getLogger('bassist')
@@ -49,17 +50,23 @@ args = arg_parser.parse_args()
 
 logger.debug('reading flavors')
 flavors = lib.flavor.directory.Directory(args.flavor_directory).db
-flavor = flavors.get_obj_from_name(args.flavor_name)
-logger.debug('retrieved flavor %s', flavor)
+requested_flavor = flavors.get_obj_from_name(args.flavor_name)
+logger.debug('retrieved requested flavor %s', requested_flavor)
+
+compared_flavor = None
+if not args.record:
+    compared_flavor = lib.flavor.obj.Obj()
 
 logger.debug('importing parsers')
-host = lib.parser.host.Host(args.scanner_directory)
+parsed_host = lib.parser.host.Host(args.scanner_directory)
 logger.debug('finished importing parsers')
 
-for parser in host.parsers:
+parse_all = not args.parse_logs
+
+for parser in parsed_host.parsers:
 
     logger.debug('parser log: %s', parser.log)
-    if args.parse_logs:
+    if not parse_all:
         if not parser.log in args.parse_logs:
             logger.info(
                     'skipping parse of %s since you requested only %s',
@@ -69,8 +76,14 @@ for parser in host.parsers:
     logger.info('parsing: %s', parser.path)
     parser.parse()
     if args.record:
-        parser.record(flavor)
+        parser.record(requested_flavor)
     else:
-        parser.diff(flavor)
+        if parse_all:
+            parser.record(compared_flavor)
+        else:
+            parser.diff(requested_flavor)
+
+if parse_all and not args.record:
+    diff = lib.diff.flavor.Flavor(requested_flavor, compared_flavor)
 
 flavors.close()
