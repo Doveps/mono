@@ -33,3 +33,7 @@ class MergeableDict(collections.MutableMapping):
             except:
                 # if there's no merge, ignore!
                 pass
+
+class NaiveRepr(object):
+    def __repr__(self):
+        return '<%s %s>'%(type(self).__name__, self.__dict__)

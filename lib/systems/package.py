@@ -1,12 +1,12 @@
 from . import common
 
-class Deb(object):
+class Deb(common.NaiveRepr):
     def __init__(self, stat, vers, arch):
         self.stat = stat
         self.vers = vers
         self.arch = arch
 
-class Package(object):
+class Package(common.NaiveRepr):
     def __init__(self):
         self.deb = None
 

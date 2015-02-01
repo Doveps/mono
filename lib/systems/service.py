@@ -1,16 +1,16 @@
 from . import common
 
-class UpstartInit(object):
+class UpstartInit(common.NaiveRepr):
     def __init__(self, state):
         self.state = state
 
-class Upstart(object):
+class Upstart(common.NaiveRepr):
     def __init__(self, wanted, state, pid):
         self.wanted = wanted
         self.state = state
         self.pid = pid
 
-class Service(object):
+class Service(common.NaiveRepr):
     def __init__(self, name):
         self.name = name
         self.upstart = None

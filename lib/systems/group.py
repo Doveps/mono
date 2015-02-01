@@ -1,6 +1,6 @@
 from . import common
 
-class Group(object):
+class Group(common.NaiveRepr):
     def __init__(self, password, gid):
         self.password = password
         self.gid = gid

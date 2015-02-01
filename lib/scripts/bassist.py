@@ -1,7 +1,9 @@
-# This contains helper functions for the bassist.py script
+# This object is intended to run from script bassist.py
 import logging
 import logging.config
 import argparse
+
+import savant.diff.sets
 
 from ..parser import host as parser_host
 from ..flavor import directory as flavor_directory
@@ -9,12 +11,13 @@ from ..flavor import obj as flavor_obj
 from ..diff import flavor as diff_flavor
 
 class Bassist(object):
-    def __init__(self):
-        self.set_logging()
-        self.get_args()
-        self.read_flavors()
-        self.parse()
-        self.finish()
+    def __init__(self, full_auto=True):
+        if full_auto:
+            self.set_logging()
+            self.get_args()
+            self.read_flavors()
+            self.parse()
+            self.finish()
 
     def set_logging(self):
         logging.config.fileConfig('log.conf')
@@ -34,16 +37,6 @@ class Bassist(object):
                 '-l', '--parse-logs',
                 nargs='*', metavar='LOG',
                 help='Only parse the given logs, for example "debs_stdout"')
-        arg_parser.add_argument(
-                '-r', '--record',
-                action='store_true',
-                help='When set, record to the given flavor name; otherwise \
-                        compare to the given flavor name')
-        arg_parser.add_argument(
-                '-i', '--inference-db',
-                help='The path to the directory containing the inference ZODB \
-                        files; if you are not recording, this argument is \
-                        REQUIRED')
 
         required_args = arg_parser.add_argument_group('required arguments')
         required_args.add_argument(
@@ -58,6 +51,18 @@ class Bassist(object):
                 '-s', '--scanner-directory',
                 required=True,
                 help='The path to the directory containing scanner results')
+
+        comparison_args = arg_parser.add_argument_group('comparison arguments')
+        comparison_args.add_argument(
+                '-r', '--record',
+                action='store_true',
+                help='When set, record to the given flavor name; otherwise \
+                        compare to the given flavor name')
+        comparison_args.add_argument(
+                '-i', '--inference-db',
+                help='The path to the directory containing the inference ZODB \
+                        files; if you are not recording, this argument is \
+                        REQUIRED')
 
         self.args = arg_parser.parse_args()
 
@@ -101,5 +106,9 @@ class Bassist(object):
     def finish(self):
         if self.parse_all and not self.args.record:
             diff = diff_flavor.Flavor(self.requested_flavor, self.compared_flavor)
+            if diff.different():
+                change_sets = savant.diff.sets.Sets(diff, self.args.inference_db)
+            else:
+                print('Flavors are identical.')
 
         self.flavors.close()

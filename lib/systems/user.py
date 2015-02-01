@@ -1,6 +1,6 @@
 from . import common
 
-class Passwd(object):
+class Passwd(common.NaiveRepr):
     def __init__(self, password, uid, gid, description, path, shell):
         self.password = password
         self.uid = uid
@@ -9,7 +9,7 @@ class Passwd(object):
         self.path = path
         self.shell = shell
 
-class Shadow(object):
+class Shadow(common.NaiveRepr):
     def __init__(self, password, lastchanged, minimum, maximum, warn,
             inactive, expire, reserved):
         self.password = password
@@ -21,7 +21,7 @@ class Shadow(object):
         self.expire = expire
         self.reserved = reserved
 
-class User(object):
+class User(common.NaiveRepr):
     def __init__(self):
         self.passwd = None
         self.shadow = None
