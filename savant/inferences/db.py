@@ -40,6 +40,9 @@ class DB(object):
         self.dbroot['diffs'][hexdigest] = diff.data
         transaction.commit()
 
+    def get_diffs(self):
+        return(self.dbroot['diffs'].keys())
+
     def close(self):
         self.connection.close()
         self.db.close()
