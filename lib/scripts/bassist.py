@@ -3,7 +3,8 @@ import logging
 import logging.config
 import argparse
 
-import savant.diff.sets
+import savant.comparisons
+import savant.db
 
 from ..parser import host as parser_host
 from ..flavor import directory as flavor_directory
@@ -105,9 +106,18 @@ class Bassist(object):
 
     def finish(self):
         if self.parse_all and not self.args.record:
-            diff = diff_flavor.Flavor(self.requested_flavor, self.compared_flavor)
-            if diff.different():
-                change_sets = savant.diff.sets.Sets(diff, self.args.inference_db)
+            flavor_comparison = diff_flavor.Flavor(self.requested_flavor, self.compared_flavor)
+            if flavor_comparison.different():
+                db = savant.db.DB(self.args.inference_db)
+                exported = flavor_comparison.export()
+                savant_comparison = savant.comparisons.Comparison(exported, db)
+
+                if savant_comparison.assigned is True:
+                    print('Matched assignments.')
+                else:
+                    print('No assignments were found for %d diffs. You need to create sets from the Savant Web UI.' %
+                            len(savant_comparison))
+
             else:
                 print('Flavors are identical.')
 

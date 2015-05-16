@@ -65,4 +65,15 @@ class Flavor(common.Diff):
         self.logger.debug('only in flavor1: %s',
                 sorted(self.only_in_flavor1.keys()))
 
+    def export(self):
+        data = {}
+
+        for sys_name, system in self.system_diffs.items():
+            data[sys_name] = {'subtract': {}, 'add': {}}
+            for diff_name, diff_obj in system.only_in_data1.items():
+                data[sys_name]['subtract'][diff_name] = diff_obj
+            for diff_name, diff_obj in system.only_in_data2.items():
+                data[sys_name]['add'][diff_name] = diff_obj
+        return data
+
 
