@@ -14,3 +14,12 @@ class Set(object):
     def add_data(self, data):
         self.db.dbroot['sets'][self.id] = data
         self.db.commit()
+
+def find(delta, db):
+    '''Find one or more sets containing a delta.'''
+    results = []
+    for set_id, set_choices in db.dbroot['sets'].items():
+        if delta in set_choices:
+            results.append(set_id)
+
+    return(results)
