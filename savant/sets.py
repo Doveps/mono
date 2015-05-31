@@ -22,6 +22,10 @@ class Set(object):
         self.db.dbroot['sets'][self.id] = data
         self.db.commit()
 
+    def delete(self):
+        del self.db.dbroot['sets'][self.id]
+        self.db.commit()
+
     def __len__(self):
         return len(self.db.dbroot['sets'][self.id])
 
@@ -42,3 +46,8 @@ def get(set_id, db):
     '''Return a single set.'''
     assert set_id in db.dbroot['sets']
     return(Set(db, set_id))
+
+def delete(set_id, db):
+    '''Delete a single set.'''
+    assert set_id in db.dbroot['sets']
+    Set(db, set_id).delete()
