@@ -9,11 +9,21 @@ class Set(object):
         self.db = db
         self.id = id
 
+        # identify the action and system
+        parts = self.id.split('|', 2)
+        assert len(parts) == 3
+        self.action = parts[0]
+        self.system = parts[1]
+        self.name = parts[2]
+
         #self.logger.debug('set hash: %s',self.id)
 
     def add_data(self, data):
         self.db.dbroot['sets'][self.id] = data
         self.db.commit()
+
+    def __len__(self):
+        return len(self.db.dbroot['sets'][self.id])
 
 def find(delta, db):
     '''Find one or more sets containing a delta.'''
@@ -23,3 +33,12 @@ def find(delta, db):
             results.append(set_id)
 
     return(results)
+
+def all(db):
+    '''Return a list of the set_ids of all sets.'''
+    return(db.dbroot['sets'].keys())
+
+def get(set_id, db):
+    '''Return a single set.'''
+    assert set_id in db.dbroot['sets']
+    return(Set(db, set_id))
