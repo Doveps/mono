@@ -10,10 +10,17 @@ class Set(object):
         self.logger = logging.getLogger(__name__ + '.' + type(self).__name__)
         self.db = db
         self.id = id
+
         self.logger.debug('id is %s',self.id)
         self.info = diffs.Diff(self.id)
 
-        #self.logger.debug('set hash: %s',self.id)
+    def delete_diff(self, diff):
+        # for some reeason, zodb doesn't like deletes from its arrays?!
+        # so operate on a new array instead, and then copy it in place
+        current = self.get_diffs()
+        assert diff in current
+        current.remove(diff)
+        self.update_diffs(current)
 
     def update_diffs(self, data):
         self.db.dbroot['sets'][self.id] = data
