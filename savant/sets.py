@@ -1,5 +1,7 @@
 import logging
 
+from . import diffs
+
 class Set(object):
     '''A Set is all or part of Comparison object data, which is inferred to
     result from a change made to an OS. For example: installing a package.'''
@@ -8,19 +10,17 @@ class Set(object):
         self.logger = logging.getLogger(__name__ + '.' + type(self).__name__)
         self.db = db
         self.id = id
-
-        # identify the action and system
-        parts = self.id.split('|', 2)
-        assert len(parts) == 3
-        self.action = parts[0]
-        self.system = parts[1]
-        self.name = parts[2]
+        self.logger.debug('id is %s',self.id)
+        self.info = diffs.Diff(self.id)
 
         #self.logger.debug('set hash: %s',self.id)
 
-    def add_data(self, data):
+    def update_diffs(self, data):
         self.db.dbroot['sets'][self.id] = data
         self.db.commit()
+
+    def get_diffs(self):
+        return self.db.dbroot['sets'][self.id]
 
     def delete(self):
         del self.db.dbroot['sets'][self.id]
