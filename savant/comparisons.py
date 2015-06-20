@@ -7,21 +7,50 @@ class Comparison(object):
     '''A Comparison is a collection of diffs, for example as generated and
     exported by the bassist.'''
 
-    def __init__(self, bassist_diffs, db):
+    def __init__(self, db, id=None, diffs=None):
+        '''Always provide either an id or diffs.'''
+
         self.logger = logging.getLogger(__name__ + '.' + type(self).__name__)
-        self.data = bassist_diffs
         self.db = db
 
+        if id is None:
+            assert diffs is not None
+            self.id_from_diffs(diffs)
+
+        if diffs is None:
+            assert id is not None
+            assert id in self.db.dbroot['comparisons']
+            self.id = id
+
+        self.diffs = self.db.dbroot['comparisons'][self.id]
+
+    def id_from_diffs(self, diffs):
         # generate a hash of the content so it can't get added twice
-        encoded = hashlib.sha1(str(self.data))
+        encoded = hashlib.sha1(str(diffs))
         self.id = encoded.hexdigest()
         self.logger.debug('diff hash: %s',self.id)
 
+        # because IDs are hashed from contents, no need to set again
         if self.id in self.db.dbroot['comparisons']:
             return
 
-        self.db.dbroot['comparisons'][self.id] = self.data
+        self.db.dbroot['comparisons'][self.id] = diffs
         self.db.commit()
+
+    def get_diff_ids(self):
+        '''Return all diff IDs that are in this comparison. These do *not*
+        contain any of the details in the comparison db from bassist about each
+        diff.'''
+
+        ids = []
+        for system_name, system_dict in self.diffs.items():
+            for action_name, action_dict in system_dict.items():
+                for name in action_dict.keys():
+                    ids.append(action_name +'|'+ system_name +'|'+ name)
+        return ids
+
+    def get_systems(self):
+        return self.diffs.keys()
 
     def assigned(self):
         '''Did we find any assignments for this comparison?'''
@@ -30,19 +59,14 @@ class Comparison(object):
         return False
 
     def __repr__(self):
-        return '<%s %s>'%(type(self).__name__, self.data)
+        return '<%s %s>'%(type(self).__name__, self.diffs)
 
     def __len__(self):
         total = 0
-        for sys_name, system in self.data.items():
+        for sys_name, system in self.diffs.items():
             total += len(system['subtract']) + len(system['add'])
         return total
 
 def all(db):
     '''Return a list of all comparison ids.'''
     return(db.dbroot['comparisons'].keys())
-
-def get(db, id):
-    '''Get a comparison by its id.'''
-    assert id in db.dbroot['comparisons']
-    return(db.dbroot['comparisons'][id])

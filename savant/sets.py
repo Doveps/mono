@@ -3,8 +3,8 @@ import logging
 from . import diffs
 
 class Set(object):
-    '''A Set is all or part of Comparison object data, which is inferred to
-    result from a change made to an OS. For example: installing a package.'''
+    '''A Set is one or more diffs from a Comparison object. Diffs result from a
+    change made to an OS. For example: installing a package.'''
 
     def __init__(self, db, id):
         self.logger = logging.getLogger(__name__ + '.' + type(self).__name__)
@@ -14,47 +14,84 @@ class Set(object):
         self.logger.debug('id is %s',self.id)
         self.info = diffs.Diff(self.id)
 
-    def delete_diff(self, diff):
-        # for some reeason, zodb doesn't like deletes from its arrays?!
-        # so operate on a new array instead, and then copy it in place
-        current = self.get_diffs()
-        assert diff in current
-        current.remove(diff)
-        self.update_diffs(current)
+        if self.id in self.db.dbroot['sets']:
+            self.diffs = self.db.dbroot['sets'][self.id]
+        else:
+            self.diffs = {}
 
-    def update_diffs(self, data):
-        self.db.dbroot['sets'][self.id] = data
+    def commit(self):
+        self.db.dbroot['sets'][self.id] = self.diffs
         self.db.commit()
 
-    def get_diffs(self):
-        return self.db.dbroot['sets'][self.id]
+    def add_diff(self, diff):
+        if diff.system not in self.diffs:
+            self.diffs[diff.system] = {}
+        if diff.action not in self.diffs[diff.system]:
+            self.diffs[diff.system][diff.action] = []
+        if diff.name not in self.diffs[diff.system][diff.action]:
+            self.diffs[diff.system][diff.action].append(diff.name)
+
+    def update_diffs(self, diff_ids):
+        for diff_id in diff_ids:
+            diff = diffs.Diff(diff_id)
+            self.add_diff(diff)
+
+        self.commit()
+
+    def delete_diff(self, diff):
+        assert self.has_diff(diff)
+
+        # ZODB doesn't like to replace in place, so copy and then update
+        diffs = self.diffs
+
+        diffs[diff.system][diff.action].remove(diff.name)
+        if len(diffs[diff.system][diff.action]) == 0:
+            del(diffs[diff.system][diff.action])
+        if len(diffs[diff.system]) == 0:
+            del(diffs[diff.system])
+
+        self.diffs = diffs
+        self.commit()
+
+    def has_diff(self, diff):
+        if diff.system not in self.diffs:
+            return False
+        if diff.action not in self.diffs[diff.system]:
+            return False
+        if diff.name not in self.diffs[diff.system][diff.action]:
+            return False
+        return True
+
+    def get_diff_ids(self):
+        ids = []
+        for system_name, system_dict in self.diffs.items():
+            for action_name, actions in system_dict.items():
+                for name in actions:
+                    ids.append(action_name +'|'+ system_name +'|'+ name)
+        return ids
 
     def delete(self):
+        assert self.id in self.db.dbroot['sets']
         del self.db.dbroot['sets'][self.id]
         self.db.commit()
 
     def __len__(self):
-        return len(self.db.dbroot['sets'][self.id])
-
-def find(delta, db):
-    '''Find one or more sets containing a delta.'''
-    results = []
-    for set_id, set_choices in db.dbroot['sets'].items():
-        if delta in set_choices:
-            results.append(set_id)
-
-    return(results)
+        length = 0
+        for action in self.diffs.values():
+            for system in action.values():
+                length += len(system)
+        return length
 
 def all(db):
     '''Return a list of the set_ids of all sets.'''
     return(db.dbroot['sets'].keys())
 
-def get(set_id, db):
-    '''Return a single set.'''
-    assert set_id in db.dbroot['sets']
-    return(Set(db, set_id))
+def find_with_diff(diff, db):
+    '''Find one or more set ids of sets that contain a diff.'''
+    results = []
+    for set_id in db.dbroot['sets'].keys():
+        set_obj = Set(db, set_id)
+        if set_obj.has_diff(diff):
+            results.append(set_id)
 
-def delete(set_id, db):
-    '''Delete a single set.'''
-    assert set_id in db.dbroot['sets']
-    Set(db, set_id).delete()
+    return(results)
