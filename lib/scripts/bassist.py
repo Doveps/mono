@@ -110,7 +110,7 @@ class Bassist(object):
             if flavor_comparison.different():
                 db = savant.db.DB(self.args.inference_db)
                 exported = flavor_comparison.export()
-                savant_comparison = savant.comparisons.Comparison(exported, db)
+                savant_comparison = savant.comparisons.Comparison(db, diffs=exported)
 
                 if savant_comparison.assigned is True:
                     print('Matched assignments.')
