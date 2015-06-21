@@ -2,6 +2,7 @@ import logging
 import hashlib
 
 from . import sets
+from . import diffs
 
 class Comparison(object):
     '''A Comparison is a collection of diffs, for example as generated and
@@ -23,6 +24,7 @@ class Comparison(object):
             self.id = id
 
         self.diffs = self.db.dbroot['comparisons'][self.id]
+        self.assignments = None
 
     def id_from_diffs(self, diffs):
         # generate a hash of the content so it can't get added twice
@@ -61,11 +63,37 @@ class Comparison(object):
     def get_systems(self):
         return self.diffs.keys()
 
-    def assigned(self):
-        '''Did we find any assignments for this comparison?'''
+    def get_sets(self):
+        '''Did we find any sets assigned to this comparison?'''
 
-        # TODO: replace this stub!
-        return False
+        if self.assignments is not None:
+            return
+
+        self.assignments = {}
+
+        for diff_id in self.get_diff_ids():
+            diff_obj = diffs.Diff(diff_id)
+            in_sets = sets.find_with_diff(diff_obj, self.db)
+            if len(in_sets) == 0:
+                self.assignments[diff_id] = None
+            else:
+                self.assignments[diff_id] = in_sets
+
+    def all_unassigned(self):
+        '''Are all diffs unassigned?'''
+        self.get_sets()
+        for diff_id in self.get_diff_ids():
+            if self.assignments[diff_id] is not None:
+                return False
+        return True
+
+    def all_assigned(self):
+        '''Are all diffs assigned?'''
+        self.get_sets()
+        for diff_id in self.get_diff_ids():
+            if self.assignments[diff_id] is None:
+                return False
+        return True
 
     def __repr__(self):
         return '<%s %s>'%(type(self).__name__, self.diffs)
