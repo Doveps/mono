@@ -1,4 +1,5 @@
 import logging
+import urllib
 
 from . import diffs
 
@@ -22,6 +23,10 @@ class Set(object):
     def commit(self):
         self.db.dbroot['sets'][self.id] = self.diffs
         self.db.commit()
+
+    def quote(self):
+        '''Return URL-safe version of my id.'''
+        return urllib.quote(self.id, '')
 
     def add_diff(self, diff):
         if diff.system not in self.diffs:
@@ -89,7 +94,7 @@ def all(db):
 def find_with_diff(diff, db):
     '''Find one or more set ids of sets that contain a diff.'''
     results = []
-    for set_id in db.dbroot['sets'].keys():
+    for set_id in all(db):
         set_obj = Set(db, set_id)
         if set_obj.has_diff(diff):
             results.append(set_id)

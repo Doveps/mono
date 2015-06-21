@@ -37,6 +37,15 @@ class Comparison(object):
         self.db.dbroot['comparisons'][self.id] = diffs
         self.db.commit()
 
+    def has_diff(self, diff):
+        if diff.system not in self.diffs:
+            return False
+        if diff.action not in self.diffs[diff.system]:
+            return False
+        if diff.name not in self.diffs[diff.system][diff.action]:
+            return False
+        return True
+
     def get_diff_ids(self):
         '''Return all diff IDs that are in this comparison. These do *not*
         contain any of the details in the comparison db from bassist about each
@@ -70,3 +79,13 @@ class Comparison(object):
 def all(db):
     '''Return a list of all comparison ids.'''
     return(db.dbroot['comparisons'].keys())
+
+def find_with_diff(diff, db):
+    '''Find one or more ids of comparisons that contain a diff.'''
+    results = []
+    for comparison_id in all(db):
+        comparison_obj = Comparison(db, comparison_id)
+        if comparison_obj.has_diff(diff):
+            results.append(comparison_id)
+
+    return(results)
