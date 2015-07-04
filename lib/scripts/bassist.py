@@ -112,11 +112,11 @@ class Bassist(object):
                 exported = flavor_comparison.export()
                 savant_comparison = savant.comparisons.Comparison(db, diffs=exported)
 
-                if savant_comparison.assigned is True:
-                    print('Matched assignments.')
+                print('The flavor comparison generated ID %s'%savant_comparison.id)
+                if savant_comparison.all_assigned():
+                    print('All diffs from this comparison have been assigned to sets.')
                 else:
-                    print('No assignments were found for %d diffs. You need to create sets from the Savant Web UI.' %
-                            len(savant_comparison))
+                    print('One or more diffs from this comparison remain to be assigned to sets. Look for the id in Savant Web.')
 
             else:
                 print('Flavors are identical.')
