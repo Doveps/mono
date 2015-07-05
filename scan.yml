@@ -5,9 +5,21 @@
     - local_prepare
 
 - hosts: scanned
-  gather_facts: false
   roles:
     - host_scan
+  sudo: true
+
+- hosts: localhost
+  gather_facts: false
+  roles:
+    - local_save
+  vars:
+    results_dir: "{{ hostvars['localhost'].pwd_command.stdout }}/local"
+
+- hosts: scanned
+  gather_facts: false
+  roles:
+    - host_cleanup
   sudo: true
 
 - hosts: localhost

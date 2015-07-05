@@ -1,0 +1,17 @@
+---
+- name: Get rid of registered variables to keep output json file smaller
+  set_fact:
+    find_processes: ''
+    find_files: ''
+    find_debs: ''
+    find_service_status: ''
+    find_initctl_list: ''
+    find_users: ''
+    find_shadow: ''
+    find_groups: ''
+    find_network_interfaces: ''
+    find_network_routes: ''
+    find_network_connections: ''
+    find_firewall_rules: ''
+    find_kernel_version: ''
+    find_kernel_extensions: ''
