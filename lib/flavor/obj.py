@@ -27,6 +27,7 @@ class Obj(persistent.Persistent):
             self.logger.debug('creating new flavor with uuid: %s',self.uuid)
 
         self.systems = {}
+        self.metadata = {}
 
     def __getstate__(self):
         """logger can not be pickled, so exclude it."""
@@ -39,6 +40,14 @@ class Obj(persistent.Persistent):
         """Restore logger which was excluded from pickling."""
         self.__dict__.update(dict)
         self.logger = logging.getLogger(__name__ + '.' + type(self).__name__)
+
+    def record_metadata(self, metadata_key, data):
+        self.logger.debug('setting metadata %s',metadata_key)
+        self.metadata[metadata_key] = data
+
+        if not self.anonymous:
+            self._p_changed = 1
+            transaction.commit()
 
     def record_system(self, system_name, data):
         if system_name in self.systems:

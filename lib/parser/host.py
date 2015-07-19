@@ -2,6 +2,7 @@ import os
 import logging
 
 from . import log_file
+from . import json_file
 
 class ParserHostException(Exception):
     pass
@@ -20,9 +21,25 @@ class Host(object):
                 continue
             self.logger.debug('it is a file')
 
-            retrieved_file = log_file.get_parser(full)
-            if retrieved_file is None:
+            parser = self.find_parser(full)
+            if parser is None:
                 continue
 
             self.logger.debug('appending parser')
-            self.parsers.append(retrieved_file)
+            self.parsers.append(parser)
+
+    def find_parser(self, full_path):
+
+        # log file?
+        parser = log_file.get_parser(full_path)
+        if parser is not None:
+            self.logger.debug('retrieved log parser')
+            return parser
+
+        # json file?
+        parser = json_file.get_parser(full_path)
+        if parser is not None:
+            self.logger.debug('retrieved json parser')
+            return parser
+
+        return None

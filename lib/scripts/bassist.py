@@ -21,7 +21,7 @@ class Bassist(object):
             self.finish()
 
     def set_logging(self):
-        logging.config.fileConfig('log.conf')
+        logging.config.fileConfig('log.conf', disable_existing_loggers=False)
         self.logger = logging.getLogger('bassist')
 
         try:
