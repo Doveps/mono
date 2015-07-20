@@ -24,7 +24,8 @@ class Comparison(object):
             self.id = id
 
         self.diffs = self.db.dbroot['comparisons'][self.id]
-        self.assignments = None
+        self.diffs_in_set = None
+        self.set_ids = None
 
     def id_from_diffs(self, diffs):
         # generate a hash of the content so it can't get added twice
@@ -63,29 +64,45 @@ class Comparison(object):
     def get_systems(self):
         return self.diffs.keys()
 
-    def get_sets(self):
-        '''Did we find any sets assigned to this comparison?'''
+    def get_set_ids(self):
+        self.find_diffs_in_sets()
+        return self.set_ids
 
-        if self.assignments is not None:
+    def find_diffs_in_sets(self):
+        '''Find all sets that diffs are assigned to.'''
+
+        if self.diffs_in_set is not None:
+            assert self.set_ids is not None
             return
 
-        self.assignments = {}
+        self.diffs_in_set = {}
+        self.set_ids = []
 
         for diff_id in self.get_diff_ids():
             diff_obj = diffs.Diff(diff_id)
-            self.assignments[diff_id] = sets.find_with_diff(diff_obj, self.db)
+            set_ids = sets.find_with_diff(diff_obj, self.db)
+
+            self.logger.debug('diff %s is assigned to sets %s',diff_id, set_ids)
+            self.diffs_in_set[diff_id] = set_ids
+
+            for set_id in set_ids:
+                if set_id in self.set_ids:
+                    continue
+                self.set_ids.append(set_id)
+
+        self.logger.debug('my diffs are in sets: %s',self.set_ids)
 
     def diff_is_assigned(self, diff_id):
         '''Is a given diff assigned to a set?'''
-        self.get_sets()
-        assert diff_id in self.assignments
-        if len(self.assignments[diff_id]) == 0:
+        self.find_diffs_in_sets()
+        assert diff_id in self.diffs_in_set
+        if len(self.diffs_in_set[diff_id]) == 0:
             return False
         return True
 
     def all_unassigned(self):
         '''Are all diffs unassigned?'''
-        self.get_sets()
+        self.find_diffs_in_sets()
         for diff_id in self.get_diff_ids():
             if self.diff_is_assigned(diff_id):
                 return False
@@ -93,7 +110,7 @@ class Comparison(object):
 
     def all_assigned(self):
         '''Are all diffs assigned?'''
-        self.get_sets()
+        self.find_diffs_in_sets()
         for diff_id in self.get_diff_ids():
             if not self.diff_is_assigned(diff_id):
                 return False
