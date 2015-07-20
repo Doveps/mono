@@ -5,6 +5,7 @@ import argparse
 
 import savant.comparisons
 import savant.db
+import savant.managers
 
 from ..parser import host as parser_host
 from ..flavor import directory as flavor_directory
@@ -18,11 +19,12 @@ class Bassist(object):
             self.get_args()
             self.read_flavors()
             self.parse()
+            self.compare()
             self.finish()
 
     def set_logging(self):
         logging.config.fileConfig('log.conf', disable_existing_loggers=False)
-        self.logger = logging.getLogger('bassist')
+        self.logger = logging.getLogger(__name__)
 
         try:
             from log_override import LOG_OVERRIDES
@@ -64,6 +66,9 @@ class Bassist(object):
                 help='The path to the directory containing the inference ZODB \
                         files; if you are not recording, this argument is \
                         REQUIRED')
+        required_args.add_argument(
+                '-c', '--config-directory',
+                help='The path to write the configuration management code.')
 
         self.args = arg_parser.parse_args()
 
@@ -104,21 +109,38 @@ class Bassist(object):
                 else:
                     parser.diff(self.requested_flavor)
 
+    def compare(self):
+        if not self.parse_all:
+            return
+
+        if self.args.record:
+            return
+
+        flavor_comparison = diff_flavor.Flavor(self.requested_flavor, self.compared_flavor)
+
+        if not flavor_comparison.different():
+            print('Flavors are identical.')
+            return
+
+        db = savant.db.DB(self.args.inference_db)
+        exported = flavor_comparison.export()
+        savant_comparison = savant.comparisons.Comparison(db, diffs=exported)
+
+        print('The flavor comparison generated ID %s'%savant_comparison.id)
+
+        if not savant_comparison.all_assigned():
+            print('One or more diffs from this comparison remain to be assigned to sets. Look for the id in Savant Web.')
+            return
+
+        print('All diffs from this comparison have been assigned to sets.')
+
+        if not self.args.config_directory:
+            print('To generate configuration management code, specify a directory (-c/--config-directory).')
+            return
+
+        manager = savant.managers.Manager(
+                db, savant_comparison.get_set_ids(), self.requested_flavor)
+        manager.write(self.args.config_directory)
+
     def finish(self):
-        if self.parse_all and not self.args.record:
-            flavor_comparison = diff_flavor.Flavor(self.requested_flavor, self.compared_flavor)
-            if flavor_comparison.different():
-                db = savant.db.DB(self.args.inference_db)
-                exported = flavor_comparison.export()
-                savant_comparison = savant.comparisons.Comparison(db, diffs=exported)
-
-                print('The flavor comparison generated ID %s'%savant_comparison.id)
-                if savant_comparison.all_assigned():
-                    print('All diffs from this comparison have been assigned to sets.')
-                else:
-                    print('One or more diffs from this comparison remain to be assigned to sets. Look for the id in Savant Web.')
-
-            else:
-                print('Flavors are identical.')
-
         self.flavors.close()
