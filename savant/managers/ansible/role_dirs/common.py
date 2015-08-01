@@ -2,6 +2,8 @@ import logging
 import os
 import errno
 
+import yaml
+
 class Directory(object):
     '''This kind of object knows how to manipulate files from top-level Ansible
     role directories.'''
@@ -30,6 +32,19 @@ class Directory(object):
             return
 
         self.file_data[self.required_file] = []
+
+    def write(self):
+        for file_name, file_data in self.file_data.items():
+            full_path = os.path.join(self.path, file_name)
+            with open(full_path, 'w') as fh:
+                # add the yaml prefix
+                fh.write('---\n')
+                if len(file_data) == 0:
+                    fh.write('# empty\n')
+                    continue
+                fh.write(
+                        yaml.safe_dump( file_data, indent=2,
+                            default_flow_style=False ))
 
     def __repr__(self):
         return str(self.file_data)

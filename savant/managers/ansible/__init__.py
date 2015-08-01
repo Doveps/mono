@@ -53,4 +53,4 @@ class Role(object):
         '''Write the role files using my handlers.'''
         for handler_name, handler in self.directory_handlers.items():
             self.logger.debug('writing handler: %s',handler_name)
-            #handler.write()
+            handler.write()
