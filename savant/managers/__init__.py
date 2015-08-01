@@ -30,6 +30,8 @@ class Manager(object):
         # TODO: abstract this, so it can be used with additional configuration
         # managers (for example puppet, chef, etc)
         role = ansible.Role(directory_path, self.flavor.metadata['facts'])
-        for set_id, set in self.sets.items():
+        for set_id, set_obj in self.sets.items():
             self.logger.debug('Translating set into role: %s',set_id)
-            role.translate_set(set)
+            role.translate_set(set_obj)
+
+        role.write()

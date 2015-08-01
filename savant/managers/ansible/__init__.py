@@ -41,6 +41,16 @@ class Role(object):
         self.directory_handlers[dir_name] = DirModule(self.path)
 
     def translate_set(self, set_obj):
+        # first iteration: assume set info equates to action
+        # example: for the set with info 'add|packages|apache2', assume the
+        # following: by installing package apache2, this set's diffs are
+        # generated
         PrimitiveClass = primitives.get_class(set_obj.info.system)
-        primitive = PrimitiveClass(set_obj, self.facts)
-        primitive.update_directives(self.directory_handlers)
+        primitive = PrimitiveClass(self.facts)
+        primitive.update_directives(set_obj.info.name, self.directory_handlers)
+
+    def write(self):
+        '''Write the role files using my handlers.'''
+        for handler_name, handler in self.directory_handlers.items():
+            self.logger.debug('writing handler: %s',handler_name)
+            #handler.write()
