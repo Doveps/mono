@@ -24,3 +24,6 @@ class FactsJSON(object):
     def record(self, flavor):
         self.logger.debug('recording %d %s', len(self.data), self.name)
         flavor.record_metadata(self.name, self.data)
+
+    def __repr__(self):
+        return '%s: %d'%(self.__class__.__name__, len(self.data))

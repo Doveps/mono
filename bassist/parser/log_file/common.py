@@ -44,3 +44,6 @@ class Log(object):
         assert self.data is not None
 
         return flavor.diff_system(self.name, self.data)
+
+    def __repr__(self):
+        return '%s: %d'%(self.__class__.__name__, len(self.data))
