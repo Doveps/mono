@@ -22,6 +22,7 @@ class Directory(object):
             if exception.errno != errno.EEXIST:
                 raise
 
+        self.added = 0
         self.get_file_data()
 
     def get_file_data(self):
@@ -45,6 +46,10 @@ class Directory(object):
                 fh.write(
                         yaml.safe_dump( file_data, indent=2,
                             default_flow_style=False ))
+
+    def get_report(self):
+        '''This should be overridden by subclass, so return empty.'''
+        return ''
 
     def __repr__(self):
         return str(self.file_data)

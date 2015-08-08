@@ -7,7 +7,8 @@ import yaml
 from . import primitives
 from .role_dirs import defaults_dir, files_dir, handlers_dir, meta_dir, tasks_dir, templates_dir, vars_dir
 
-class Role(object):
+# TODO: split this into role and playbook
+class Ansible(object):
     '''This object encapsulates all knowledge about how to build Ansible
     playbooks. Roles are structured according to Ansible best practices. See:
 
@@ -15,6 +16,9 @@ class Role(object):
 
     top_dirs = ['tasks', 'handlers', 'templates', 'files', 'vars', 'defaults',
             'meta']
+
+    # human-friendly description of the code this conf mgmt system generates:
+    descriptor = 'Ansible role'
 
     def __init__(self, path, facts):
         self.path = path
@@ -24,7 +28,7 @@ class Role(object):
         assert os.path.isdir(self.path)
 
         self.directory_handlers = {}
-        for dir_name in Role.top_dirs:
+        for dir_name in Ansible.top_dirs:
             self.set_dir_handlers(dir_name)
 
     def set_dir_handlers(self, dir_name):
@@ -41,10 +45,9 @@ class Role(object):
         self.directory_handlers[dir_name] = DirModule(self.path)
 
     def translate_set(self, set_obj):
-        # first iteration: assume set info equates to action
-        # example: for the set with info 'add|packages|apache2', assume the
-        # following: by installing package apache2, this set's diffs are
-        # generated
+        '''First iteration: assume set info equates to action. For example: for
+        the set with info 'add|packages|apache2', assume the following: by
+        installing package apache2, this set's diffs are generated.'''
         PrimitiveClass = primitives.get_class(set_obj.info.system)
         primitive = PrimitiveClass(self.facts)
         primitive.update_directives(set_obj.info.name, self.directory_handlers)
@@ -54,3 +57,12 @@ class Role(object):
         for handler_name, handler in self.directory_handlers.items():
             self.logger.debug('writing handler: %s',handler_name)
             handler.write()
+
+    def get_report(self):
+        '''Show what we did.'''
+        out_str = ''
+        for handler_name, handler in self.directory_handlers.items():
+            output = handler.get_report()
+            if output == '': continue
+            out_str += '- %s'%output
+        return out_str
