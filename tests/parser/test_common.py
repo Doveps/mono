@@ -1,10 +1,10 @@
 import pytest
 
-import lib.parser.log_file.common
+import bassist.parser.log_file.common
 
 @pytest.fixture(scope='function')
 def common_log():
-    return lib.parser.log_file.common.Log('path/to/nonexistent')
+    return bassist.parser.log_file.common.Log('path/to/nonexistent')
 
 def test_path(common_log):
     assert common_log.path == 'path/to/nonexistent'

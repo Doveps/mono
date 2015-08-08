@@ -1,6 +1,6 @@
 import pytest
 
-import lib.parser.log_file.files_stdout
+import bassist.parser.log_file.files_stdout
 
 good_files_text = '''     2    4 drwxr-xr-x  23 root     root         4096 Oct 19 17:23 /
 123010    4 -rw-r--r--   1 root     root          110 Dec  6 20:22 /a/file
@@ -14,7 +14,7 @@ good_files_text = '''     2    4 drwxr-xr-x  23 root     root         4096 Oct 1
 def good_files(tmpdir):
     p = tmpdir.join('files.log')
     p.write(good_files_text)
-    o = lib.parser.log_file.files_stdout.FilesStdoutLog(str(p))
+    o = bassist.parser.log_file.files_stdout.FilesStdoutLog(str(p))
     o.parse()
     return o
 
@@ -79,8 +79,8 @@ broken_files_text = '''     2    4 -rwxr-xr-x  23 root     root         4096 Oct
 def test_broken_path(tmpdir):
     p = tmpdir.join('files.log')
     p.write(broken_files_text)
-    o = lib.parser.log_file.files_stdout.FilesStdoutLog(str(p))
-    with pytest.raises(lib.parser.log_file.files_stdout.ParsedFileException):
+    o = bassist.parser.log_file.files_stdout.FilesStdoutLog(str(p))
+    with pytest.raises(bassist.parser.log_file.files_stdout.ParsedFileException):
         o.parse()
 
 duplicates_text = '''     2    4 drwxr-xr-x  23 root     root         4096 Oct 19 17:23 /
@@ -90,6 +90,6 @@ duplicates_text = '''     2    4 drwxr-xr-x  23 root     root         4096 Oct 1
 def test_duplicates(tmpdir):
     p = tmpdir.join('files.log')
     p.write(duplicates_text)
-    o = lib.parser.log_file.files_stdout.FilesStdoutLog(str(p))
+    o = bassist.parser.log_file.files_stdout.FilesStdoutLog(str(p))
     with pytest.raises(AssertionError):
         o.parse()

@@ -1,6 +1,6 @@
 import pytest
 
-import lib.parser.log_file.debs_stdout
+import bassist.parser.log_file.debs_stdout
 
 good_debs_text = '''Desired=Unknown/Install/Remove/Purge/Hold
 | Status=Not/Inst/Conf-files/Unpacked/halF-conf/Half-inst/trig-aWait/Trig-pend
@@ -14,7 +14,7 @@ ii  accountsservice                     0.6.35-0ubuntu7               amd64     
 def good_debs(tmpdir):
     p = tmpdir.join('debs.log')
     p.write(good_debs_text)
-    o = lib.parser.log_file.debs_stdout.DebsStdoutLog(str(p))
+    o = bassist.parser.log_file.debs_stdout.DebsStdoutLog(str(p))
     o.parse()
     return o
 
@@ -47,7 +47,7 @@ short_debs_text = '''Desired=Unknown/Install/Remove/Purge/Hold
 def test_short_debs(tmpdir):
     p = tmpdir.join('debs.log')
     p.write(short_debs_text)
-    o = lib.parser.log_file.debs_stdout.DebsStdoutLog(str(p))
+    o = bassist.parser.log_file.debs_stdout.DebsStdoutLog(str(p))
     o.parse()
     assert len(o.data) is 0
 
@@ -62,7 +62,7 @@ ii  accountsservice
 def test_missing_deb_part(tmpdir):
     p = tmpdir.join('debs.log')
     p.write(bad_debs_text)
-    o = lib.parser.log_file.debs_stdout.DebsStdoutLog(str(p))
+    o = bassist.parser.log_file.debs_stdout.DebsStdoutLog(str(p))
     with pytest.raises(AssertionError):
         o.parse()
 
@@ -78,6 +78,6 @@ ii  accountsservice                     0.6.35-0ubuntu7               amd64     
 def test_duplicates(tmpdir):
     p = tmpdir.join('debs.log')
     p.write(duplicates_text)
-    o = lib.parser.log_file.debs_stdout.DebsStdoutLog(str(p))
+    o = bassist.parser.log_file.debs_stdout.DebsStdoutLog(str(p))
     with pytest.raises(AssertionError):
         o.parse()

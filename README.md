@@ -17,13 +17,11 @@ Specify as above, and also pass -r or --record:
 `./bassist.py -s ~/scanner/local/33.33.33.50 -f ~/flavors -n ubuntu-14.04 -r`
 
 # Setup
-Bassist requires Python 2. Other modules include:
-- zodb
+Bassist requires Python 2.
 
 ## OS X
 ```sh
-mkvirtualenv bassist
-pip install zodb
+pip install -r requirements.txt
 ```
 
 ## Python 2
@@ -41,12 +39,15 @@ If you want to read the flavor database in a friendly format:
 `bassist` tests using pytest and optionally pytest-cov. For the former:
 
 ```
+pip install pytest
 py.test
 ```
 
+## Coverage
 To also test code coverage:
 
 ```
+pip install pytest-cov
 py.test --cov-report html --cov-config .coveragerc --cov .
 ```
 

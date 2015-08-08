@@ -1,6 +1,6 @@
 import pytest
 
-import lib.parser.log_file.initctl_list_stdout
+import bassist.parser.log_file.initctl_list_stdout
 
 good_initctl_list_text = '''mountnfs-bootclean.sh start/running
 rsyslog start/running, process 456
@@ -12,7 +12,7 @@ network-interface-security (networking) start/running
 def good_initctl_list(tmpdir):
     p = tmpdir.join('initctl_list.log')
     p.write(good_initctl_list_text)
-    o = lib.parser.log_file.initctl_list_stdout.InitctlListStdoutLog(str(p))
+    o = bassist.parser.log_file.initctl_list_stdout.InitctlListStdoutLog(str(p))
     o.parse()
     return o
 
@@ -56,14 +56,14 @@ def test_stopped_service_state(rsyslog_stopped_service):
 def test_bad_extra_field_count(tmpdir):
     p = tmpdir.join('initctl_list.log')
     p.write('mountnfs-bootclean.sh start/running junk')
-    o = lib.parser.log_file.initctl_list_stdout.InitctlListStdoutLog(str(p))
+    o = bassist.parser.log_file.initctl_list_stdout.InitctlListStdoutLog(str(p))
     with pytest.raises(AssertionError):
         o.parse()
 
 def test_bad_missing_pid(tmpdir):
     p = tmpdir.join('initctl_list.log')
     p.write('rsyslog start/running, process')
-    o = lib.parser.log_file.initctl_list_stdout.InitctlListStdoutLog(str(p))
+    o = bassist.parser.log_file.initctl_list_stdout.InitctlListStdoutLog(str(p))
     with pytest.raises(AssertionError):
         o.parse()
 
@@ -74,6 +74,6 @@ rsyslog start/running, process 457
 def test_duplicates(tmpdir):
     p = tmpdir.join('initctl_list.log')
     p.write(duplicates_text)
-    o = lib.parser.log_file.initctl_list_stdout.InitctlListStdoutLog(str(p))
+    o = bassist.parser.log_file.initctl_list_stdout.InitctlListStdoutLog(str(p))
     with pytest.raises(AssertionError):
         o.parse()
