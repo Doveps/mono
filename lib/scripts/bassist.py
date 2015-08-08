@@ -40,6 +40,11 @@ class Bassist(object):
                 '-l', '--parse-logs',
                 nargs='*', metavar='LOG',
                 help='Only parse the given logs, for example "debs_stdout"')
+        arg_parser.add_argument(
+                '-t', '--config-tool',
+                default='ansible',
+                help='The configuration management tool to use. The default \
+                        is Ansible. Currently no other tools are supported.')
 
         required_args = arg_parser.add_argument_group('required arguments')
         required_args.add_argument(
@@ -140,7 +145,8 @@ class Bassist(object):
 
         manager = savant.managers.Manager(
                 db, savant_comparison.get_set_ids(), self.requested_flavor)
-        manager.write(self.args.config_directory)
+        manager.write(self.args.config_directory, self.args.config_tool)
+        print(manager.get_report())
 
     def finish(self):
         self.flavors.close()
