@@ -1,5 +1,16 @@
 import logging
 import time
+import re
+
+class Observer(object):
+    '''Artifacts that result from running the observer (e.g. Ansible) will be
+    recorded here. Some of the parsers need to ignore them since they are not
+    useful for determining diffs between systems.'''
+
+    # .ansible/tmp/ansible-tmp-1417897614.23-199064374829668
+    timestamp_re = re.compile('\.ansible/tmp/ansible-tmp-\d{10,}.\d{2}-\d+(/|$)')
+    # /bin/sh -c ps -eo pid,ppid,uid,gid,cgroup,f,ni,pri,tty,args -www
+    pslist_re = re.compile('^(/bin/sh -c )?ps -eo ([a-z]{1,6},){9,}[a-z]{1,6} -www$')
 
 class ParserLogException(Exception):
     pass

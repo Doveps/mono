@@ -20,11 +20,16 @@ class ParsedFileLine(object):
 
     logger = logging.getLogger(__name__ + '.ParsedFileLine')
 
+    ignored_top = [ 'dev', 'lost+found', 'proc', 'run', 'sys', 'tmp' ]
+    # ignore more?
+    #  /var/log/*
+
     def __init__(self, line):
         # have to use shlex to split, otherwise escape codes in path
         # mess us up
         self.parts = shlex.split(line)
         self.path = path.Path()
+        self.ignore = False
 
         if len(self.parts) < 11:
             self.set_without_size()
@@ -32,6 +37,10 @@ class ParsedFileLine(object):
         else:
             self.set_fields_before_path()
             self.set_path(self.parts[10:])
+
+        path_parts = self.path.path.split('/')
+        if path_parts[1] in ParsedFileLine.ignored_top:
+            self.ignore = True
 
     def set_without_size(self):
         '''Set fields from a line without a size. This is common for 'c'
@@ -59,6 +68,10 @@ class ParsedFileLine(object):
 
         count = len(path_parts)
         if count == 1:
+            # ignore "observer effect" commands, that is: Ansible
+            if common.Observer.timestamp_re.search(path_parts[0]):
+                self.ignore = True
+
             # /opt/VBoxGuestAdditions-4.3.8
             self.path.path = path_parts[0]
             return
@@ -73,10 +86,6 @@ class ParsedFileLine(object):
         raise ParsedFileException('Unable to understand path: %s',self.parts)
 
 class FilesStdoutLog(common.Log):
-    ignored_top = [ 'dev', 'lost+found', 'proc', 'run', 'sys', 'tmp' ]
-    # ignore more?
-    #  /home/*/.ansible
-    #  /var/log/*
 
     def parse(self):
         self.logger.debug('parsing')
@@ -95,8 +104,7 @@ class FilesStdoutLog(common.Log):
     def parse_line(self, line):
         parsed = ParsedFileLine(line)
 
-        path_parts = parsed.path.path.split('/')
-        if path_parts[1] in self.ignored_top: return
+        if parsed.ignore: return
 
         assert parsed.path.path not in self.data
         self.data[parsed.path.path] = parsed.path
