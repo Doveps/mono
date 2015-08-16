@@ -1,6 +1,7 @@
 import logging
 import shlex
 import time
+import re
 
 from . import common
 from ...systems import path
@@ -20,9 +21,18 @@ class ParsedFileLine(object):
 
     logger = logging.getLogger(__name__ + '.ParsedFileLine')
 
-    ignored_top = [ 'dev', 'lost+found', 'proc', 'run', 'sys', 'tmp' ]
-    # ignore more?
-    #  /var/log/*
+    # TODO: we will need to get smarter about this
+    # a static list of diffs will come back and bite us as soon as we find a
+    # system where somebody is retaining important state in /tmp, for example
+    ignored = [
+            re.compile('^/dev/'),
+            re.compile('^/lost+found/'),
+            re.compile('^/proc/'),
+            re.compile('^/run/'),
+            re.compile('^/sys/'),
+            re.compile('^/tmp/'),
+            re.compile('^/var/log/'),
+            ]
 
     def __init__(self, line):
         # have to use shlex to split, otherwise escape codes in path
@@ -38,9 +48,14 @@ class ParsedFileLine(object):
             self.set_fields_before_path()
             self.set_path(self.parts[10:])
 
-        path_parts = self.path.path.split('/')
-        if path_parts[1] in ParsedFileLine.ignored_top:
+        if self.is_ignored():
             self.ignore = True
+
+    def is_ignored(self):
+        for pattern in ParsedFileLine.ignored:
+            if pattern.match(self.path.path):
+                return True
+        return False
 
     def set_without_size(self):
         '''Set fields from a line without a size. This is common for 'c'
