@@ -8,7 +8,10 @@ class Observer(object):
     useful for determining diffs between systems.'''
 
     # .ansible/tmp/ansible-tmp-1417897614.23-199064374829668
-    timestamp_re = re.compile('\.ansible/tmp/ansible-tmp-\d{10,}.\d{2}-\d+(/|$)')
+    # It is as of yet unknown how many digits can follow the dot. We have seen
+    # 1, 2, and 3. We'll be conservative and expect between one and five
+    # digits.
+    timestamp_re = re.compile('\.ansible/tmp/ansible-tmp-\d{10,}.\d{1,5}-\d+(/|$)')
     # /bin/sh -c ps -eo pid,ppid,uid,gid,cgroup,f,ni,pri,tty,args -www
     pslist_re = re.compile('^(/bin/sh -c )?ps -eo ([a-z]{1,6},){9,}[a-z]{1,6} -www$')
 
