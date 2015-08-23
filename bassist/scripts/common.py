@@ -33,10 +33,6 @@ class Script(object):
 
     def set_arg_parser(self):
         self.arg_parser = argparse.ArgumentParser( description=self.description )
-        self.arg_parser.add_argument(
-                '-l', '--parse-logs',
-                nargs='*', metavar='LOG',
-                help='Only parse the given logs, for example "debs_stdout"')
 
         self.required_args = self.arg_parser.add_argument_group('required arguments')
         self.required_args.add_argument(
@@ -63,17 +59,9 @@ class Script(object):
         self.parsed_host = parser_host.Host(self.args.scanner_directory)
         self.logger.debug('finished importing parsers')
 
-        self.parse_all = not self.args.parse_logs
-
         for parser in self.parsed_host.parsers:
 
             self.logger.debug('parser log: %s', parser.log)
-            if not self.parse_all:
-                if not parser.log in args.parse_logs:
-                    logger.debug(
-                            'skipping parse of %s since you requested only %s',
-                            parser.path, args.parse_logs)
-                    continue
 
             self.logger.debug('parsing: %s', parser.path)
             parser.parse()

@@ -28,10 +28,7 @@ class Run(common.Script):
     def run_parsers(self):
         self.parse()
         for parser in self.parsed_host.parsers:
-            if self.parse_all:
-                parser.record(self.compared_flavor)
-            else:
-                parser.diff(self.requested_flavor)
+            parser.diff(self.requested_flavor)
 
     def set_args(self):
         self.set_arg_parser()
@@ -55,9 +52,6 @@ class Run(common.Script):
         self.args = self.arg_parser.parse_args()
 
     def compare(self):
-        if not self.parse_all:
-            return
-
         flavor_comparison = diff_flavor.Flavor(self.requested_flavor, self.compared_flavor)
 
         if not flavor_comparison.different():
