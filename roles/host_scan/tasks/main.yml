@@ -5,16 +5,10 @@
   shell: ps -eo pid,ppid,uid,gid,cgroup,f,ni,pri,tty,args -www
   register: find_processes
 
-- name: Find existing find_files scan results
-  find_scan:
-    hostvars: "{{ hostvars['localhost'] }}"
-    of_host: '{{ inventory_hostname }}'
-    key: find_files
-
+# TODO: this will be much improved by a custom scanner
 - name: Find all files
-  shell: find / -ls || exit 0
+  shell: find / -not -fstype vboxsf -not -fstype tmpfs -not -fstype devtmpfs -not -fstype proc -not -fstype sysfs -not -fstype fusectl -not -fstype debugfs -not -fstype securityfs -not -fstype pstore -not -fstype rpc_pipefs -not -fstype cgroup -ls || exit 0
   register: find_files
-  when: not scanned_find_files
 
 - name: Find installed .deb packages
   shell: dpkg -l || exit 0

@@ -35,6 +35,14 @@ These results are suitable for input into another, separate analysis
 script.
 
 # TODO
+* Replace Ansible with our own scanner; features
+    * don't assume python
+    * don't assume root
+    * multi-hop using identified connections to scanned host
+    * does somethine else exist that we can reuse?
+    * make smart decisions about what to scan (linux vs ios, etc)
+    * don't assume ssh
+    * save results someplace better (not "local" dir)
 * Keep the scanned-host fingerprint somewhere other than
   `~/.ssh/known_hosts`.
 * Retrieve the scanned-host fingerprint from somewhere other than
