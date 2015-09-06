@@ -9,6 +9,9 @@ class InitctlListStdoutLog(common.Log):
     # network-interface-security (networking) start/running
     line_re = re.compile('^(\S+) (?:(\S+) )?(\S+)/(\S+)(?:, process (\d+))?$')
 
+    #    pre-stop process 928
+    ignored_re = re.compile('^\t\S+ \S+ \d+$')
+
     def parse(self):
         self.logger.debug('parsing')
 
@@ -20,7 +23,11 @@ class InitctlListStdoutLog(common.Log):
                 self.parse_line(line)
 
     def parse_line(self, line):
-        matches = self.line_re.match(line)
+        if InitctlListStdoutLog.ignored_re.match(line):
+            self.logger.debug('ignoring: %s',line)
+            return
+
+        matches = InitctlListStdoutLog.line_re.match(line)
         assert matches
         (name, instance, wanted, state, pid) = matches.groups()
         if instance is not None:
