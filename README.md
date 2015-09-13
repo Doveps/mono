@@ -6,15 +6,6 @@ information into Ansible playbooks.
 # Usage
 Install Ansible.
 
-## SSH trust
-You will need to add a permitted SSH key to your keychain. For Vagrant
-VMs, this is the Vagrant insecure key. To add this key to your keychain,
-run:
-
-```bash
-ssh-add vagrant_insecure_key
-```
-
 ## Running the scan
 ```bash
 ansible-playbook scan.yml
@@ -47,4 +38,3 @@ script.
   `~/.ssh/known_hosts`.
 * Retrieve the scanned-host fingerprint from somewhere other than
   `ssh-keyscan`.
-* Find a better way to manage SSH key access to scanned hosts.
