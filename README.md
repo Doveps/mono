@@ -4,17 +4,20 @@ baseline for a host, plus modifications made to that host.
 
 # Usage
 * Find out where your scanner put its output (for example:
-`~/scanner/local/33.33.33.50`).
-* Find out where your flavor database is (for example: `~/flavors`).
-
-## Comparison
-Pass the scanner directory, flavor directory, and flavor name to the
-bassist:
-`./bassist.py -s ~/scanner/local/33.33.33.50 -f ~/flavors -n ubuntu-14.04`
+`~/doveps/scanner/local/33.33.33.50`).
+* Find out where your flavor database is (for example: `~/doveps/flavors`).
+* Find out where your inferences database is (for example: `~/doveps/inferences`).
 
 ## Flavor creation and modification
-Specify as above, and also pass -r or --record:
-`./bassist.py -s ~/scanner/local/33.33.33.50 -f ~/flavors -n ubuntu-14.04 -r`
+Specify the flavor directory, flavor name, and scanner results
+directory:
+`create_flavor -f ~/doveps/flavors/ -n ubuntu-14.04.1 -s ~/doveps/scanner/local/33.33.33.50`
+
+## Comparison
+Specify flavor directory, flavor name, and scanner results directory as
+above. Also specify the inferences directory, and the automation code
+output directory:
+`create_automation -s ~/doveps/scanner/local/33.33.33.51/ -f ~/doveps/flavors/ -i ~/doveps/inferences/ -n ubuntu-14.04.1 -c ~/doveps`
 
 # Setup
 Bassist requires Python 2.
