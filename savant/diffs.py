@@ -17,3 +17,6 @@ class Diff(object):
         self.action = parts[0]
         self.system = parts[1]
         self.name = parts[2]
+
+    def __repr__(self):
+        return self.action+'|'+self.system+'|'+self.name
