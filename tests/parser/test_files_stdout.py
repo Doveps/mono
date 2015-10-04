@@ -78,12 +78,32 @@ def test_link_target(good_files):
 def test_char_no_size(good_files):
     assert good_files.data['/a/charfile'].size is None
 
-broken_files_text = '''     2    4  -rwxr-xr-x  23 root     root         4096 Oct 19 17:23 /why so spacey?
+extra_space_text = '''     2    4  -rwxr-xr-x  23 root     root         4096 Oct 19 17:23 /why so spacey?
 '''
 
-def test_broken_path(tmpdir):
+def test_broken_parse(tmpdir):
     p = tmpdir.join('files.log')
-    p.write(broken_files_text)
+    p.write(extra_space_text)
+    o = bassist.parser.log_file.files_stdout.FilesStdoutLog(str(p))
+    with pytest.raises(bassist.parser.log_file.files_stdout.ParsedFileException):
+        o.parse()
+
+missing_size_text = '''123010    4 -rw-r--r--   1 root     root              Dec  6 20:22 /a/file
+'''
+
+def test_missing_size(tmpdir):
+    p = tmpdir.join('files.log')
+    p.write(missing_size_text)
+    o = bassist.parser.log_file.files_stdout.FilesStdoutLog(str(p))
+    with pytest.raises(bassist.parser.log_file.files_stdout.ParsedFileException):
+        o.parse()
+
+char_size_text = ''' 6320    0 crw-rw-rw-   1 root     root          123 Nov  1 15:58 /a/charfile
+'''
+
+def test_extra_size(tmpdir):
+    p = tmpdir.join('files.log')
+    p.write(char_size_text)
     o = bassist.parser.log_file.files_stdout.FilesStdoutLog(str(p))
     with pytest.raises(bassist.parser.log_file.files_stdout.ParsedFileException):
         o.parse()

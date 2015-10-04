@@ -91,6 +91,14 @@ class ParsedFileLine(object):
         p.month = m.group('month')
         p.day = m.group('day')
         p.more_time = m.group('timex')
+
+        if p.size is None:
+            if p.perms[0] != 'c':
+                raise ParsedFileException('Missing file size, but not a char device: %s',line)
+        else:
+            if p.perms[0] == 'c':
+                raise ParsedFileException('Has file size, but is a char device: %s',line)
+
         self.path = p
 
         self.ignore = False
