@@ -1,5 +1,4 @@
 import logging
-import shlex
 import time
 import re
 
@@ -34,19 +33,69 @@ class ParsedFileLine(object):
             re.compile('^/var/log/'),
             ]
 
+    meta_re = re.compile(r'''
+            ^\s* # beginning of line, followed by 0 or more spaces
+                (?P<inode>\d{1,20})
+            \s+
+                (?P<blocks>\d{1,10})
+            \s
+                (?P<perms>[-cld][-r][-w][-xs][-r][-w][-xs][-r][-w][-xtT])
+            \s+
+                (?P<lcount>\d{1,10})
+            \s
+                (?P<owner>[-a-zA-Z0-9_]{1,20})
+            \s+
+                (?P<group>[-a-zA-Z0-9_]{1,20})
+            \s+
+
+                # optional size; char devices don't have this
+            (
+                (?P<size>\d{1,20})
+            \s
+            )?
+
+                (?P<month>(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec))
+            \s+
+
+                # 1 or 2 digits
+                (?P<day>\d{1,2})
+            \s+
+
+                # valid: 2013 OR 15:58
+                (?P<timex>(\d{4}|\d\d:\d\d))
+            \s
+
+                # alternate group: symlink has " -> ", other files don't
+            (
+                (?P<source>.+)\ ->\ (?P<target>.+)
+                |
+                (?P<path>.+)
+            )
+            ''', re.VERBOSE)
+
     def __init__(self, line):
-        # have to use shlex to split, otherwise escape codes in path
-        # mess us up
-        self.parts = shlex.split(line)
+        m = ParsedFileLine.meta_re.match(line)
+        try:
+            assert m
+        except AssertionError, e:
+            raise ParsedFileException('Unable to understand line: %s',line)
+
         self.path = path.Path()
+
+        self.path.inode = m.group('inode')
+        self.path.blocks = m.group('blocks')
+        self.path.perms = m.group('perms')
+        self.path.link_count = m.group('lcount')
+        self.path.owner = m.group('owner')
+        self.path.group = m.group('group')
+        self.path.size = m.group('size')
+        self.path.month = m.group('month')
+        self.path.day = m.group('day')
+        self.path.more_time = m.group('timex')
+
         self.ignore = False
 
-        if len(self.parts) < 11:
-            self.set_without_size()
-
-        else:
-            self.set_fields_before_path()
-            self.set_path(self.parts[10:])
+        self.set_path(m)
 
         if self.is_ignored():
             self.ignore = True
@@ -57,48 +106,22 @@ class ParsedFileLine(object):
                 return True
         return False
 
-    def set_without_size(self):
-        '''Set fields from a line without a size. This is common for 'c'
-        files, etc. Note the missing size right before "Oct":
-           6320    0 crw-rw-rw-   1 root     root              Oct 19 17:23 /sys/kernel/security/apparmor/.null
-        '''
-        (self.path.inode, self.path.blocks, self.path.perms,
-                self.path.link_count, self.path.owner, self.path.group,
-                self.path.month, self.path.day, self.path.more_time,
-                self.path.path) = self.parts[0:10]
-
-    def set_fields_before_path(self):
-        '''Set fields up to a path:
-         523431    4 drwxr-xr-x   9 root     root         4096 Apr 19  2014
-        '''
-        (self.path.inode, self.path.blocks, self.path.perms,
-                self.path.link_count, self.path.owner, self.path.group,
-                self.path.size, self.path.month, self.path.day,
-                self.path.more_time) = self.parts[0:10]
-
-    def set_path(self, path_parts):
+    def set_path(self, m):
         '''Set a path and possibly also a symlink target. There's room
         for interpretation here because paths can have spaces, and
         symlinks contain spaces due to their 'foo -> bar' format.'''
 
-        count = len(path_parts)
-        if count == 1:
+        if m.group('path') is not None:
             # ignore "observer effect" commands, that is: Ansible
-            if common.Observer.timestamp_re.search(path_parts[0]):
+            if common.Observer.timestamp_re.search(m.group('path')):
                 self.ignore = True
 
             # /opt/VBoxGuestAdditions-4.3.8
-            self.path.path = path_parts[0]
+            self.path.path = m.group('path').rstrip('\n')
             return
 
-        if count == 3:
-            if path_parts[1] == '->':
-                # /bin/dnsdomainname -> hostname
-                self.path.path = path_parts[0]
-                self.path.link_target = path_parts[2]
-                return
-
-        raise ParsedFileException('Unable to understand path: %s',self.parts)
+        self.path.path = m.group('source')
+        self.path.link_target = m.group('target').rstrip('\n')
 
 class FilesStdoutLog(common.Log):
 

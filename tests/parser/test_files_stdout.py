@@ -8,6 +8,11 @@ good_files_text = '''     2    4 drwxr-xr-x  23 root     root         4096 Oct 1
  13744    0 lrwxrwxrwx   1 root     root            0 Dec  6 20:22 /a/symlink -> ../target
   7607    0 lrwxrwxrwx   1 root     root           15 Nov  1 15:58 /dev/ignored -> /proc/somewhere
 131001    4 -rw-r--r--   1 root     root          834 Dec 18  2013 /a\ path\ with\ spaces
+225014    4 drwx-wx--T   2 root     crontab      4096 Feb  9  2013 /var/spool/cron/crontabs
+785394    4 -rw-r--r--   1 501      staff        1407 Jan  9  2012 /opt/httpd/man/man1/logresolve.1
+224957    4 drwxrwsr-x   2 libuuid  libuuid      4096 Apr 16  2014 /var/lib/libuuid
+225018    4 drwxrwxrwt   2 root     root         4096 Oct 21  2014 /var/tmp
+104664   44 -rwsr-xr-x   1 root     root        44168 May  7  2014 /bin/ping
 '''
 
 @pytest.fixture(scope='function')
@@ -19,7 +24,7 @@ def good_files(tmpdir):
     return o
 
 def test_length(good_files):
-    assert len(good_files.data) is 5
+    assert len(good_files.data) is 10
 
 def test_in_path(good_files):
     assert '/' in good_files.data
@@ -73,7 +78,7 @@ def test_link_target(good_files):
 def test_char_no_size(good_files):
     assert good_files.data['/a/charfile'].size is None
 
-broken_files_text = '''     2    4 -rwxr-xr-x  23 root     root         4096 Oct 19 17:23 /why so spacey?
+broken_files_text = '''     2    4  -rwxr-xr-x  23 root     root         4096 Oct 19 17:23 /why so spacey?
 '''
 
 def test_broken_path(tmpdir):
