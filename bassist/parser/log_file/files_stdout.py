@@ -80,18 +80,18 @@ class ParsedFileLine(object):
         except AssertionError, e:
             raise ParsedFileException('Unable to understand line: %s',line)
 
-        self.path = path.Path()
-
-        self.path.inode = m.group('inode')
-        self.path.blocks = m.group('blocks')
-        self.path.perms = m.group('perms')
-        self.path.link_count = m.group('lcount')
-        self.path.owner = m.group('owner')
-        self.path.group = m.group('group')
-        self.path.size = m.group('size')
-        self.path.month = m.group('month')
-        self.path.day = m.group('day')
-        self.path.more_time = m.group('timex')
+        p = path.Path()
+        p.inode = m.group('inode')
+        p.blocks = m.group('blocks')
+        p.perms = m.group('perms')
+        p.link_count = m.group('lcount')
+        p.owner = m.group('owner')
+        p.group = m.group('group')
+        p.size = m.group('size')
+        p.month = m.group('month')
+        p.day = m.group('day')
+        p.more_time = m.group('timex')
+        self.path = p
 
         self.ignore = False
 
