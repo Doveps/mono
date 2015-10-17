@@ -78,9 +78,9 @@ def test_link_target(good_files):
 def test_char_no_size(good_files):
     assert good_files.data['/a/charfile'].size is None
 
+
 extra_space_text = '''     2    4  -rwxr-xr-x  23 root     root         4096 Oct 19 17:23 /why so spacey?
 '''
-
 def test_broken_parse(tmpdir):
     p = tmpdir.join('files.log')
     p.write(extra_space_text)
@@ -88,9 +88,9 @@ def test_broken_parse(tmpdir):
     with pytest.raises(bassist.parser.log_file.files_stdout.ParsedFileException):
         o.parse()
 
+
 missing_size_text = '''123010    4 -rw-r--r--   1 root     root              Dec  6 20:22 /a/file
 '''
-
 def test_missing_size(tmpdir):
     p = tmpdir.join('files.log')
     p.write(missing_size_text)
@@ -98,9 +98,9 @@ def test_missing_size(tmpdir):
     with pytest.raises(bassist.parser.log_file.files_stdout.ParsedFileException):
         o.parse()
 
+
 char_size_text = ''' 6320    0 crw-rw-rw-   1 root     root          123 Nov  1 15:58 /a/charfile
 '''
-
 def test_extra_size(tmpdir):
     p = tmpdir.join('files.log')
     p.write(char_size_text)
@@ -108,9 +108,9 @@ def test_extra_size(tmpdir):
     with pytest.raises(bassist.parser.log_file.files_stdout.ParsedFileException):
         o.parse()
 
+
 missing_symlink_perms_text = ''' 13744    0 -rwxrwxrwx   1 root     root            0 Dec  6 20:22 /a/symlink -> ../target
 '''
-
 def test_missing_symlink_perms(tmpdir):
     p = tmpdir.join('files.log')
     p.write(missing_symlink_perms_text)
@@ -118,9 +118,9 @@ def test_missing_symlink_perms(tmpdir):
     with pytest.raises(bassist.parser.log_file.files_stdout.ParsedFileException):
         o.parse()
 
+
 missing_symlink_path_text = ''' 13744    0 lrwxrwxrwx   1 root     root            0 Dec  6 20:22 /a/symlink
 '''
-
 def test_missing_symlink_path(tmpdir):
     p = tmpdir.join('files.log')
     p.write(missing_symlink_path_text)
@@ -128,10 +128,10 @@ def test_missing_symlink_path(tmpdir):
     with pytest.raises(bassist.parser.log_file.files_stdout.ParsedFileException):
         o.parse()
 
+
 duplicates_text = '''     2    4 drwxr-xr-x  23 root     root         4096 Oct 19 17:23 /
      3    4 drwxr-xr-x  23 root     root         4096 Oct 19 17:23 /
 '''
-
 def test_duplicates(tmpdir):
     p = tmpdir.join('files.log')
     p.write(duplicates_text)
