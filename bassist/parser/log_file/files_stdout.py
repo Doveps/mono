@@ -120,6 +120,10 @@ class ParsedFileLine(object):
         symlinks contain spaces due to their 'foo -> bar' format.'''
 
         if m.group('path') is not None:
+
+            if self.path.perms[0] == 'l':
+                raise ParsedFileException('Invalid symlink format: %s',m.group('path'))
+
             # ignore "observer effect" commands, that is: Ansible
             if common.Observer.timestamp_re.search(m.group('path')):
                 self.ignore = True
@@ -127,6 +131,9 @@ class ParsedFileLine(object):
             # /opt/VBoxGuestAdditions-4.3.8
             self.path.path = m.group('path').rstrip('\n')
             return
+
+        if self.path.perms[0] != 'l':
+            raise ParsedFileException('Symlink formatted path, but file is not a symlink: %s',m.group('path'))
 
         self.path.path = m.group('source')
         self.path.link_target = m.group('target').rstrip('\n')

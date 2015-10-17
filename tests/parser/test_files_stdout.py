@@ -108,6 +108,26 @@ def test_extra_size(tmpdir):
     with pytest.raises(bassist.parser.log_file.files_stdout.ParsedFileException):
         o.parse()
 
+missing_symlink_perms_text = ''' 13744    0 -rwxrwxrwx   1 root     root            0 Dec  6 20:22 /a/symlink -> ../target
+'''
+
+def test_missing_symlink_perms(tmpdir):
+    p = tmpdir.join('files.log')
+    p.write(missing_symlink_perms_text)
+    o = bassist.parser.log_file.files_stdout.FilesStdoutLog(str(p))
+    with pytest.raises(bassist.parser.log_file.files_stdout.ParsedFileException):
+        o.parse()
+
+missing_symlink_path_text = ''' 13744    0 lrwxrwxrwx   1 root     root            0 Dec  6 20:22 /a/symlink
+'''
+
+def test_missing_symlink_path(tmpdir):
+    p = tmpdir.join('files.log')
+    p.write(missing_symlink_path_text)
+    o = bassist.parser.log_file.files_stdout.FilesStdoutLog(str(p))
+    with pytest.raises(bassist.parser.log_file.files_stdout.ParsedFileException):
+        o.parse()
+
 duplicates_text = '''     2    4 drwxr-xr-x  23 root     root         4096 Oct 19 17:23 /
      3    4 drwxr-xr-x  23 root     root         4096 Oct 19 17:23 /
 '''
