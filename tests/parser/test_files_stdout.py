@@ -7,6 +7,8 @@ good_files_text = '''     2    4 drwxr-xr-x  23 root     root         4096 Oct 1
   6320    0 crw-rw-rw-   1 root     root              Nov  1 15:58 /a/charfile
  13744    0 lrwxrwxrwx   1 root     root            0 Dec  6 20:22 /a/symlink -> ../target
   7607    0 lrwxrwxrwx   1 root     root           15 Nov  1 15:58 /dev/ignored -> /proc/somewhere
+ 13745    0 lrwxrwxrwx   1 root     root            0 Dec  6 20:22 /weird/\ ->\ symlink -> ../target
+ 13746    0 lrwxrwxrwx   1 root     root            0 Dec  6 20:22 /another/symlink -> ../weird\ ->\ target
 131001    4 -rw-r--r--   1 root     root          834 Dec 18  2013 /a\ path\ with\ spaces
 225014    4 drwx-wx--T   2 root     crontab      4096 Feb  9  2013 /var/spool/cron/crontabs
 785394    4 -rw-r--r--   1 501      staff        1407 Jan  9  2012 /opt/httpd/man/man1/logresolve.1
@@ -24,7 +26,7 @@ def good_files(tmpdir):
     return o
 
 def test_length(good_files):
-    assert len(good_files.data) is 10
+    assert len(good_files.data) is 12
 
 def test_in_path(good_files):
     assert '/' in good_files.data
@@ -75,6 +77,12 @@ def test_slash_no_target(slash):
 def test_link_target(good_files):
     assert good_files.data['/a/symlink'].link_target == '../target'
 
+def test_weird_symlink(good_files):
+    assert good_files.data['/weird/\ ->\ symlink'].link_target == '../target'
+
+def test_weird_symlink_target(good_files):
+    assert good_files.data['/another/symlink'].link_target == '../weird\ ->\ target'
+
 def test_char_no_size(good_files):
     assert good_files.data['/a/charfile'].size is None
 
@@ -104,6 +112,16 @@ char_size_text = ''' 6320    0 crw-rw-rw-   1 root     root          123 Nov  1 
 def test_extra_size(tmpdir):
     p = tmpdir.join('files.log')
     p.write(char_size_text)
+    o = bassist.parser.log_file.files_stdout.FilesStdoutLog(str(p))
+    with pytest.raises(bassist.parser.log_file.files_stdout.ParsedFileException):
+        o.parse()
+
+
+double_symlink_dereference_text = ''' 13744    0 lrwxrwxrwx   1 root     root            0 Dec  6 20:22 /a/symlink -> ../target -> ../duplicate
+'''
+def test_double_symlink_dereference(tmpdir):
+    p = tmpdir.join('files.log')
+    p.write(double_symlink_dereference_text)
     o = bassist.parser.log_file.files_stdout.FilesStdoutLog(str(p))
     with pytest.raises(bassist.parser.log_file.files_stdout.ParsedFileException):
         o.parse()

@@ -33,6 +33,8 @@ class ParsedFileLine(object):
             re.compile('^/var/log/'),
             ]
 
+    symlink_deref_re = re.compile(r' -> ')
+
     meta_re = re.compile(r'''
             ^\s* # beginning of line, followed by 0 or more spaces
                 (?P<inode>\d{1,20})
@@ -137,6 +139,9 @@ class ParsedFileLine(object):
 
         self.path.path = m.group('source')
         self.path.link_target = m.group('target').rstrip('\n')
+
+        if ParsedFileLine.symlink_deref_re.search(self.path.path):
+            raise ParsedFileException('Unexpected symlink dereference found in path: %s',self.path.path)
 
 class FilesStdoutLog(common.Log):
 
