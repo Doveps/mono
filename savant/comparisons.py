@@ -1,4 +1,5 @@
 import logging
+logger = logging.getLogger(__name__)
 import hashlib
 
 from . import sets
@@ -11,7 +12,6 @@ class Comparison(object):
     def __init__(self, db, id=None, diffs=None):
         '''Always provide either an id or diffs.'''
 
-        self.logger = logging.getLogger(__name__ + '.' + type(self).__name__)
         self.db = db
 
         if id is None:
@@ -31,7 +31,7 @@ class Comparison(object):
         # generate a hash of the content so it can't get added twice
         encoded = hashlib.sha1(str(diffs))
         self.id = encoded.hexdigest()
-        self.logger.debug('diff hash: %s',self.id)
+        logger.debug('diff hash: %s',self.id)
 
         # because IDs are hashed from contents, no need to set again
         if self.id in self.db.dbroot['comparisons']:
@@ -82,7 +82,6 @@ class Comparison(object):
             diff_obj = diffs.Diff(diff_id)
             set_ids = sets.find_with_diff(diff_obj, self.db)
 
-            self.logger.debug('diff %s is assigned to sets %s',diff_id, set_ids)
             self.diffs_in_set[diff_id] = set_ids
 
             for set_id in set_ids:
@@ -90,7 +89,7 @@ class Comparison(object):
                     continue
                 self.set_ids.append(set_id)
 
-        self.logger.debug('my diffs are in sets: %s',self.set_ids)
+        logger.debug('my diffs are in sets: %s',self.set_ids)
 
     def diff_is_assigned(self, diff_id):
         '''Is a given diff assigned to a set?'''

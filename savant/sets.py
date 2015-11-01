@@ -1,22 +1,34 @@
 import logging
+logger = logging.getLogger(__name__)
 import urllib
 
 from . import diffs
+
+cache = {}
 
 class Set(object):
     '''A Set is one or more diffs from a Comparison object. Diffs result from a
     change made to an OS. For example: installing a package.'''
 
     def __init__(self, db, id):
-        self.logger = logging.getLogger(__name__ + '.' + type(self).__name__)
         self.db = db
         self.id = id
 
-        self.logger.debug('id is %s',self.id)
+        logger.debug('id is %s',self.id)
         self.info = diffs.Diff(self.id)
+
+        # system/action lookup dict, for quicker lookups than a list
+        self.diff_lookups = {}
 
         if self.id in self.db.dbroot['sets']:
             self.diffs = self.db.dbroot['sets'][self.id]
+
+            for system_name, actions in self.diffs.items():
+                self.diff_lookups[system_name] = {}
+                for action_name, names in actions.items():
+                    self.diff_lookups[system_name][action_name] = {}
+                    for name in names:
+                        self.diff_lookups[system_name][action_name][name] = True
         else:
             self.diffs = {}
 
@@ -31,10 +43,13 @@ class Set(object):
     def add_diff(self, diff):
         if diff.system not in self.diffs:
             self.diffs[diff.system] = {}
+            self.diff_lookups[diff.system] = {}
         if diff.action not in self.diffs[diff.system]:
             self.diffs[diff.system][diff.action] = []
+            self.diff_lookups[diff.system][diff.action] = []
         if diff.name not in self.diffs[diff.system][diff.action]:
             self.diffs[diff.system][diff.action].append(diff.name)
+            self.diff_lookups[diff.system][diff.action][diff.name] = True
 
     def update_diffs(self, diff_ids):
         for diff_id in diff_ids:
@@ -59,11 +74,11 @@ class Set(object):
         self.commit()
 
     def has_diff(self, diff):
-        if diff.system not in self.diffs:
+        if diff.system not in self.diff_lookups:
             return False
-        if diff.action not in self.diffs[diff.system]:
+        if diff.action not in self.diff_lookups[diff.system]:
             return False
-        if diff.name not in self.diffs[diff.system][diff.action]:
+        if diff.name not in self.diff_lookups[diff.system][diff.action]:
             return False
         return True
 
@@ -95,7 +110,9 @@ def find_with_diff(diff, db):
     '''Find one or more set ids of sets that contain a diff.'''
     results = []
     for set_id in all(db):
-        set_obj = Set(db, set_id)
+        if not set_id in cache:
+            cache[set_id] = Set(db, set_id)
+        set_obj = cache[set_id]
         if set_obj.has_diff(diff):
             results.append(set_id)
 
