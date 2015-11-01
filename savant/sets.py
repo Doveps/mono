@@ -46,7 +46,7 @@ class Set(object):
             self.diff_lookups[diff.system] = {}
         if diff.action not in self.diffs[diff.system]:
             self.diffs[diff.system][diff.action] = []
-            self.diff_lookups[diff.system][diff.action] = []
+            self.diff_lookups[diff.system][diff.action] = {}
         if diff.name not in self.diffs[diff.system][diff.action]:
             self.diffs[diff.system][diff.action].append(diff.name)
             self.diff_lookups[diff.system][diff.action][diff.name] = True
