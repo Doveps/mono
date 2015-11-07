@@ -82,3 +82,4 @@ class Run(common.Script):
                 db, savant_comparison.get_set_ids(), self.requested_flavor)
         manager.write(self.args.config_directory, self.args.config_tool)
         print(manager.get_report())
+        db.close()
