@@ -22,12 +22,6 @@ class DB(object):
                 self.dbroot[root] = BTrees.OOBTree.BTree()
                 transaction.commit()
 
-    # careful!
-    # http://eli.thegreenplace.net/2009/06/12/safely-using-destructors-in-python
-    # http://pydev.blogspot.com.br/2015/01/creating-safe-cyclic-reference.html
-    def __del__(self):
-        self.close()
-
     def close(self):
         self.connection.close()
         self.db.close()
