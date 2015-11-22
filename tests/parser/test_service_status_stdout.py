@@ -1,3 +1,5 @@
+# Copyright (c) 2015 Kurt Yoder
+# See the file LICENSE for copying permission.
 import pytest
 
 import bassist.parser.log_file.service_status_stdout

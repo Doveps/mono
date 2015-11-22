@@ -1,3 +1,5 @@
+# Copyright (c) 2015 Kurt Yoder
+# See the file LICENSE for copying permission.
 # This object is intended to run from script bassist.py
 import logging
 import logging.config
