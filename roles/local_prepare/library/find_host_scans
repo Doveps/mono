@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# Copyright (c) 2015 Kurt Yoder
+# See the file LICENSE for copying permission.
 # look in local directory for complete host scans
 # examples:
 # this directory contains a find_files scan for 33.33.33.50

@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# Copyright (c) 2015 Kurt Yoder
+# See the file LICENSE for copying permission.
 # look for 'host_scan' that matches host name and key
 def main():
     module = AnsibleModule(argument_spec=dict(
