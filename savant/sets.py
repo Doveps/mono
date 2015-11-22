@@ -1,3 +1,5 @@
+# Copyright (c) 2015 Kurt Yoder
+# See the file LICENSE for copying permission.
 import logging
 logger = logging.getLogger(__name__)
 import urllib
