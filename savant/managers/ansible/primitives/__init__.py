@@ -1,13 +1,16 @@
 import logging
 
-from . import packages
-from . import processes
+from . import paths, packages, processes
 
 module_logger = logging.getLogger(__name__)
 
 def get_class(system_name):
     '''Example: accept 'packages', convert to packages.Packages.'''
-    module_name = globals()[system_name]
+    try:
+        module_name = globals()[system_name]
+    except KeyError, e:
+        raise KeyError, 'Missing ansible primitive for system: %s'%system_name
+
     class_name = system_name.capitalize()
     ClassPointer = getattr(module_name, class_name)
     return ClassPointer
