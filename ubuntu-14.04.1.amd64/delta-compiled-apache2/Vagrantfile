@@ -1,5 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
+# Copyright (c) 2015 Kurt Yoder
+# See the file LICENSE for copying permission.
 
 $ip = '33.33.33.54'
 

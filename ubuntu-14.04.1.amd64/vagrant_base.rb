@@ -1,3 +1,6 @@
+# Copyright (c) 2015 Kurt Yoder
+# See the file LICENSE for copying permission.
+
 # this file contains the base vagrant config
 # include it from a Vagrantfile using "load 'vagrant_base.rb'"
 
