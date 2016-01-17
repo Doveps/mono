@@ -1,32 +1,27 @@
-# Copyright (c) 2015 Kurt Yoder
+# Copyright (c) 2015, 2016 Kurt Yoder
 # See the file LICENSE for copying permission.
-import os
 import logging
 
-import ZODB
-import BTrees.OOBTree
-import transaction
+from py2neo import Graph
+
+_db = None
 
 class DB(object):
-    '''Encapsulate access to the inferences database.'''
+    '''Access to the savant Graph DB will always happen via this
+    object.'''
 
-    def __init__(self, path):
-        self.path = os.path.join(path, 'inferences.zodb')
-        self.logger = logging.getLogger(__name__ + '.' + type(self).__name__)
-        self.db = ZODB.DB(self.path)
-        self.connection = self.db.open()
-        self.dbroot = self.connection.root()
+    def __init__(self):
+        self.graph = Graph()
 
-        self.logger.debug('dbroot has: %s',self.dbroot)
+    def stuff(self):
+        logging.warn('got here')
 
-        for root in ['comparisons', 'sets', 'playbooks']:
-            if not root in self.dbroot:
-                self.dbroot[root] = BTrees.OOBTree.BTree()
-                transaction.commit()
+# http://stackoverflow.com/questions/6829675
+def get_db():
+    '''Ensure the db connection is global and re-usable.'''
+    global _db
+    if not _db:
+        _db = DB()
+    return _db
 
-    def close(self):
-        self.connection.close()
-        self.db.close()
-
-    def commit(self):
-        transaction.commit()
+__all__ = [ 'get_db' ]
