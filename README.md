@@ -5,38 +5,24 @@ baseline for a host, plus modifications made to that host.
 # Usage
 * Find out where your scanner put its output (for example:
 `~/doveps/scanner/local/33.33.33.50`).
-* Find out where your flavor database is (for example: `~/doveps/flavors`).
-* Find out where your inferences database is (for example: `~/doveps/inferences`).
+* Start up your Neo4j db (currently we assume it's running on localhost,
+  port 7474).
 
-## Flavor creation and modification
-Specify the flavor directory, flavor name, and scanner results
+## Create Automation
+Specify scanner results directory and the automation code output
 directory:
-`create_flavor -f ~/doveps/flavors/ -n ubuntu-14.04.1 -s ~/doveps/scanner/local/33.33.33.50`
+`create_automation -s ~/doveps/scanner/local/33.33.33.51/ -c ~/doveps`
 
-## Comparison
-Specify flavor directory, flavor name, and scanner results directory as
-above. Also specify the inferences directory, and the automation code
-output directory:
-`create_automation -s ~/doveps/scanner/local/33.33.33.51/ -f ~/doveps/flavors/ -i ~/doveps/inferences/ -n ubuntu-14.04.1 -c ~/doveps`
+If this says you should run savant-web, run savant-web and then re-run
+`create_automation` as above.
 
 # Setup
-Bassist requires Python 2.
+Bassist currently runs in Python 2.
 
 ## OS X
 ```sh
 pip install -r requirements.txt
 ```
-
-## Python 2
-Why are we using Python 2 and not Python 3? The answer: there is no
-working zodb viewer under Python 3 at the moment. Thus, using Python 3
-would make development using zodb much more difficult.
-
-# Flavors
-If you want to read the flavor database in a friendly format:
-* `pip install eye`
-* `eye /path/to/flavor.zodb`
-* point your web browser at http://localhost:8080
 
 # Testing
 `bassist` tests using pytest and optionally pytest-cov. For the former:
@@ -55,3 +41,6 @@ py.test --cov-report html --cov-config .coveragerc --cov .
 ```
 
 The test report is in the `htmlcov` directory; use a web browser to view it.
+
+# TODO
+* Support Python 3

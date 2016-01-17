@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Copyright (c) 2015 Kurt Yoder
 # See the file LICENSE for copying permission.
-# This script creates automation scripts from flavors and sets. For
+# This script creates automation scripts from a knowledge graph. For
 # documentation, see README.md, or run with --help.
 
 # all the logic resides in a module
