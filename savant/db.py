@@ -3,15 +3,39 @@
 import logging
 
 from py2neo import Graph
+import keyring
 
 _db = None
+
+class DBPassword(object):
+    name = 'savant_db'
+    user = 'neo4j'
+
+    def format(self):
+        '''Retrun the user and password in a format suitable for
+        including into a Graph() setup string. If no password has been
+        set, return empty.'''
+        password = self.get()
+        if password == '':
+            return('')
+        return('%s:%s@'%(DBPassword.user,password))
+
+    def get(self):
+        '''Get the password for the DB.'''
+        return(keyring.get_password(DBPassword.name, DBPassword.user))
+
+    def set(self, new_password):
+        '''Set a password for the DB, creating or overwriting any
+        existing value.'''
+        keyring.set_password(DBPassword.name, DBPassword.user, new_password)
 
 class DB(object):
     '''Access to the savant Graph DB will always happen via this
     object.'''
 
     def __init__(self):
-        self.graph = Graph()
+        connection = 'http://'+DBPassword().format()+'localhost:7474/db/data/'
+        self.graph = Graph(connection)
 
     def stuff(self):
         logging.warn('got here')
