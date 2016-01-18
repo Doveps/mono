@@ -7,6 +7,7 @@ baseline for a host, plus modifications made to that host.
 `~/doveps/scanner/local/33.33.33.50`).
 * Start up your Neo4j db (currently we assume it's running on localhost,
   port 7474).
+* Ensure you've set your Neo4j password (see savant `README.md`).
 
 ## Create Automation
 Specify scanner results directory and the automation code output
