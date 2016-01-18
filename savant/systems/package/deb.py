@@ -1,8 +1,5 @@
-from py2neo import Node, Relationship
-
-from ... import db
-
-g = db.get_db()
+# Copyright (c) 2016 Kurt Yoder
+# See the file LICENSE for copying permission.
 
 class DebPackage(object):
     def __init__(self, name):
@@ -16,7 +13,3 @@ class DebPackage(object):
 
     def set_arch(self, arch):
         self.arch = arch
-
-    def add(self):
-        n = Node('DebPackage', name=self.name)
-        g.graph.create(n)
