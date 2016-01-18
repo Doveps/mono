@@ -25,4 +25,5 @@ class DebsStdoutLog(common.Log):
                 d.set_arch(arch)
                 # assert d not in my_host
                 # better: use uniqueconstraint to ensure this
-                d.add()
+
+                self.interview.reply(d)

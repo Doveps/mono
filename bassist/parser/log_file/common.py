@@ -4,6 +4,8 @@ import logging
 import time
 import re
 
+from ... import interview
+
 class Observer(object):
     '''Artifacts that result from running the observer (e.g. Ansible) will be
     recorded here. Some of the parsers need to ignore them since they are not
@@ -25,9 +27,7 @@ class Log(object):
         self.path = path
         self.log = self.__module__.split('.')[-1]
         self.logger = logging.getLogger(self.__module__ + '.' + type(self).__name__)
-
-        self.data = None
-        self.name = None
+        self.interview = interview.get()
 
     def parse(self):
         '''The default parse method does nothing. It should be

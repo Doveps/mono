@@ -4,6 +4,7 @@ import argparse
 
 from . import common
 from ..parser import host as parser_host
+from .. import interview
 
 class RunException(Exception):
     pass
@@ -32,6 +33,7 @@ class Run(common.Script):
             parser.parse()
 
     def run_parsers(self):
+        interview.start()
         self.parse()
         #for parser in self.parsed_host.parsers:
         #    parser.record()
