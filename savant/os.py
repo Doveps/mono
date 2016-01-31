@@ -16,6 +16,6 @@ class OS(object):
 
     def add(self, obj):
         '''Link a new object to this OS.'''
-        o = Node(obj.__class__.__name__, name = obj.name)
+        o = obj.get_node()
         contains = Relationship(self.n, 'contains', o)
         g.graph.create(contains)

@@ -2,7 +2,7 @@
 # See the file LICENSE for copying permission.
 import logging
 
-from py2neo import Graph
+import py2neo
 import keyring
 
 _db = None
@@ -12,7 +12,7 @@ class DBPassword(object):
     user = 'neo4j'
 
     def format(self):
-        '''Retrun the user and password in a format suitable for
+        '''Return the user and password in a format suitable for
         including into a Graph() setup string. If no password has been
         set, return empty.'''
         password = self.get()
@@ -35,10 +35,7 @@ class DB(object):
 
     def __init__(self):
         connection = 'http://'+DBPassword().format()+'localhost:7474/db/data/'
-        self.graph = Graph(connection)
-
-    def stuff(self):
-        logging.warn('got here')
+        self.graph = py2neo.Graph(connection)
 
 # http://stackoverflow.com/questions/6829675
 def get_db():
