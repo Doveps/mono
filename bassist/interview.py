@@ -2,7 +2,7 @@
 # See the file LICENSE for copying permission.
 import time
 
-import savant.os
+import savant.snapshot
 
 _interview = None
 
@@ -11,11 +11,11 @@ class Interview(object):
 
     def __init__(self):
         self.id = time.time()
-        self.os = savant.os.OS(self.id)
+        self.snapshot = savant.snapshot.Snapshot(self.id)
 
     def reply(self, obj):
         '''Add an object to the interview.'''
-        self.os.add(obj)
+        self.snapshot.add(obj)
 
 def start():
     '''Start a new interview with unique id, and make it globally
