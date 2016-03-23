@@ -6,8 +6,7 @@ from . import common
 
 class DebsStdoutLog(common.Log):
 
-    def parse(self):
-        self.logger.warn('parsing')
+    def parse(self, save):
 
         with open(self.path, 'r') as f:
             for line_number, line in enumerate(f.readlines()):
@@ -23,7 +22,5 @@ class DebsStdoutLog(common.Log):
                 d.set_stat(stat)
                 d.set_vers(vers)
                 d.set_arch(arch)
-                # assert d not in my_host
-                # better: use uniqueconstraint to ensure this
 
-                self.interview.reply(d)
+                save(d)
