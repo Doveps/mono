@@ -6,6 +6,6 @@ setup(
     name='savant',
     version='0.0.1dev',
     packages=find_packages(),
-    scripts=['bin/set_savant_password'],
+    scripts=['bin/set_savant_password', 'bin/savant_api_server'],
     long_description=open('README.md').read(),
 )

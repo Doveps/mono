@@ -4,6 +4,7 @@ import time
 import logging
 logger = logging.getLogger(__name__)
 
+from flask_restful import Resource
 from py2neo import Node, Relationship
 
 from . import db
@@ -43,3 +44,46 @@ class Snapshot(object):
             return False
         else:
             return True
+
+class SnapshotsAPI(Resource):
+    def get(self):
+        return find_probable_os()
+
+def find_without_os():
+    '''Get all snapshots that don't have any OS assigned to them.'''
+    rets = []
+    query = """
+        MATCH (SBase:Snapshot)
+        WHERE NOT (:OS)-[:has_snapshot]->(SBase)
+        RETURN SBase
+    """
+    for record in g.graph.cypher.execute(query):
+        rets.append(record.SBase.properties)
+    return rets
+
+def find_probable_os():
+    '''Compare all snapshots, and rank them by likelihood of being a base OS.'''
+    rets = []
+    query = """
+        MATCH (SBase:Snapshot)
+        MATCH (:Snapshot)-[:contains]->(SPrimePackage)
+        WHERE NOT (SBase)-[:contains]->(SPrimePackage)
+        RETURN SBase, count(distinct(SPrimePackage)) AS diff
+        ORDER BY diff DESC
+    """
+    for record in g.graph.cypher.execute(query):
+        rets.append(record.SBase.properties)
+    return rets
+
+def find_difference(timestamp1, timestamp2):
+    '''Find the difference between two snapshots.'''
+    rets = []
+    query = """
+        MATCH (SBase:Snapshot {timestamp:{time1}})
+        MATCH (:Snapshot {timestamp:{time2}})-[PContains:contains]->(SPrimePackage)
+        WHERE NOT (SBase)-[:contains]->(SPrimePackage)
+        RETURN SPrimePackage
+    """
+    for record in g.graph.cypher.execute(query, time1=timestamp1, time2=timestamp2):
+        rets.append(record.SPrimePackage.properties)
+    return rets
