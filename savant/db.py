@@ -16,6 +16,8 @@ class DBPassword(object):
         including into a Graph() setup string. If no password has been
         set, return empty.'''
         password = self.get()
+	print password
+	print DBPassword.user
         if password == '':
             return('')
         return('%s:%s@'%(DBPassword.user,password))

@@ -32,13 +32,13 @@ class Snapshot(object):
             self.n = Node('Snapshot', timestamp=self.timestamp)
 
     def add(self, obj):
-        '''Link a new object to this snapshot.'''
+     
         o = obj.get_node()
         contains = Relationship(self.n, 'contains', o)
         g.graph.create(contains)
 
     def exists(self):
-        '''Did this snapshot already run?'''
+        
         n = g.graph.find_one('Snapshot', 'secondary_id', self.secondary_id)
         if n is None:
             return False
@@ -50,7 +50,7 @@ class SnapshotsAPI(Resource):
         return find_probable_os()
 
 def find_without_os():
-    '''Get all snapshots that don't have any OS assigned to them.'''
+    
     rets = []
     query = """
         MATCH (SBase:Snapshot)
@@ -62,7 +62,6 @@ def find_without_os():
     return rets
 
 def find_probable_os():
-    '''Compare all snapshots, and rank them by likelihood of being a base OS.'''
     rets = []
     query = """
         MATCH (SBase:Snapshot)
@@ -76,7 +75,7 @@ def find_probable_os():
     return rets
 
 def find_difference(timestamp1, timestamp2):
-    '''Find the difference between two snapshots.'''
+    
     rets = []
     query = """
         MATCH (SBase:Snapshot {timestamp:{time1}})
