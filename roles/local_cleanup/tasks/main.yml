@@ -5,7 +5,7 @@
   template:
     src: facts.json.j2
     dest: 'local/{{ item }}/facts.json'
-  with_items: groups['scanned']
+  with_items: "{{groups['scanned']}}"
 
 - name: Remove SSH fingerprint trust, IFF we added it
   lineinfile:
