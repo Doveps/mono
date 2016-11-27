@@ -31,12 +31,12 @@ class DB(object):
         :param data:
         :return: id Flavor id
         """
-        self.cursor.execute("INSERT INTO flavors (name) VALUES (%s)", (name,))
+        self.cursor.execute("INSERT INTO Flavor (name) VALUES (%s)", (name,))
         obj = self.cursor.fetchone()[0]
         return obj
 
     def record_metadata(self, flavor_id, name, data):
-        self.cursor.execute("INSERT INTO metadata (name, data, flavor_id) VALUES (%s, %s, %s)",
+        self.cursor.execute("INSERT INTO Metadata (name, data, flavor_id) VALUES (%s, %s, %s)",
                             (name, json.dump(data), flavor_id))
         obj = self.cursor.fetchone()[0]
         return obj
