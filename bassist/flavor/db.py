@@ -3,6 +3,8 @@
 import os
 import logging
 
+import psycopg2
+
 import ZODB
 import BTrees.OOBTree
 import transaction
@@ -17,7 +19,7 @@ class FlavorDBException(Exception):
 
 class DB(object):
     def __init__(self, path):
-        self.path = os.path.join(path, 'flavors.zodb')
+        # self.path = os.path.join(path, 'flavors.zodb')
         self.logger = logging.getLogger(__name__ + '.' + type(self).__name__)
         self.db = ZODB.DB(self.path)
         self.connection = self.db.open()

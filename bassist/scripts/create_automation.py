@@ -66,7 +66,7 @@ class Run(common.Script):
         try:
             savant_comparison = savant.comparisons.Comparison(db, diffs=exported)
         except AttributeError:
-            raise RunException, "Failed database operation! Did you create a flavor yet?"
+            raise RunException("Failed database operation! Did you create a flavor yet?")
 
         print('The flavor comparison generated ID %s'%savant_comparison.id)
 
