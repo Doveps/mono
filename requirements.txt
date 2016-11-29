@@ -1,1 +1,5 @@
-pyyaml
+django
+djangorestframework
+markdown
+django-filter
+api
