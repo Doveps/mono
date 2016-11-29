@@ -1,11 +1,13 @@
 # Copyright (c) 2015 Kurt Yoder
 # See the file LICENSE for copying permission.
 import logging
+
 logger = logging.getLogger(__name__)
 import hashlib
 
 from . import sets
 from . import diffs
+
 
 class Comparison(object):
     '''A Comparison is a collection of diffs, for example as generated and
@@ -33,7 +35,7 @@ class Comparison(object):
         # generate a hash of the content so it can't get added twice
         encoded = hashlib.sha1(str(diffs))
         self.id = encoded.hexdigest()
-        logger.debug('diff hash: %s',self.id)
+        logger.debug('diff hash: %s', self.id)
 
         # because IDs are hashed from contents, no need to set again
         if self.id in self.db.dbroot['comparisons']:
@@ -60,7 +62,7 @@ class Comparison(object):
         for system_name, system_dict in self.diffs.items():
             for action_name, action_dict in system_dict.items():
                 for name in action_dict.keys():
-                    ids.append(action_name +'|'+ system_name +'|'+ name)
+                    ids.append(action_name + '|' + system_name + '|' + name)
         return ids
 
     def get_systems(self):
@@ -91,7 +93,7 @@ class Comparison(object):
                     continue
                 self.set_ids.append(set_id)
 
-        logger.debug('my diffs are in sets: %s',self.set_ids)
+        logger.debug('my diffs are in sets: %s', self.set_ids)
 
     def diff_is_assigned(self, diff_id):
         '''Is a given diff assigned to a set?'''
@@ -118,7 +120,7 @@ class Comparison(object):
         return True
 
     def __repr__(self):
-        return '<%s %s>'%(type(self).__name__, self.diffs)
+        return '<%s %s>' % (type(self).__name__, self.diffs)
 
     def __len__(self):
         total = 0
@@ -126,9 +128,11 @@ class Comparison(object):
             total += len(system['subtract']) + len(system['add'])
         return total
 
+
 def all(db):
     '''Return a list of all comparison ids.'''
-    return(db.dbroot['comparisons'].keys())
+    return (db.dbroot['comparisons'].keys())
+
 
 def find_with_diff(diff, db):
     '''Find one or more ids of comparisons that contain a diff.'''
@@ -138,4 +142,4 @@ def find_with_diff(diff, db):
         if comparison_obj.has_diff(diff):
             results.append(comparison_id)
 
-    return(results)
+    return (results)
