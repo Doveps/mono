@@ -1,6 +1,6 @@
 from rest_framework import serializers, viewsets
 
-from savant.api.savant.models import Comparison
+from savant.models import Comparison
 
 
 class ComparisonSerializer(serializers.HyperlinkedModelSerializer):

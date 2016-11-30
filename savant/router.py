@@ -1,10 +1,9 @@
 from django.conf.urls import url, include
-from django.contrib.auth.models import User
-from rest_framework import routers, serializers, viewsets
+from rest_framework import routers
 
-from savant.api.savant.resources.comparison import ComparisonViewSet
-from savant.api.savant.resources.diff import DiffViewSet
-from savant.api.savant.resources.set import SetViewSet
+from savant.resources.comparison import ComparisonViewSet
+from savant.resources.diff import DiffViewSet
+from savant.resources.set import SetViewSet
 
 router = routers.DefaultRouter()
 router.register(r'comparisons', ComparisonViewSet)

@@ -1,6 +1,6 @@
 from rest_framework import serializers, viewsets
 
-from savant.api.savant.models import Diff
+from savant.models import Diff
 
 
 class DiffSerializer(serializers.HyperlinkedModelSerializer):

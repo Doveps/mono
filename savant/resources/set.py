@@ -1,6 +1,6 @@
 from rest_framework import serializers, viewsets
 
-from savant.api.savant.models import Set
+from savant.models import Set
 
 
 class SetSerializer(serializers.HyperlinkedModelSerializer):

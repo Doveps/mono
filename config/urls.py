@@ -16,10 +16,9 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
-from savant.api.savant.router import router
+from savant.router import router
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', include('rest_framework.urls', namespace='rest_framework')),
-    url(r'^api/', include(router.urls)),
+    url(r'^', include(router.urls)),
 ]
