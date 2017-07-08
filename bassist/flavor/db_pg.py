@@ -5,6 +5,7 @@ import json
 import logging
 
 import psycopg2
+from sqlalchemy import create_engine
 
 from . import name
 from . import obj
@@ -19,6 +20,7 @@ class DB(object):
         print "Hello db_pg"
         self.logger = logging.getLogger(__name__ + '.' + type(self).__name__)
 
+        engine = create_engine("postgresql://postgres:postgres@localhost:5432/doveps", echo=False)
         self.connection = psycopg2.connect("dbname=doveps user=postgres password=postgres")
         self.cursor = self.connection.cursor()
 
