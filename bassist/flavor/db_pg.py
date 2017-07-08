@@ -16,6 +16,7 @@ class FlavorDBException(Exception):
 
 class DB(object):
     def __init__(self, path=None):
+        print "Hello db_pg"
         self.logger = logging.getLogger(__name__ + '.' + type(self).__name__)
 
         self.connection = psycopg2.connect("dbname=doveps user=postgres password=postgres")

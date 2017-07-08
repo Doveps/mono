@@ -19,7 +19,7 @@ class FlavorDBException(Exception):
 
 class DB(object):
     def __init__(self, path):
-        # self.path = os.path.join(path, 'flavors.zodb')
+        self.path = os.path.join(path, 'flavors.zodb')
         self.logger = logging.getLogger(__name__ + '.' + type(self).__name__)
         self.db = ZODB.DB(self.path)
         self.connection = self.db.open()
@@ -30,10 +30,14 @@ class DB(object):
         if not 'names' in self.dbroot:
             self.dbroot['names'] = BTrees.OOBTree.BTree()
             transaction.commit()
+            # print "name_committed: ", name_committed
 
         if not 'uuids' in self.dbroot:
             self.dbroot['uuids'] = BTrees.OOBTree.BTree()
             transaction.commit()
+
+        # print "names: ", self.dbroot['names']
+        # print "uuids: ", self.dbroot['uuids']
 
     def close(self):
         self.connection.close()
@@ -44,6 +48,7 @@ class DB(object):
         Then return the flavor ID.'''
         self.logger.debug('flavor_name: %s', flavor_name)
         name_obj = name.get(self.dbroot['names'], flavor_name)
+        # print "name_obj: ", name_obj
         return (name_obj.uuid)
 
     def get_flavor_from_id(self, flavor_id):

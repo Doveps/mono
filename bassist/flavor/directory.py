@@ -3,7 +3,7 @@
 import os
 import logging
 
-from . import db
+from . import db, db_pg
 
 class FlavorDirectoryException(Exception):
     pass
@@ -19,3 +19,4 @@ class Directory(object):
 
         # open all flavor objects
         self.db = db.DB(path)
+        self.db_pg = db_pg.DB(path)
