@@ -20,8 +20,7 @@ class DB(object):
         print "Hello db_pg"
         self.logger = logging.getLogger(__name__ + '.' + type(self).__name__)
 
-        engine = create_engine("postgresql://postgres:postgres@localhost:5432/doveps", echo=False)
-        self.connection = psycopg2.connect("dbname=doveps user=postgres password=postgres")
+        self.connection = psycopg2.connect("dbname='doveps' user='postgres' host='localhost' password='postgres'")
         self.cursor = self.connection.cursor()
 
     def get_or_create_tables(self):
