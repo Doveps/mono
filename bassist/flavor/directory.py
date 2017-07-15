@@ -18,5 +18,5 @@ class Directory(object):
                     'Path %s is either not readable or not a directory'%self.path)
 
         # open all flavor objects
-        self.db = db.DB(path)
+        # self.db = db.DB(path)
         self.db_pg = db_pg.DB(path)

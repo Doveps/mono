@@ -24,20 +24,15 @@ class DB(object):
         self.db = ZODB.DB(self.path)
         self.connection = self.db.open()
         self.dbroot = self.connection.root()
-
         self.logger.debug('dbroot has: %s', self.dbroot)
 
         if not 'names' in self.dbroot:
             self.dbroot['names'] = BTrees.OOBTree.BTree()
             transaction.commit()
-            # print "name_committed: ", name_committed
 
         if not 'uuids' in self.dbroot:
             self.dbroot['uuids'] = BTrees.OOBTree.BTree()
             transaction.commit()
-
-        # print "names: ", self.dbroot['names']
-        # print "uuids: ", self.dbroot['uuids']
 
     def close(self):
         self.connection.close()
