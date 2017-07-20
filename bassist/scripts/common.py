@@ -52,7 +52,7 @@ class Script(object):
 
     def read_flavors(self):
         self.logger.debug('reading flavors')
-        self.flavors = flavor_directory.Directory(self.args.flavor_db).db_pg
+        self.flavors = flavor_directory.Directory(self.args.flavor_db).db
         self.requested_flavor = self.flavors.get_obj_from_name(self.args.flavor_name)
         self.logger.debug('retrieved requested flavor %s', self.requested_flavor)
 
