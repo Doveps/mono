@@ -1,0 +1,14 @@
+CREATE TABLE Import (
+	id	SERIAL8 PRIMARY KEY,
+	Imports TEXT
+);
+
+CREATE TABLE Flavor (
+	id SERIAL8 PRIMARY KEY,
+	Flavors TEXT
+):
+
+CREATE TABLE Ansible (
+	id SERIAL8 PRIMARY KEY,
+	Scanned_Files TEXT
+):
