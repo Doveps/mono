@@ -1,3 +1,5 @@
+-- Storing Functions --
+
 CREATE OR REPLACE FUNCTION store_import (par_import TEXT) RETURNS TEXT AS 
 $$
 	
@@ -79,3 +81,25 @@ $$
 	END;
 $$
 LANGUAGE 'plpgsql'; 
+
+-- Get Functions --
+CREATE OR REPLACE get_imports (OUT INT, OUT TEXT) RETURNS SETOF RECORD AS
+$$
+	SELECT id, Imports
+	FROM Import;
+$$
+LANGUAGE 'sql';
+
+CREATE OR REPLACE get_flavors (OUT INT, OUT TEXT) RETURNS SETOF RECORD AS
+$$
+	SELECT id, Flavors
+	FROM Flavor;
+$$
+LANGUAGE 'sql';
+
+CREATE OR REPLACE get_ansible_files (OUT INT, OUT TEXT) RETURNS SETOF RECORD AS
+$$
+	SELECT id, Scanned_Files
+	FROM Ansible;
+$$
+LANGUAGE 'sql';
