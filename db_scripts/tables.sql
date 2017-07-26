@@ -6,9 +6,9 @@ CREATE TABLE Import (
 CREATE TABLE Flavor (
 	id SERIAL8 PRIMARY KEY,
 	Flavors TEXT
-):
+);
 
 CREATE TABLE Ansible (
 	id SERIAL8 PRIMARY KEY,
 	Scanned_Files TEXT
-):
+);

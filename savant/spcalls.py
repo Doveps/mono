@@ -23,5 +23,3 @@ class SPcalls:
             res = [("Error: " + str(sys.exc_info()[0]) + " " + str(sys.exc_info()[1]),)]
             print "res", res
         return res
-
-
