@@ -1,105 +1,105 @@
 -- Storing Functions --
 
-CREATE OR REPLACE FUNCTION store_import (par_import TEXT) RETURNS TEXT AS 
+CREATE OR REPLACE FUNCTION store_import(par_import TEXT)
+ RETURNS TEXT AS
 $$
-	
-	DECLARE
-		loc_import TEXT;
-		loc_res TEXT;
+DECLARE
+  loc_import TEXT;
+  loc_res  TEXT;
+BEGIN
 
-	BEGIN
+  SELECT INTO loc_import imports
+  FROM Import
+  WHERE imports = par_import;
 
-		SELECT INTO loc_import Imports 
-		FROM Imports
-		WHERE Imports = par_import;
+  IF loc_import ISNULL
+  THEN
+    INSERT INTO Import (imports) VALUES (par_import);
+    loc_res = 'OK';
 
-		IF loc_import ISNULL
-			THEN
-				INSERT INTO Import (Imports) VALUES (par_import);
-				loc_res = "OK";
-		ELSE
-			loc_res = "EXISTS";
+  ELSE
+    loc_res = 'EXISTED';
 
-		END IF;
-
-		RETURN loc_res;
-	END;
+  END IF;
+  RETURN loc_res;
+END;
 $$
-LANGUAGE 'plpgsql'; 
+LANGUAGE 'plpgsql';
 
 
-CREATE OR REPLACE FUNCTION store_flavor (par_flavor TEXT) RETURNS TEXT AS 
+CREATE OR REPLACE FUNCTION store_flavor(par_flavor TEXT)
+  RETURNS TEXT AS
 $$
-	
-	DECLARE
-		loc_flavor TEXT;
-		loc_res TEXT;
+DECLARE
+  loc_flavor TEXT;
+  loc_res  TEXT;
+BEGIN
 
-	BEGIN
+  SELECT INTO loc_flavor flavors
+  FROM Flavor
+  WHERE flavors = par_flavor;
 
-		SELECT INTO loc_flavor Flavors 
-		FROM Flavor
-		WHERE Flavors = par_flavor;
+  IF loc_import ISNULL
+  THEN
+    INSERT INTO Flavor (flavors) VALUES (par_flavor);
+    loc_res = 'OK';
 
-		IF loc_flavor ISNULL
-			THEN
-				INSERT INTO Flavor (Flavors) VALUES (par_flavor);
-				loc_res = "OK";
-		ELSE
-			loc_res = "EXISTS";
+  ELSE
+    loc_res = 'EXISTED';
 
-		END IF;
-
-		RETURN loc_res;
-	END;
+  END IF;
+  RETURN loc_res;
+END;
 $$
-LANGUAGE 'plpgsql'; 
+LANGUAGE 'plpgsql';
 
-CREATE OR REPLACE FUNCTION store_ansible_files (par_scanned TEXT) RETURNS TEXT AS 
+CREATE OR REPLACE FUNCTION store_ansible(par_scanned_files TEXT)
+  RETURNS TEXT AS
 $$
-	
-	DECLARE
-		loc_scanned TEXT;
-		loc_res TEXT;
+DECLARE
+  loc_ansible TEXT;
+  loc_res  TEXT;
+BEGIN
 
-	BEGIN
+  SELECT INTO loc_ansible scanned_files
+  FROM Ansible
+  WHERE scanned_files = par_scanned_files;
 
-		SELECT INTO loc_scanned Scanned_Files 
-		FROM Ansible
-		WHERE Scanned_Files = par_scanned;
+  IF loc_import ISNULL
+  THEN
+    INSERT INTO Ansible (scanned_files) VALUES (par_scanned_files);
+    loc_res = 'OK';
 
-		IF loc_scanned ISNULL
-			THEN
-				INSERT INTO Ansible (Scanned_Files) VALUES (par_scanned);
-				loc_res = "OK";
-		ELSE
-			loc_res = "EXISTS";
+  ELSE
+    loc_res = 'EXISTED';
 
-		END IF;
-
-		RETURN loc_res;
-	END;
+  END IF;
+  RETURN loc_res;
+END;
 $$
-LANGUAGE 'plpgsql'; 
+LANGUAGE 'plpgsql';
 
 -- Get Functions --
-CREATE OR REPLACE get_imports (OUT INT, OUT TEXT) RETURNS SETOF RECORD AS
+CREATE OR REPLACE FUNCTION get_imports (OUT BIGINT, OUT TEXT)
+ RETURNS SETOF RECORD AS
 $$
-	SELECT id, Imports
-	FROM Import;
-$$
-LANGUAGE 'sql';
-
-CREATE OR REPLACE get_flavors (OUT INT, OUT TEXT) RETURNS SETOF RECORD AS
-$$
-	SELECT id, Flavors
-	FROM Flavor;
+	SELECT id, imports
+	FROM import;
 $$
 LANGUAGE 'sql';
 
-CREATE OR REPLACE get_ansible_files (OUT INT, OUT TEXT) RETURNS SETOF RECORD AS
+CREATE OR REPLACE FUNCTION get_flavors (OUT BIGINT, OUT TEXT)
+ RETURNS SETOF RECORD AS
 $$
-	SELECT id, Scanned_Files
-	FROM Ansible;
+	SELECT id, flavors
+	FROM flavor;
+$$
+LANGUAGE 'sql';
+
+CREATE OR REPLACE FUNCTION get_ansible_files (OUT BIGINT, OUT TEXT)
+ RETURNS SETOF RECORD AS
+$$
+	SELECT id, scanned_files
+	FROM ansible;
 $$
 LANGUAGE 'sql';
