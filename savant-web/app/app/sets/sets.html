@@ -1,0 +1,37 @@
+<h2>Sets</h2>
+
+<p>The following sets exist:
+
+<ul class=entries>
+    <li ng-repeat="data in sets">
+        <strong>
+            {{ data.info.action }} {{ data.info.system }}:
+            <a href="" ui-sref="dashboard.set({id:data.set.id})">
+                {{ data.info.name }}
+            </a>
+        </strong>
+
+        has <strong>{{ data.length }}</strong> diff/s
+
+        <ul>
+
+            <li class=entries>From comparison/s:
+                <a ng-repeat="comp in data.comparisons" href=""
+                   ui-sref="dashboard.comparison({id:comp.id})">{{ comp|truncate(6, True) }}</a>
+            </li>
+            <li ng-if="data.other_sets">Shared with set/s:
+                <ul>
+                    <li ng-repeat="set in data.other_sets">{{ set.info.action }} {{ set.info.system }}:
+                        <a href="" ui-sref="dashboard.set({id:set.id})">{{ set.info.name }}</a>
+                </ul>
+            </li>
+
+        </ul>
+    </li>
+    <li ng-show="sets.length === 0">
+        <em>
+            No sets exist at the moment. Choose from the <a href="{{ url_for('home') }}">
+            pending list</a> to add some.
+        </em>
+</ul>
+

@@ -1,0 +1,41 @@
+<h2>
+    <a href="" ui-sref="dashboard.sets">Sets</a> /
+    <small>{{ set.info.action }} {{ set.info.system }}: {{ set.info.name }}</small>
+</h2>
+
+<div ng-if="diffs.choices.length > 0">
+    <h3>Delete Diffs</h3>
+    <p>You may delete diffs from this set.
+    <form method=post class=add-entry>
+        <input type=hidden name=escaped_id value={{ set.quote() }}>
+        <dl>
+            {{ render_multiselect(form.diffs, size=form.diffs.choices|length) }}
+            <dd><input type=submit value="Delete Diffs From Set">
+        </dl>
+    </form>
+</div>
+
+<div ng-if="diffs.choices.length === 0">
+    <h3>This set has no diffs</h3>
+</div>
+
+<div ng-if="comparisons.length > 0">
+    <h3>In Comparisons</h3>
+    <p>This set is currently associated with the following comparisons:</p>
+
+    <ul class=entries>
+        <li ng-repeat="comp in comparisons">
+            <a href="" ui-sref="dashboard.comparison({id:comp.id})">{{ comp.id }}</a>
+            ({{ comp.length }} diff/s)
+    </ul>
+</div>
+
+<h3>Delete Set</h3>
+<p>If this set is invalid, consider deleting it:
+<form method=post>
+    <input type=hidden name=escaped_id value={{ set.quote() }}>
+    <dl>
+        <dd><input type=submit value="Delete Set">
+    </dl>
+</form>
+
