@@ -1,0 +1,12 @@
+#!/usr/bin/env python
+# Copyright (c) 2016 Kurt Yoder
+# See the file LICENSE for copying permission.
+
+import argparse
+
+import savant.api
+
+arg_parser = argparse.ArgumentParser( description='Launch the Savant API server' )
+args = arg_parser.parse_args()
+
+savant.api.app.run(debug=True)
