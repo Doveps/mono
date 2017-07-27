@@ -1,0 +1,21 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+# Copyright (c) 2015 Kurt Yoder
+# See the file LICENSE for copying permission.
+
+$ip = '33.33.33.52'
+
+$hostname = 'ubuntu-14-04-delta-apache2-mysql'
+
+$script = <<SCRIPT
+apt-get -y install apache2
+
+echo setting mysql password so we are not prompted
+# http://stackoverflow.com/questions/7739645/install-mysql-on-ubuntu-without-password-prompt
+echo "mysql-server mysql-server/root_password password doveps" | debconf-set-selections
+echo "mysql-server mysql-server/root_password_again password doveps" | debconf-set-selections
+
+apt-get -y install mysql-server
+SCRIPT
+
+load '../vagrant_base.rb'

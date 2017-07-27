@@ -1,0 +1,25 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+# Copyright (c) 2015 Kurt Yoder
+# See the file LICENSE for copying permission.
+
+$ip = '33.33.33.54'
+
+$hostname = 'ubuntu-14-04-delta-compiled-apache2'
+
+mirror = 'http://apache.arvixe.com'
+httpd = 'httpd-2.4.16'
+
+$script = <<SCRIPT
+apt-get -y install build-essential libapr1-dev libaprutil1-dev libpcre3-dev
+wget -nc #{mirror}/httpd/#{httpd}.tar.bz2
+tar -jxvf #{httpd}.tar.bz2
+cd #{httpd}
+./configure --prefix=/opt/httpd
+make
+make install
+/opt/httpd/bin/apachectl start
+SCRIPT
+
+load '../vagrant_base.rb'
+

@@ -1,0 +1,14 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+# Copyright (c) 2015 Kurt Yoder
+# See the file LICENSE for copying permission.
+
+$ip = '33.33.33.51'
+
+$hostname = 'ubuntu-14-04-delta-apache2'
+
+$script = <<SCRIPT
+apt-get -y install apache2
+SCRIPT
+
+load '../vagrant_base.rb'
