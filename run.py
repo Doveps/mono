@@ -1,8 +1,8 @@
 from flask import Flask
 import os
 
-from savant import savant
+from app import app
 
 
 if __name__ == '__main__':
-    savant.run()
+    app.run()

@@ -3,11 +3,12 @@ from utils import *
 
 spcalls = SPcalls()
 
-@app.route('/doveps/api/imports', methods=['GET'])
+@app.route('/doveps/api/imports/', methods=['GET'])
 def show_imports():
 
 	imports = spcalls.spcall('get_imports', ())
 	entries = []
+	print "length: ", len(imports)
 
 	if 'Error' in str(imports[0][0]):
 		return jsonify({'status': 'error',
