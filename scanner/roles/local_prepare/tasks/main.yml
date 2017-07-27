@@ -1,0 +1,32 @@
+---
+# Copyright (c) 2015 Kurt Yoder
+# See the file LICENSE for copying permission.
+- debug:
+    msg: 'Connect to host {{ host }} as user {{ user }}'
+
+- name: Retrieve host SSH fingerprint
+  command: 'ssh-keyscan {{ host }}'
+  register: ssh_keyscan_command
+
+- name: Trust SSH fingerprint
+  lineinfile:
+    dest: ~/.ssh/known_hosts
+    line: '{{ item }}'
+  with_items:
+    ssh_keyscan_command.stdout_lines
+  register:
+    trust_ssh_lineinfile
+
+- name: Set up host connection
+  add_host:
+    name: '{{ host }}'
+    groups: scanned
+    ansible_ssh_user: '{{ user }}'
+
+- name: Record where I am in the filesystem
+  command: pwd
+  register: pwd_command
+
+- name: Find existing host scans
+  find_host_scans:
+    directory: local

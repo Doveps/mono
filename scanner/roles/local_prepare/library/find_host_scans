@@ -1,0 +1,53 @@
+#!/usr/bin/env python
+# Copyright (c) 2015 Kurt Yoder
+# See the file LICENSE for copying permission.
+# look in local directory for complete host scans
+# examples:
+# this directory contains a find_files scan for 33.33.33.50
+#  local/33.33.33.50/find_files_stdout.log
+#  local/33.33.33.50/find_files_stderr.log
+# this directory contains a partial, ignored find_files scan for 33.33.33.51
+#  local/33.33.33.51/find_files_stderr.log
+# this directory contains no scans for 33.33.33.52
+#  local/33.33.33.52/
+
+import os
+import re
+
+import json
+
+def main():
+    module = AnsibleModule(argument_spec=dict(
+        directory=dict(required=True)
+    ))
+    directory = module.params['directory']
+    scan_re = re.compile('^(.+)_(std(err|out)).log$')
+
+    scans_by_host = {}
+    for host in os.listdir(directory):
+        host_path = '%s/%s'%(directory, host)
+        if not os.path.isdir(host_path): continue
+
+        results = {}
+        for result_file in os.listdir(host_path):
+            matches = scan_re.search(result_file)
+            if matches is None: continue
+
+            result_name = matches.group(1)
+            result_stream = matches.group(2)
+            if not results.has_key(result_name):
+                results[result_name] = {'stdout': False, 'stderr': False}
+
+            results[result_name][result_stream] = True
+
+        valid_results = {}
+        for result, streams in results.iteritems():
+            if streams['stdout'] and streams['stderr']:
+                valid_results[result] = True
+        scans_by_host[host] = valid_results
+
+    module.exit_json(changed=False,
+            ansible_facts={'host_scans':scans_by_host})
+
+from ansible.module_utils.basic import *
+main()
