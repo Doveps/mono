@@ -1,0 +1,6 @@
+*.log
+log_override.py
+.coverage
+htmlcov
+bassist.egg-info
+.cache
