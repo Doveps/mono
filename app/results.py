@@ -15,5 +15,10 @@ def show_imports():
 						'message': imports[0][0]})
 
 	elif len(imports) != 0:
-		# entris.append({})
-		return jsonify({'haha':'haha'})
+		for i in imports:
+			entries.append({"imports": i[0]})
+
+		return jsonify({"status": "OK", "message": "OK", "entries": entries, "count": len(entries)})
+
+	else:
+		return jsonify({"status": 'FAILED', "message": "Nothing Found"})
