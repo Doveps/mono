@@ -3,6 +3,7 @@
 import logging
 import os
 import importlib
+import traceback
 
 module_logger = logging.getLogger(__name__)
 
@@ -18,8 +19,15 @@ def get_parser(path):
 
     try:
         parser_module = importlib.import_module('..'+parser_name, __name__)
-    except ImportError:
-        module_logger.debug('failed parser import for %s; skipping', path)
+    except ImportError, e:
+        if str(e) == 'No module named %s'%parser_name:
+            module_logger.debug('no module could be imported for %s; skipping', path)
+        else:
+            module_logger.warn(
+                    'error importing module %s to parse %s; skipping',
+                    parser_name, path)
+            module_logger.warn('*** traceback:')
+            module_logger.warn(traceback.format_exc())
         return None
     except KeyError:
         module_logger.debug('malformed log file %s; skipping', path)

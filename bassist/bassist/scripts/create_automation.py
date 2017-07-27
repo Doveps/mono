@@ -1,87 +1,80 @@
 # Copyright (c) 2015 Kurt Yoder
 # See the file LICENSE for copying permission.
-import savant.comparisons
-import savant.db
-import savant.managers
-
-from ..flavor import obj as flavor_obj
-from ..diff import flavor as diff_flavor
+import argparse
 
 from . import common
+from ..parser import host as parser_host
+from .. import interview
 
 class RunException(Exception):
     pass
 
 class Run(common.Script):
-    description = 'Create automation by comparing flavors'
-    flavor_arg_description = 'Compare with the given flavor name'
+    description = 'Create automation by inferring OS contents'
 
     def __init__(self):
         self.set_logging()
         self.set_args()
 
-        self.read_flavors()
-        self.compared_flavor = flavor_obj.Obj()
-
         self.run_parsers()
         self.compare()
         self.finish()
 
-    def run_parsers(self):
-        self.parse()
+    def parse_saver(self, obj):
+        '''Pass this method to the parser. It will be invoked there, allowing
+        our interview object to import the parser data.'''
+        self.interview.reply(obj)
+
+    def parse(self):
+        self.logger.debug('importing parsers')
+        self.parsed_host = parser_host.Host(self.args.scanner_directory)
+        self.logger.debug('finished importing parsers')
+
         for parser in self.parsed_host.parsers:
-            parser.record(self.compared_flavor)
+
+            self.logger.debug('parser log: %s', parser.log)
+
+            self.logger.debug('parsing: %s', parser.path)
+            parser.parse(self.parse_saver)
+
+    def run_parsers(self):
+        self.interview = interview.start(self.args.scan_id)
+
+        if self.interview.should_run():
+            self.logger.info('parsing')
+            self.parse()
+        else:
+            self.logger.info('re-using existing parse results')
+
+        #for parser in self.parsed_host.parsers:
+        #    parser.record()
 
     def set_args(self):
-        self.set_arg_parser()
+        self.arg_parser = argparse.ArgumentParser( description=self.description )
+
+        self.required_args = self.arg_parser.add_argument_group('required arguments')
+        self.required_args.add_argument(
+                '-s', '--scanner-directory',
+                required=True,
+                help='The path to the directory containing scanner results')
+        self.required_args.add_argument(
+                '-c', '--config-directory',
+                required=True,
+                help='The path to write the configuration management \
+                        code')
+
         self.arg_parser.add_argument(
                 '-t', '--config-tool',
                 default='ansible',
                 help='The configuration management tool to use. The \
                         default is Ansible. Currently no other tools \
                         are supported.')
-
-        self.required_args.add_argument(
-                '-i', '--inference-db',
-                required=True,
-                help='The path to the directory containing the inference \
-                        ZODB files')
-        self.required_args.add_argument(
-                '-c', '--config-directory',
-                help='The path to write the configuration management \
-                        code')
+        self.arg_parser.add_argument(
+                '-i', '--scan-id',
+                help='If you want to re-use your parse results, give any arbitrary \
+                        ID here. This can be useful for testing.')
 
         self.args = self.arg_parser.parse_args()
 
     def compare(self):
-        flavor_comparison = diff_flavor.Flavor(self.requested_flavor, self.compared_flavor)
-
-        if not flavor_comparison.different():
-            print('Flavors are identical.')
-            return
-
-        db = savant.db.DB(self.args.inference_db)
-        exported = flavor_comparison.export()
-
-        try:
-            savant_comparison = savant.comparisons.Comparison(db, diffs=exported)
-        except AttributeError:
-            raise RunException, "Failed database operation! Did you create a flavor yet?"
-
-        print('The flavor comparison generated ID %s'%savant_comparison.id)
-
-        if not savant_comparison.all_assigned():
-            print('One or more diffs from this comparison remain to be assigned to sets. Look for the id in Savant Web.')
-            return
-
-        print('All diffs from this comparison have been assigned to sets.')
-
-        if not self.args.config_directory:
-            print('To generate configuration management code, specify a directory (-c/--config-directory).')
-            return
-
-        manager = savant.managers.Manager(
-                db, savant_comparison.get_set_ids(), self.requested_flavor)
-        manager.write(self.args.config_directory, self.args.config_tool)
-        print(manager.get_report())
-        db.close()
+        self.logger.warn('not implemented yet: compare')
