@@ -1,2 +1,4 @@
 savant
 zodb
+psycopg2
+sqlalchemy

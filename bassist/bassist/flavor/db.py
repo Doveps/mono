@@ -3,6 +3,8 @@
 import os
 import logging
 
+import psycopg2
+
 import ZODB
 import BTrees.OOBTree
 import transaction
@@ -10,8 +12,10 @@ import transaction
 from . import name
 from . import obj
 
+
 class FlavorDBException(Exception):
     pass
+
 
 class DB(object):
     def __init__(self, path):
@@ -20,8 +24,7 @@ class DB(object):
         self.db = ZODB.DB(self.path)
         self.connection = self.db.open()
         self.dbroot = self.connection.root()
-
-        self.logger.debug('dbroot has: %s',self.dbroot)
+        self.logger.debug('dbroot has: %s', self.dbroot)
 
         if not 'names' in self.dbroot:
             self.dbroot['names'] = BTrees.OOBTree.BTree()
@@ -38,20 +41,21 @@ class DB(object):
     def get_id_from_name(self, flavor_name):
         '''Check if the flavor name has a flavor ID. If not, create it.
         Then return the flavor ID.'''
-        self.logger.debug('flavor_name: %s',flavor_name)
+        self.logger.debug('flavor_name: %s', flavor_name)
         name_obj = name.get(self.dbroot['names'], flavor_name)
-        return(name_obj.uuid)
+        # print "name_obj: ", name_obj
+        return (name_obj.uuid)
 
     def get_flavor_from_id(self, flavor_id):
         '''Check if the flavor object referenced by the given ID exists. If
         not, create it. Then return the flavor object.'''
-        self.logger.debug('flavor_id: %s',flavor_id)
+        self.logger.debug('flavor_id: %s', flavor_id)
         uuid_obj = obj.get(self.dbroot['uuids'], flavor_id)
-        return(uuid_obj)
+        return (uuid_obj)
 
     def get_obj_from_name(self, flavor_name):
         '''Return a flavor object from a given name.'''
         uuid = self.get_id_from_name(flavor_name)
-        self.logger.debug('uuid: %s',uuid)
+        self.logger.debug('uuid: %s', uuid)
         obj = self.get_flavor_from_id(uuid)
-        return(obj)
+        return (obj)
