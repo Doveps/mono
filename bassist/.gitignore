@@ -4,3 +4,8 @@ log_override.py
 htmlcov
 bassist.egg-info
 .cache
+build
+dist
+env
+__pycache__
+*.pyc

@@ -18,6 +18,7 @@ class Name(persistent.Persistent):
         self.logger.debug('creating flavor %s',self.name)
         self.uuid = str(uuid.uuid4())
         self.logger.debug('uuid is %s',self.uuid)
+        print "uuid: ", uuid
 
     def __getstate__(self):
         """logger can not be pickled, so exclude it."""
