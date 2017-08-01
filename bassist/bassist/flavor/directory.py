@@ -19,4 +19,3 @@ class Directory(object):
 
         # open all flavor objects
         self.db = db.DB(path)
-        self.db_pg = db_pg.DB(path)

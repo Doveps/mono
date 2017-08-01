@@ -2,6 +2,10 @@
 # See the file LICENSE for copying permission.
 from . import common
 from ...systems import package
+from savant.app.results import *
+print "results"
+# from .mono.savant.app.results import store_import
+
 
 class DebsStdoutLog(common.Log):
 
@@ -17,6 +21,9 @@ class DebsStdoutLog(common.Log):
                 if line_number < 5: continue
 
                 parts = line.split()
+                print "parts: ", parts[2]
+                store_imports(" ".join(parts))
+
 
                 assert len(parts) > 4
                 (stat, name, vers, arch) = parts[0:4]
@@ -24,3 +31,4 @@ class DebsStdoutLog(common.Log):
                 assert name not in self.data
                 self.data[name] = package.Package()
                 self.data[name].add_deb(stat, vers, arch)
+

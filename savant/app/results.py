@@ -1,7 +1,12 @@
 from flask import Flask, jsonify, request
 from utils import *
 
+
 spcalls = SPcalls()
+
+@app.route('/doveps/api/store_imports/', methods=['POST'])
+def store_imports(data):
+	spcalls.spcall('store_import', (data,), True)
 
 @app.route('/doveps/api/imports/', methods=['GET'])
 def show_imports():
