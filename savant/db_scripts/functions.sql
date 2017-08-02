@@ -68,11 +68,11 @@ $$
 LANGUAGE 'plpgsql';
 
 -- Get Functions --
-CREATE OR REPLACE FUNCTION get_imports(OUT BIGINT, OUT TEXT)
+CREATE OR REPLACE FUNCTION get_debs(OUT BIGINT, OUT TEXT, OUT TEXT, OUT TEXT, OUT TEXT)
  RETURNS SETOF RECORD AS
 $$
-	SELECT id, imports
-	FROM import;
+	SELECT id, stat, name, version, architecture
+	FROM debs;
 $$
 LANGUAGE 'sql';
 

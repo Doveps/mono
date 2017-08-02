@@ -4,24 +4,28 @@ from utils import *
 
 spcalls = SPcalls()
 
-@app.route('/doveps/api/store_imports/', methods=['POST'])
+@app.route('/doveps/api/store_debs/', methods=['POST'])
 def store_debs(stat, name, vers, arch):
 	spcalls.spcall('store_debs', (stat, name, vers, arch,), True)
 
-@app.route('/doveps/api/imports/', methods=['GET'])
-def show_imports():
+@app.route('/doveps/api/debs/', methods=['GET'])
+def show_debs():
 
-	imports = spcalls.spcall('get_imports', ())
+	debs = spcalls.spcall('get_debs', ())
 	entries = []
-	print "length: ", len(imports)
+	print "length: ", len(debs)
 
-	if 'Error' in str(imports[0][0]):
+	if 'Error' in str(debs[0][0]):
 		return jsonify({'status': 'error',
-						'message': imports[0][0]})
+						'message': debs[0][0]})
 
-	elif len(imports) != 0:
-		for i in imports:
-			entries.append({"imports": i[0]})
+	elif len(debs) != 0:
+		for deb in debs:
+			entries.append({"ID" : deb[0],
+							"Stat" : deb[1],
+							"Name" : deb[2],
+							"Version" : deb[3],
+							"Architecture" : deb[4]})
 
 		return jsonify({"status": "OK", "message": "OK", "entries": entries, "count": len(entries)})
 
