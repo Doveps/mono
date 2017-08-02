@@ -1,10 +1,10 @@
 # Copyright (c) 2015 Kurt Yoder
 # See the file LICENSE for copying permission.
+import sys
+sys.path.insert(0, r'/mono/savant/app')
 from . import common
 from ...systems import package
-from savant.app.results import *
-print "results"
-# from .mono.savant.app.results import store_import
+from results import *
 
 
 class DebsStdoutLog(common.Log):
