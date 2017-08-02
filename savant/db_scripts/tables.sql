@@ -1,6 +1,9 @@
-CREATE TABLE Import(
+CREATE TABLE Debs(
 	id	SERIAL8 PRIMARY KEY,
-	imports TEXT
+	stat TEXT,
+	name TEXT,
+	version TEXT,
+	architecture TEXT
 );
 
 CREATE TABLE Flavor(

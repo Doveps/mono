@@ -21,12 +21,19 @@ class DebsStdoutLog(common.Log):
                 if line_number < 5: continue
 
                 parts = line.split()
-                print "parts: ", parts[2]
-                store_imports(" ".join(parts))
+                print "parts: ", parts
 
 
                 assert len(parts) > 4
                 (stat, name, vers, arch) = parts[0:4]
+
+                print "stat: ", parts[0]
+                print "name: ", parts[1]
+                print "version: ", parts[2]
+                print "architecture: ", parts[3]
+                print "\n"
+
+                store_debs(parts[0], parts[1], parts[2], parts[3])
 
                 assert name not in self.data
                 self.data[name] = package.Package()
