@@ -1,11 +1,8 @@
 # Copyright (c) 2015 Kurt Yoder
 # See the file LICENSE for copying permission.
-import sys
-sys.path.insert(0, r'/mono/savant/app')
 from . import common
 from ...systems import package
 from results import store_debs
-
 
 class DebsStdoutLog(common.Log):
 
@@ -21,7 +18,6 @@ class DebsStdoutLog(common.Log):
                 if line_number < 5: continue
 
                 parts = line.split()
-
 
                 assert len(parts) > 4
                 (stat, name, vers, arch) = parts[0:4]
