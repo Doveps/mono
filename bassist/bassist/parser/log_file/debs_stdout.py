@@ -4,7 +4,7 @@ import sys
 sys.path.insert(0, r'/mono/savant/app')
 from . import common
 from ...systems import package
-from results import *
+from results import store_debs
 
 
 class DebsStdoutLog(common.Log):
@@ -21,7 +21,7 @@ class DebsStdoutLog(common.Log):
                 if line_number < 5: continue
 
                 parts = line.split()
-                print "parts: ", parts
+                print "parts: ", parts[1]
 
 
                 assert len(parts) > 4
