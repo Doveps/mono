@@ -21,7 +21,6 @@ class DebsStdoutLog(common.Log):
                 if line_number < 5: continue
 
                 parts = line.split()
-                print "parts: ", parts[1]
 
 
                 assert len(parts) > 4
