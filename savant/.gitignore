@@ -1,4 +1,4 @@
 app/*.pyc
 *.pyc
-*.egg-info
+savant.egg-info
 flavor

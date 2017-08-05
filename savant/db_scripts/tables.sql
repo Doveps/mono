@@ -1,4 +1,4 @@
-CREATE TABLE Debs(
+CREATE TABLE IF NOT EXISTS Debs(
 	id	SERIAL8 PRIMARY KEY,
 	stat TEXT,
 	name TEXT,
@@ -6,12 +6,12 @@ CREATE TABLE Debs(
 	architecture TEXT
 );
 
-CREATE TABLE Flavor(
+CREATE TABLE IF NOT EXISTS Flavor(
 	id SERIAL8 PRIMARY KEY,
 	flavors TEXT
 );
 
-CREATE TABLE Ansible(
+CREATE TABLE IF NOT EXISTS Ansible(
 	id SERIAL8 PRIMARY KEY,
 	scanned_files TEXT
 );
