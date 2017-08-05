@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request
-from utils import *
+from utils import SPCalls
 
 
 spcalls = SPcalls()
