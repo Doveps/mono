@@ -1,27 +1,15 @@
 -- Storing Functions --
 
-CREATE OR REPLACE FUNCTION store_import(par_import TEXT)
+CREATE OR REPLACE FUNCTION store_debs(in par_stat TEXT, in par_name TEXT, in par_version TEXT, in par_arch TEXT)
  RETURNS TEXT AS
 $$
 DECLARE
-  loc_import TEXT;
   loc_res  TEXT;
 BEGIN
 
-  SELECT INTO loc_import imports
-  FROM Import
-  WHERE imports = par_import;
-
-  IF loc_import ISNULL
-  THEN
-    INSERT INTO Import (imports) VALUES (par_import);
-    loc_res = 'OK';
-
-  ELSE
-    loc_res = 'EXISTED';
-
-  END IF;
-  RETURN loc_res;
+  INSERT INTO Debs(stat, name, version, architecture) VALUES (par_stat, par_name, par_version, par_arch);
+  loc_res = 'OK';
+  return loc_res;
 END;
 $$
 LANGUAGE 'plpgsql';
@@ -80,11 +68,11 @@ $$
 LANGUAGE 'plpgsql';
 
 -- Get Functions --
-CREATE OR REPLACE FUNCTION get_imports(OUT BIGINT, OUT TEXT)
+CREATE OR REPLACE FUNCTION get_debs(OUT BIGINT, OUT TEXT, OUT TEXT, OUT TEXT, OUT TEXT)
  RETURNS SETOF RECORD AS
 $$
-	SELECT id, imports
-	FROM import;
+	SELECT id, stat, name, version, architecture
+	FROM debs;
 $$
 LANGUAGE 'sql';
 
