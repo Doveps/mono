@@ -1,7 +1,11 @@
-1. Go to draw.io
-2. Select "Open Existing Diagram"
-3. Select "Doveps/mono"
-4. Select "master" (This is to switch the branch)
-5. Select "docs_"
-6. Select "docs"
-7. Select "FlavorDocs.xml"
+# Diagrams
+Each `xml` file in this directory is a draw.io diagram. To view or edit:
+
+* Open draw.io in your web browser
+* Select "Open Existing Diagram"
+* Select "Doveps/mono"
+    * If you need to switch to a branch:
+    * Select "master"
+    * Select the branch name
+* Select "docs"
+* Select the XML file you want to edit
