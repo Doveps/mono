@@ -14,80 +14,84 @@ END;
 $$
 LANGUAGE 'plpgsql';
 
-
-CREATE OR REPLACE FUNCTION store_flavor(par_flavor TEXT)
-  RETURNS TEXT AS
+CREATE OR REPLACE FUNCTION store_groups(in par_group_name TEXT, in par_password TEXT, in par_gid TEXT, in par_users TEXT)
+ RETURNS TEXT AS
 $$
 DECLARE
-  loc_flavor TEXT;
   loc_res  TEXT;
 BEGIN
 
-  SELECT INTO loc_flavor flavors
-  FROM Flavor
-  WHERE flavors = par_flavor;
-
-  IF loc_import ISNULL
-  THEN
-    INSERT INTO Flavor (flavors) VALUES (par_flavor);
-    loc_res = 'OK';
-
-  ELSE
-    loc_res = 'EXISTED';
-
-  END IF;
-  RETURN loc_res;
+  INSERT INTO Groups(group_name, password, gid, users) VALUES (par_group_name, par_password, par_gid, par_users);
+  loc_res = 'OK';
+  return loc_res;
 END;
 $$
 LANGUAGE 'plpgsql';
 
-CREATE OR REPLACE FUNCTION store_ansible(par_scanned_files TEXT)
-  RETURNS TEXT AS
+CREATE OR REPLACE FUNCTION store_shadow(in par_username TEXT, in par_password TEXT, in par_lastchanged TEXT,
+ in par_min TEXT, in par_max TEXT, in par_warn TEXT, in par_inactive TEXT, in par_expire TEXT, in par_reserve TEXT)
+ RETURNS TEXT AS
 $$
 DECLARE
-  loc_ansible TEXT;
   loc_res  TEXT;
 BEGIN
 
-  SELECT INTO loc_ansible scanned_files
-  FROM Ansible
-  WHERE scanned_files = par_scanned_files;
-
-  IF loc_import ISNULL
-  THEN
-    INSERT INTO Ansible (scanned_files) VALUES (par_scanned_files);
-    loc_res = 'OK';
-
-  ELSE
-    loc_res = 'EXISTED';
-
-  END IF;
-  RETURN loc_res;
+  INSERT INTO Shadow(username, password, lastchanged, minmium, maximum, warn, inactive, expire, reserve)
+   VALUES (par_username, par_password, par_lastchanged, par_min, par_max, par_warn, par_inactive, par_expire, par_reserve);
+  loc_res = 'OK';
+  return loc_res;
 END;
 $$
 LANGUAGE 'plpgsql';
+
+CREATE OR REPLACE FUNCTION store_users(in par_username TEXT, in par_password TEXT, in par_uid TEXT, in par_gid TEXT,
+ in par_description TEXT, in par_user_path TEXT, in par_shell TEXT)
+ RETURNS TEXT AS
+$$
+DECLARE
+  loc_res  TEXT;
+BEGIN
+
+  INSERT INTO Debs(username, password, uid, gid, description, user_path, shell)
+   VALUES (par_username, par_password, par_uid, par_gid, par_description, par_user_path, par_shell);
+  loc_res = 'OK';
+  return loc_res;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+
 
 -- Get Functions --
+
 CREATE OR REPLACE FUNCTION get_debs(OUT BIGINT, OUT TEXT, OUT TEXT, OUT TEXT, OUT TEXT)
  RETURNS SETOF RECORD AS
 $$
 	SELECT id, stat, name, version, architecture
-	FROM debs;
+	FROM Debs;
 $$
 LANGUAGE 'sql';
 
-CREATE OR REPLACE FUNCTION get_flavors(OUT BIGINT, OUT TEXT)
+CREATE OR REPLACE FUNCTION get_groups(OUT BIGINT, OUT TEXT, OUT TEXT, OUT TEXT, OUT TEXT)
  RETURNS SETOF RECORD AS
 $$
-	SELECT id, flavors
-	FROM flavor;
+  SELECT id, group_name, password, gid, users
+  FROM Groups;
 $$
 LANGUAGE 'sql';
 
-CREATE OR REPLACE FUNCTION get_ansible_files(OUT BIGINT, OUT TEXT)
+CREATE OR REPLACE FUNCTION get_shadow(OUT BIGINT, OUT TEXT, OUT TEXT, OUT TEXT, OUT TEXT, OUT TEXT, OUT TEXT, OUT TEXT, OUT TEXT, OUT TEXT)
  RETURNS SETOF RECORD AS
 $$
-	SELECT id, scanned_files
-	FROM ansible;
+  SELECT id, username, password, lastchanged, minmium, maximum, warn, inactive, expire, reserve
+  FROM Shadow;
+$$
+LANGUAGE 'sql';
+
+CREATE OR REPLACE FUNCTION get_debs(OUT BIGINT, OUT TEXT, OUT TEXT, OUT TEXT, OUT TEXT, OUT TEXT, OUT TEXT, OUT TEXT)
+ RETURNS SETOF RECORD AS
+$$
+  SELECT id, username, password, uid, gid, description, user_path, shell
+  FROM Users;
 $$
 LANGUAGE 'sql';
