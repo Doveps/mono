@@ -2,7 +2,7 @@
 # See the file LICENSE for copying permission.
 from . import common
 from ...systems import package
-from results import store_debs
+from results import create_flavor
 from run_sql import execute_sql
 
 class DebsStdoutLog(common.Log):
@@ -29,5 +29,5 @@ class DebsStdoutLog(common.Log):
                 self.data[name] = package.Package()
                 self.data[name].add_deb(stat, vers, arch)
 
-        execute_sql("debs_2.sql")
+        # execute_sql("debs_2.sql")
 

@@ -83,12 +83,12 @@ LANGUAGE 'sql';
 CREATE OR REPLACE FUNCTION get_shadow(OUT BIGINT, OUT TEXT, OUT TEXT, OUT TEXT, OUT TEXT, OUT TEXT, OUT TEXT, OUT TEXT, OUT TEXT, OUT TEXT)
  RETURNS SETOF RECORD AS
 $$
-  SELECT id, username, password, lastchanged, minmium, maximum, warn, inactive, expire, reserve
+  SELECT id, username, password, lastchanged, minimum, maximum, warn, inactive, expire, reserve
   FROM Shadow;
 $$
 LANGUAGE 'sql';
 
-CREATE OR REPLACE FUNCTION get_debs(OUT BIGINT, OUT TEXT, OUT TEXT, OUT TEXT, OUT TEXT, OUT TEXT, OUT TEXT, OUT TEXT)
+CREATE OR REPLACE FUNCTION get_users(OUT BIGINT, OUT TEXT, OUT TEXT, OUT TEXT, OUT TEXT, OUT TEXT, OUT TEXT, OUT TEXT)
  RETURNS SETOF RECORD AS
 $$
   SELECT id, username, password, uid, gid, description, user_path, shell
