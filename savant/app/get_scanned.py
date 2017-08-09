@@ -2,6 +2,7 @@ import os
 from bassist.parser import host as parser_host
 import logging
 import logging.config
+from app import record
 
 def get_scanner_directory():
 	os.chdir("/home/josiah/Documents/Doveps/mono/scanner/local/33.33.33.50/")
@@ -27,14 +28,7 @@ def parse():
 	print "recording"
 	for parser in parsed_host.parsers:
 		print('Recording %s'%parser)
-    
-# def record():
-#     parse()
-#     print "recording"
-#     for parser in selfparsed_host.parsers:
-#         print('Recording %s'%parser)
-#         print "parser: ", parser
-        # parser.record(self.requested_flavor)
+	
+	record.record_all()
 
-# record()
-parse()
+    

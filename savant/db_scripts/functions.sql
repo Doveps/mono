@@ -52,7 +52,7 @@ DECLARE
   loc_res  TEXT;
 BEGIN
 
-  INSERT INTO Debs(username, password, uid, gid, description, user_path, shell)
+  INSERT INTO Users(username, password, uid, gid, description, user_path, shell)
    VALUES (par_username, par_password, par_uid, par_gid, par_description, par_user_path, par_shell);
   loc_res = 'OK';
   return loc_res;

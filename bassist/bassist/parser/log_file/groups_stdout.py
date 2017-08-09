@@ -3,6 +3,8 @@
 from . import common
 from ...systems import group
 
+groups = []
+
 class GroupsStdoutLog(common.Log):
 
     def parse(self):
@@ -17,6 +19,8 @@ class GroupsStdoutLog(common.Log):
                 assert len(parts) is 4
 
                 (group_name, password, gid, users) = parts[0:4]
+
+                groups.append(parts[0:4])
 
                 assert group_name not in self.data
 
