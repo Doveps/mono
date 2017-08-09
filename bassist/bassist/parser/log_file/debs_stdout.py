@@ -9,7 +9,6 @@ class DebsStdoutLog(common.Log):
     
 
     def parse(self):
-        print "Executing desb_stdout"
         self.logger.debug('parsing')
 
         self.data = package.Packages()

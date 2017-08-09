@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request
 from utils import SPcalls
 import sys, os
 from app import app
-from app import get_scanned
+from app import get_scanned, record, comparison
 
 # from . import common
 
@@ -11,9 +11,23 @@ spcalls = SPcalls()
 
 @app.route('/doveps/api/flavor/create/', methods=['POST'])
 def create_flavors():
-	get_scanned.parse()
+	os.chdir("/home/josiah/Documents/Doveps/mono/scanner/local/33.33.33.50/")
+	scanner_directory = str(os.getcwd())
+
+	get_scanned.parse(scanner_directory)
+	record.record_base_flavors()
 
 	return jsonify({"Status" : "OK", "Message" : "Saved"})
+
+@app.route('/doveps/api/flavor/compare/', methods=['POST'])
+def compare():
+	comparison.run_comparison()
+
+	return jsonify({"Debs" : {"New" : comparison.new_debs()},
+					"Groups" : {"New" : comparison.new_groups()}
+					# "Shadow" : {"New" : comparison.new_shadow()},
+					# "Users" : {"New" : comparison.new_users()}
+					})
 
 
 @app.route('/doveps/api/debs/', methods=['GET'])

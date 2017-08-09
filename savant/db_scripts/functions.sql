@@ -36,7 +36,7 @@ DECLARE
   loc_res  TEXT;
 BEGIN
 
-  INSERT INTO Shadow(username, password, lastchanged, minmium, maximum, warn, inactive, expire, reserve)
+  INSERT INTO Shadow(username, password, lastchanged, minimum, maximum, warn, inactive, expire, reserve)
    VALUES (par_username, par_password, par_lastchanged, par_min, par_max, par_warn, par_inactive, par_expire, par_reserve);
   loc_res = 'OK';
   return loc_res;

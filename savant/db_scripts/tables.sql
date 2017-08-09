@@ -37,3 +37,4 @@ CREATE TABLE IF NOT EXISTS Users(
 	user_path TEXT,
 	shell TEXT
 );
+
