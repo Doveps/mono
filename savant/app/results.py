@@ -25,8 +25,6 @@ def compare():
 
 	return jsonify({"Debs" : {"New" : comparison.new_debs()},
 					"Groups" : {"New" : comparison.new_groups()}
-					# "Shadow" : {"New" : comparison.new_shadow()},
-					# "Users" : {"New" : comparison.new_users()}
 					})
 
 

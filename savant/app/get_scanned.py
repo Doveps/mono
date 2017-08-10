@@ -14,7 +14,3 @@ def parse(scanner_directory):
 		logger.debug('parser log: %s', parser.log)
 		logger.debug('parsing: %s', parser.path)
 		parser.parse()
-
-	print "recording"
-	for parser in parsed_host.parsers:
-		print('Recording %s'%parser)
