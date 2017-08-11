@@ -4,8 +4,6 @@ import sys, os
 from app import app
 from app import get_scanned, record, comparison
 
-# from . import common
-
 spcalls = SPcalls()
 
 

@@ -95,3 +95,4 @@ $$
   FROM Users;
 $$
 LANGUAGE 'sql';
+
