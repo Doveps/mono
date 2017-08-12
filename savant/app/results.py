@@ -1,12 +1,30 @@
 from flask import Flask, jsonify, request
-from utils import SPCalls
-
+from utils import SPcalls
+import sys, os
+from app import app
+from app import get_scanned, record, comparison
 
 spcalls = SPcalls()
 
-@app.route('/doveps/api/store_debs/', methods=['POST'])
-def store_debs(stat, name, vers, arch):
-	spcalls.spcall('store_debs', (stat, name, vers, arch,), True)
+
+@app.route('/doveps/api/flavor/create/', methods=['POST'])
+def create_flavors():
+	os.chdir("/home/josiah/Documents/Doveps/mono/scanner/local/33.33.33.50/")
+	scanner_directory = str(os.getcwd())
+
+	get_scanned.parse(scanner_directory)
+	record.record_base_flavors()
+
+	return jsonify({"Status" : "OK", "Message" : "Saved"})
+
+@app.route('/doveps/api/flavor/compare/', methods=['POST'])
+def compare():
+	comparison.run_comparison()
+
+	return jsonify({"Debs" : {"New" : comparison.new_debs()},
+					"Groups" : {"New" : comparison.new_groups()}
+					})
+
 
 @app.route('/doveps/api/debs/', methods=['GET'])
 def show_debs():

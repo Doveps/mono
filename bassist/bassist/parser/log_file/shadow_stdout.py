@@ -3,6 +3,8 @@
 from . import common
 from ...systems import user
 
+shadow = []
+
 class ShadowStdoutLog(common.Log):
 
     def parse(self):
@@ -18,6 +20,8 @@ class ShadowStdoutLog(common.Log):
 
                 (user_name, password, lastchanged, minimum, maximum,
                         warn, inactive, expire, reserved) = parts[0:9]
+
+                shadow.append(parts[0:9])
 
                 assert user_name not in self.data
 

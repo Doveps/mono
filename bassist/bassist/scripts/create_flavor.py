@@ -19,7 +19,5 @@ class Run(common.Script):
 
     def record(self):
         self.parse()
-        print "recording"
         for parser in self.parsed_host.parsers:
-            print('Recording %s'%parser)
             parser.record(self.requested_flavor)

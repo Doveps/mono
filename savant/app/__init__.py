@@ -5,4 +5,4 @@ app = Flask(__name__)
 app.debug = True
 
 
-from app import *
+from app.results import create_flavors

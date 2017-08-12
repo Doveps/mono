@@ -3,6 +3,8 @@
 from . import common
 from ...systems import user
 
+users = []
+
 class UsersStdoutLog(common.Log):
 
     def parse(self):
@@ -17,6 +19,8 @@ class UsersStdoutLog(common.Log):
                 assert len(parts) is 7
 
                 (user_name, password, uid, gid, description, path, shell) = parts[0:7]
+
+                users.append(parts[0:7])
 
                 # TODO: passwd spec does allow duplicate names, but not IDs!
                 assert user_name not in self.data

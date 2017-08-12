@@ -2,10 +2,11 @@
 # See the file LICENSE for copying permission.
 from . import common
 from ...systems import package
-from results import store_debs
-from run_sql import execute_sql
+
+debs = []
 
 class DebsStdoutLog(common.Log):
+    
 
     def parse(self):
         self.logger.debug('parsing')
@@ -23,11 +24,9 @@ class DebsStdoutLog(common.Log):
                 assert len(parts) > 4
                 (stat, name, vers, arch) = parts[0:4]
 
-                store_debs(parts[0], parts[1], parts[2], parts[3])
+                debs.append(parts[0:4])
 
                 assert name not in self.data
                 self.data[name] = package.Package()
                 self.data[name].add_deb(stat, vers, arch)
-
-        execute_sql("debs_2.sql")
 
