@@ -42,9 +42,9 @@ class SPcalls:
                 dbo.dbcommit()
             return res
 
-        except:
+        except Exception:
             res = [("Error: " + str(sys.exc_info()[0]) + " " + str(sys.exc_info()[1]),)]
-            print "res", res
+            # print "res", res
         return res
 
 @app.after_request
