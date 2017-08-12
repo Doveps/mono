@@ -3,8 +3,7 @@ CREATE TABLE IF NOT EXISTS Debs2(
 	stat TEXT,
 	name TEXT,
 	version TEXT,
-	architecture TEXT,
-	UNIQUE (stat, name, version, architecture)
+	architecture TEXT
 );
 
 CREATE TABLE IF NOT EXISTS Groups2(
@@ -12,8 +11,7 @@ CREATE TABLE IF NOT EXISTS Groups2(
 	group_name TEXT,
 	password TEXT,
 	gid TEXT,
-	users TEXT,
-	UNIQUE (group_name, password, gid, users)
+	users TEXT
 );
 
 CREATE TABLE IF NOT EXISTS Shadow2(
@@ -26,8 +24,7 @@ CREATE TABLE IF NOT EXISTS Shadow2(
 	warn TEXT,
 	inactive TEXT,
 	expire TEXT,
-	reserve TEXT,
-	UNIQUE (username, password, lastchanged, minimum, maximum, warn, inactive, expire, reserve)
+	reserve TEXT
 );
 
 CREATE TABLE IF NOT EXISTS Users2(
@@ -38,8 +35,7 @@ CREATE TABLE IF NOT EXISTS Users2(
 	gid TEXT,
 	description TEXT,
 	user_path TEXT,
-	shell TEXT,
-	UNIQUE (username, password, uid, gid, description, user_path, shell)
+	shell TEXT
 );
 
 
