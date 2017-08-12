@@ -149,3 +149,84 @@ $$
   		SELECT username, password, uid, gid, description, user_path, shell FROM Users;
 $$
 LANGUAGE 'sql';
+
+
+CREATE OR REPLACE FUNCTION deb2_exists(in par_stat TEXT, in par_name TEXT, in par_version TEXT, in par_arch TEXT) 
+  RETURNS TEXT AS
+  $$
+
+    DECLARE response TEXT;
+
+    BEGIN
+      IF EXISTS(SELECT 1 FROM Debs2 WHERE stat=par_stat AND name=par_name AND version=par_version AND architecture=par_arch) THEN 
+        response := 'TRUE';
+      ELSE
+        response := 'FALSE';
+      END IF;
+
+      RETURN response;
+      
+    END
+  $$
+LANGUAGE 'plpgsql';
+
+CREATE OR REPLACE FUNCTION group2_exists(in par_group_name TEXT, in par_password TEXT, in par_gid TEXT, in par_users TEXT) 
+  RETURNS TEXT AS
+  $$
+
+    DECLARE response TEXT;
+
+    BEGIN
+      IF EXISTS(SELECT 1 FROM Groups2 WHERE group_name=par_group_name AND password=par_password AND gid=par_gid AND users=par_users) THEN 
+        response := 'TRUE';
+      ELSE
+        response := 'FALSE';
+      END IF;
+
+      RETURN response;
+      
+    END
+  $$
+LANGUAGE 'plpgsql';
+
+CREATE OR REPLACE FUNCTION shadow2_exists(in par_username TEXT, in par_password TEXT, in par_lastchanged TEXT,
+ in par_min TEXT, in par_max TEXT, in par_warn TEXT, in par_inactive TEXT, in par_expire TEXT, in par_reserve TEXT) 
+  RETURNS TEXT AS
+  $$
+
+    DECLARE response TEXT;
+
+    BEGIN
+      IF EXISTS(SELECT 1 FROM Shadow2 WHERE username=par_username AND password=par_password AND lastchanged=par_lastchanged AND
+       minimum=par_min AND maximum=par_max AND warn=par_warn AND inactive=par_inactive AND expire=par_expire AND reserve=par_reserve) THEN 
+        response := 'TRUE';
+      ELSE
+        response := 'FALSE';
+      END IF;
+
+      RETURN response;
+      
+    END
+  $$
+LANGUAGE 'plpgsql';
+
+CREATE OR REPLACE FUNCTION user2_exists(in par_username TEXT, in par_password TEXT, in par_uid TEXT, in par_gid TEXT,
+ in par_description TEXT, in par_user_path TEXT, in par_shell TEXT) 
+  RETURNS TEXT AS
+  $$
+
+    DECLARE response TEXT;
+
+    BEGIN
+      IF EXISTS(SELECT 1 FROM Users2 WHERE username=par_username AND password=par_password AND uid=par_uid AND gid=par_gid AND
+        description=par_description AND user_path=par_user_path AND shell=par_shell) THEN 
+        response := 'TRUE';
+      ELSE
+        response := 'FALSE';
+      END IF;
+
+      RETURN response;
+      
+    END
+  $$
+LANGUAGE 'plpgsql';
