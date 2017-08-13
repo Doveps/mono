@@ -1,19 +1,15 @@
 language: python
 python:
-  - "2.6"
   - "2.7"
-  - "3.2"
-  - "3.3"
-  - "3.4"
-  - "3.5"
-  - "3.5-dev" # 3.5 development branch
-  - "3.6"
-  - "3.6-dev" # 3.6 development branch
-  - "3.7-dev" # 3.7 development branch
-  - "nightly" # currently points to 3.7-dev
+env:
+  CODECLIMATE_REPO_TOKEN: 3ad8d339aef5ad69c4320b829eaabea02febb90ed9c23d259531750ab5faf00f
+  # https://lord.io/blog/2014/travis-multiple-subdirs/
+  TEST_DIR: savant
+
 # command to install dependencies
 install:
-  - "pip install -r requirements.txt"
-  - "pip install -e ."
+  - "cd $TEST_DIR && pip install -r requirements.txt"
+  - "cd $TEST_DIR && pip install -e ."
+
 # command to run tests
-script: python test/test_basic.py
+script: cd $TEST_DIR && python tests/test_basic.py
