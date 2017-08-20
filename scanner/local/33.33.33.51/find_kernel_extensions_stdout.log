@@ -1,0 +1,31 @@
+Module                  Size  Used by
+vboxsf                 43802  1 
+dm_crypt               23177  0 
+vboxvideo              45696  1 
+ttm                    93424  1 vboxvideo
+drm_kms_helper         55071  1 vboxvideo
+ppdev                  17671  0 
+drm                   303102  3 ttm,drm_kms_helper,vboxvideo
+syscopyarea            12529  1 vboxvideo
+sysfillrect            12701  1 vboxvideo
+sysimgblt              12640  1 vboxvideo
+vboxguest             276728  3 vboxsf,vboxvideo
+i2c_piix4              22155  0 
+serio_raw              13462  0 
+parport_pc             32701  0 
+mac_hid                13205  0 
+nfsd                  284396  2 
+auth_rpcgss            59309  1 nfsd
+nfs_acl                12837  1 nfsd
+nfs                   240815  0 
+lockd                  93913  2 nfs,nfsd
+sunrpc                289217  6 nfs,nfsd,auth_rpcgss,lockd,nfs_acl
+fscache                63988  1 nfs
+lp                     17759  0 
+parport                42348  3 lp,ppdev,parport_pc
+psmouse               106692  0 
+ahci                   34091  2 
+libahci                32716  1 ahci
+e1000                 145227  0 
+video                  19476  0 
+pata_acpi              13038  0 

@@ -1,0 +1,51 @@
+  PID  PPID   UID   GID CGROUP                      F  NI PRI TT       COMMAND
+    1     0     0     0 -                           4   0  19 ?        /sbin/init
+    2     0     0     0 -                           1   0  19 ?        [kthreadd]
+    3     2     0     0 -                           1   0  19 ?        [ksoftirqd/0]
+    4     2     0     0 -                           1   0  19 ?        [kworker/0:0]
+    5     2     0     0 -                           1 -20  39 ?        [kworker/0:0H]
+    6     2     0     0 -                           1   0  19 ?        [kworker/u2:0]
+    7     2     0     0 -                           1   0  19 ?        [rcu_sched]
+    8     2     0     0 -                           1   0  19 ?        [rcuos/0]
+    9     2     0     0 -                           1   0  19 ?        [rcu_bh]
+   10     2     0     0 -                           1   0  19 ?        [rcuob/0]
+   11     2     0     0 -                           1   - 139 ?        [migration/0]
+   12     2     0     0 -                           5   - 139 ?        [watchdog/0]
+   13     2     0     0 -                           1 -20  39 ?        [khelper]
+   14     2     0     0 -                           5   0  19 ?        [kdevtmpfs]
+   15     2     0     0 -                           1 -20  39 ?        [netns]
+   16     2     0     0 -                           1 -20  39 ?        [writeback]
+   17     2     0     0 -                           1 -20  39 ?        [kintegrityd]
+   18     2     0     0 -                           1 -20  39 ?        [bioset]
+   19     2     0     0 -                           1 -20  39 ?        [kworker/u3:0]
+   20     2     0     0 -                           1 -20  39 ?        [kblockd]
+   21     2     0     0 -                           1 -20  39 ?        [ata_sff]
+   22     2     0     0 -                           1   0  19 ?        [khubd]
+   23     2     0     0 -                           1 -20  39 ?        [md]
+   24     2     0     0 -                           1 -20  39 ?        [devfreq_wq]
+   25     2     0     0 -                           1   0  19 ?        [kworker/0:1]
+   26     2     0     0 -                           1   0  19 ?        [khungtaskd]
+   27     2     0     0 -                           1   0  19 ?        [kswapd0]
+   28     2     0     0 -                           1 -20  39 ?        [vmstat]
+   29     2     0     0 -                           1   5  14 ?        [ksmd]
+   30     2     0     0 -                           1   0  19 ?        [fsnotify_mark]
+   31     2     0     0 -                           1   0  19 ?        [ecryptfs-kthrea]
+   32     2     0     0 -                           1 -20  39 ?        [crypto]
+   44     2     0     0 -                           1 -20  39 ?        [kthrotld]
+   45     2     0     0 -                           1   0  19 ?        [kworker/u2:1]
+   46     2     0     0 -                           1   0  19 ?        [scsi_eh_0]
+   47     2     0     0 -                           1   0  19 ?        [scsi_eh_1]
+   48     2     0     0 -                           1   0  19 ?        [kworker/u2:2]
+  938     1     0     0 -                           1   0  19 ?        /usr/sbin/VBoxService --pidfile /var/run/vboxadd-service.pid
+  967     1     0     0 -                           4   0  19 tty1     /sbin/getty -8 38400 tty1
+  976     2     0     0 -                           1   0  19 ?        [kauditd]
+ 1122     1     0     0 -                           4   0  19 ?        /lib/systemd/systemd-hostnamed
+ 1240     1     0     0 -                           4   0  19 ?        /usr/sbin/sshd -D
+ 1375  1240     0     0 2:name=systemd:/user/900.us 4   0  19 ?        sshd: vagrant [priv]
+ 1393  1375   900   900 2:name=systemd:/user/900.us 5   0  19 ?        sshd: vagrant@pts/0 
+ 1431  1393   900   900 2:name=systemd:/user/900.us 0   0  19 pts/0    /bin/sh -c sudo -k && sudo -H -S -p "[sudo via ansible, key=yfuccclbulaxgbnhinckznvmgqwctejj] password: " -u root /bin/sh -c 'echo SUDO-SUCCESS-yfuccclbulaxgbnhinckznvmgqwctejj; /usr/bin/python /home/vagrant/.ansible/tmp/ansible-tmp-1501705391.32-90901879489510/command; rm -rf /home/vagrant/.ansible/tmp/ansible-tmp-1501705391.32-90901879489510/ >/dev/null 2>&1'
+ 1433  1431     0   900 2:name=systemd:/user/900.us 4   0  19 pts/0    sudo -H -S -p [sudo via ansible, key=yfuccclbulaxgbnhinckznvmgqwctejj] password:  -u root /bin/sh -c echo SUDO-SUCCESS-yfuccclbulaxgbnhinckznvmgqwctejj; /usr/bin/python /home/vagrant/.ansible/tmp/ansible-tmp-1501705391.32-90901879489510/command; rm -rf /home/vagrant/.ansible/tmp/ansible-tmp-1501705391.32-90901879489510/ >/dev/null 2>&1
+ 1434  1433     0     0 2:name=systemd:/user/900.us 4   0  19 pts/0    /bin/sh -c echo SUDO-SUCCESS-yfuccclbulaxgbnhinckznvmgqwctejj; /usr/bin/python /home/vagrant/.ansible/tmp/ansible-tmp-1501705391.32-90901879489510/command; rm -rf /home/vagrant/.ansible/tmp/ansible-tmp-1501705391.32-90901879489510/ >/dev/null 2>&1
+ 1435  1434     0     0 2:name=systemd:/user/900.us 4   0  19 pts/0    /usr/bin/python /home/vagrant/.ansible/tmp/ansible-tmp-1501705391.32-90901879489510/command
+ 1436  1435     0     0 2:name=systemd:/user/900.us 0   0  19 pts/0    /bin/sh -c ps -eo pid,ppid,uid,gid,cgroup,f,ni,pri,tty,args -www 
+ 1437  1436     0     0 2:name=systemd:/user/900.us 4   0  19 pts/0    ps -eo pid,ppid,uid,gid,cgroup,f,ni,pri,tty,args -www

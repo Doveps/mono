@@ -3,14 +3,15 @@ from utils import SPcalls
 import sys, os
 from app import app
 from app import get_scanned, record, comparison
+from app.base_path import get_path
 
 spcalls = SPcalls()
 
 
 @app.route('/doveps/api/flavor/create/', methods=['POST'])
 def create_flavors():
-	os.chdir("/home/josiah/Documents/Doveps/mono/scanner/local/33.33.33.50/")
-	scanner_directory = str(os.getcwd())
+	path = get_path()
+	scanner_directory = path + "/mono/scanner/local/33.33.33.50/"
 
 	get_scanned.parse(scanner_directory)
 	record.record_base_flavors()

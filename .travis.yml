@@ -1,15 +1,19 @@
 language: python
 python:
   - "2.7"
-env:
-  CODECLIMATE_REPO_TOKEN: 3ad8d339aef5ad69c4320b829eaabea02febb90ed9c23d259531750ab5faf00f
-  # https://lord.io/blog/2014/travis-multiple-subdirs/
-  TEST_DIR: savant
-
 # command to install dependencies
 install:
-  - "cd $TEST_DIR && pip install -r requirements.txt"
-  - "cd $TEST_DIR && pip install -e ."
+  - "pip install -r savant/requirements.txt"
+  - "pip install -r bassist/requirements.txt"
+  - "pip install -e savant/."
+  - "pip install -e bassist/."
+  - "sudo apt-get install vagrant"
+env:
+  - DB=pgsql
+service:
+  - postgresql
+before_script:
+  - psql -c 'drop database if exists travis_ci_test;' -U postgres
+  - psql -c 'create database travis_ci_test;' -U postgres
 
-# command to run tests
-script: cd $TEST_DIR && python tests/test_basic.py
+script: python savant/tests/test_basic.py

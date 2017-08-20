@@ -1,0 +1,95 @@
+mountnfs-bootclean.sh start/running
+rsyslog start/running, process 428
+tty4 start/running, process 813
+udev start/running, process 322
+upstart-udev-bridge start/running, process 310
+mountall-net stop/waiting
+passwd stop/waiting
+rc stop/waiting
+startpar-bridge stop/waiting
+ureadahead-other stop/waiting
+systemd-logind start/running, process 478
+tty5 start/running, process 815
+console-setup stop/waiting
+hwclock-save stop/waiting
+idmapd-mounting stop/waiting
+irqbalance stop/waiting
+plymouth-log stop/waiting
+rpcbind-boot stop/waiting
+mountall.sh start/running
+statd start/running, process 592
+failsafe stop/waiting
+dbus start/running, process 412
+resolvconf start/running
+mounted-var stop/waiting
+plymouth-shutdown stop/waiting
+plymouth stop/waiting
+udev-fallback-graphics stop/waiting
+ssh start/running, process 1240
+checkroot.sh start/running
+control-alt-delete stop/waiting
+hwclock stop/waiting
+mounted-proc stop/waiting
+setvtrgb stop/waiting
+shutdown stop/waiting
+statd-mounting stop/waiting
+cron start/running, process 850
+mountkernfs.sh start/running
+rpcbind start/running, process 562
+mountall stop/waiting
+mounted-debugfs stop/waiting
+console stop/waiting
+mounted-run stop/waiting
+checkfs.sh start/running
+checkroot-bootclean.sh start/running
+mountnfs.sh start/running
+ufw start/running
+kmod stop/waiting
+plymouth-stop stop/waiting
+rcS stop/waiting
+wait-for-state stop/waiting
+bootmisc.sh start/running
+flush-early-job-log stop/waiting
+friendly-recovery stop/waiting
+gssd-mounting stop/waiting
+rc-sysinit stop/waiting
+upstart-socket-bridge start/running, process 548
+refresh-apt stop/waiting
+cryptdisks start/running
+mountdevsubfs.sh start/running
+tty2 start/running, process 818
+upstart-file-bridge start/running, process 392
+udevtrigger stop/waiting
+mtab.sh start/running
+tty3 start/running, process 819
+container-detect stop/waiting
+mounted-dev stop/waiting
+udev-finish stop/waiting
+cryptdisks-udev stop/waiting
+hostname stop/waiting
+mountall-reboot stop/waiting
+network-interface (lo) start/running
+network-interface (eth0) start/running
+network-interface (eth1) start/running
+tty1 start/running, process 967
+gssd stop/waiting
+mountall-shell stop/waiting
+mounted-tmp stop/waiting
+plymouth-ready stop/waiting
+plymouth-splash stop/waiting
+plymouth-upstart-bridge stop/waiting
+portmap-wait stop/waiting
+udevmonitor stop/waiting
+mountall-bootclean.sh start/running
+network-interface-security (network-interface/eth1) start/running
+network-interface-security (network-interface/eth0) start/running
+network-interface-security (network-interface/lo) start/running
+network-interface-security (networking) start/running
+networking start/running
+tty6 start/running, process 821
+dmesg stop/waiting
+procps stop/waiting
+idmapd start/running, process 420
+console-font stop/waiting
+network-interface-container stop/waiting
+ureadahead stop/waiting

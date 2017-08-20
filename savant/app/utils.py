@@ -9,9 +9,9 @@ from app import app
 
 # if connection == 'local':
     
-class DBconn:
+class DBconn():
     def __init__(self):
-        engine = create_engine("postgresql://postgres:postgres@127.0.0.1:5432/Doveps")
+        engine = create_engine("postgresql://postgres:postgres@127.0.0.1:5432/travis_ci_test")
         self.conn = engine.connect()
         self.trans = self.conn.begin()
 

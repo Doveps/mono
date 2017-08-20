@@ -2,13 +2,14 @@ import os
 from app import record, get_scanned
 from run_sql import execute_sql
 from utils import SPcalls
+from app.base_path import get_path
 
 spcalls = SPcalls()
 
 def run_comparison():
+	path = get_path()
 	execute_sql("comparisons.sql")
-	os.chdir("/home/josiah/Documents/Doveps/mono/scanner/local/33.33.33.51/")
-	scanner_directory = str(os.getcwd())
+	scanner_directory = path + "/mono/scanner/local/33.33.33.51/"
 
 	get_scanned.parse(scanner_directory)
 	record.record_comparison_flavors()
