@@ -1,0 +1,13 @@
+Module                  Size  Used by
+vboxsf                 43802  1 
+dm_crypt               23177  0 
+vboxvideo              45696  1 
+ttm                    93424  1 vboxvideo
+drm_kms_helper         55071  1 vboxvideo
+ppdev                  17671  0 
+drm                   303102  3 ttm,drm_kms_helper,vboxvideo
+syscopyarea            12529  1 vboxvideo
+sysfillrect            12701  1 vboxvideo
+sysimgblt              12640  1 vboxvideo
+vboxguest             276728  3 vboxsf,vboxvideo
+i2c_piix4              22155  0 

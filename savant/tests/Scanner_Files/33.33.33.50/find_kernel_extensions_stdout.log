@@ -1,0 +1,8 @@
+Module                  Size  Used by
+vboxsf                 43802  1 
+dm_crypt               23177  0 
+vboxvideo              45696  1 
+ppdev                  17671  0 
+ttm                    93424  1 vboxvideo
+drm_kms_helper         55071  1 vboxvideo
+drm                   303102  3 ttm,drm_kms_helper,vboxvideo

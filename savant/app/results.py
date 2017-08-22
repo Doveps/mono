@@ -11,7 +11,7 @@ spcalls = SPcalls()
 @app.route('/doveps/api/flavor/create/', methods=['POST'])
 def create_flavors():
 	path = get_path()
-	scanner_directory = path + "/mono/scanner/local/33.33.33.50/"
+	scanner_directory = path + "/mono/savant/tests/Scanner_Files/33.33.33.50/"
 
 	get_scanned.parse(scanner_directory)
 	record.record_base_flavors()

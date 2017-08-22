@@ -1,0 +1,18 @@
+Desired=Unknown/Install/Remove/Purge/Hold
+| Status=Not/Inst/Conf-files/Unpacked/halF-conf/Half-inst/trig-aWait/Trig-pend
+|/ Err?=(none)/Reinst-required (Status,Err: uppercase=bad)
+||/ Name                                Version                          Architecture Description
++++-===================================-================================-============-===============================================================================
+ii  accountsservice                     0.6.35-0ubuntu7.2                amd64        query and manipulate user account information
+ii  adduser                             3.113+nmu3ubuntu3                all          add and remove users and groups
+ii  apache2                             2.4.7-1ubuntu4.17                amd64        Apache HTTP Server
+ii  apache2-bin                         2.4.7-1ubuntu4.17                amd64        Apache HTTP Server (binary files and modules)
+ii  apache2-data                        2.4.7-1ubuntu4.17                all          Apache HTTP Server (common files)
+ii  apparmor                            2.8.95~2430-0ubuntu5.3           amd64        User-space parser utility for AppArmor
+ii  apt                                 1.0.1ubuntu2.14                  amd64        commandline package manager
+ii  apt-transport-https                 1.0.1ubuntu2.14                  amd64        https download transport for APT
+ii  apt-utils                           1.0.1ubuntu2.14                  amd64        package management related utility programs
+ii  apt-xapian-index                    0.45ubuntu4                      all          maintenance and search tools for a Xapian index of Debian packages
+ii  aptitude                            0.6.8.2-1ubuntu4                 amd64        terminal-based package manager
+ii  aptitude-common                     0.6.8.2-1ubuntu4                 all          architecture indepedent files for the aptitude package manager
+ii  base-files                          7.2ubuntu5.4                     amd64        Debian base system miscellaneous files

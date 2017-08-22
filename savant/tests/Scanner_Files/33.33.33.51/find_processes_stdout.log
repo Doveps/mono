@@ -36,16 +36,11 @@
    46     2     0     0 -                           1   0  19 ?        [scsi_eh_0]
    47     2     0     0 -                           1   0  19 ?        [scsi_eh_1]
    48     2     0     0 -                           1   0  19 ?        [kworker/u2:2]
-  938     1     0     0 -                           1   0  19 ?        /usr/sbin/VBoxService --pidfile /var/run/vboxadd-service.pid
-  967     1     0     0 -                           4   0  19 tty1     /sbin/getty -8 38400 tty1
-  976     2     0     0 -                           1   0  19 ?        [kauditd]
- 1122     1     0     0 -                           4   0  19 ?        /lib/systemd/systemd-hostnamed
- 1240     1     0     0 -                           4   0  19 ?        /usr/sbin/sshd -D
- 1375  1240     0     0 2:name=systemd:/user/900.us 4   0  19 ?        sshd: vagrant [priv]
- 1393  1375   900   900 2:name=systemd:/user/900.us 5   0  19 ?        sshd: vagrant@pts/0 
- 1431  1393   900   900 2:name=systemd:/user/900.us 0   0  19 pts/0    /bin/sh -c sudo -k && sudo -H -S -p "[sudo via ansible, key=yfuccclbulaxgbnhinckznvmgqwctejj] password: " -u root /bin/sh -c 'echo SUDO-SUCCESS-yfuccclbulaxgbnhinckznvmgqwctejj; /usr/bin/python /home/vagrant/.ansible/tmp/ansible-tmp-1501705391.32-90901879489510/command; rm -rf /home/vagrant/.ansible/tmp/ansible-tmp-1501705391.32-90901879489510/ >/dev/null 2>&1'
- 1433  1431     0   900 2:name=systemd:/user/900.us 4   0  19 pts/0    sudo -H -S -p [sudo via ansible, key=yfuccclbulaxgbnhinckznvmgqwctejj] password:  -u root /bin/sh -c echo SUDO-SUCCESS-yfuccclbulaxgbnhinckznvmgqwctejj; /usr/bin/python /home/vagrant/.ansible/tmp/ansible-tmp-1501705391.32-90901879489510/command; rm -rf /home/vagrant/.ansible/tmp/ansible-tmp-1501705391.32-90901879489510/ >/dev/null 2>&1
- 1434  1433     0     0 2:name=systemd:/user/900.us 4   0  19 pts/0    /bin/sh -c echo SUDO-SUCCESS-yfuccclbulaxgbnhinckznvmgqwctejj; /usr/bin/python /home/vagrant/.ansible/tmp/ansible-tmp-1501705391.32-90901879489510/command; rm -rf /home/vagrant/.ansible/tmp/ansible-tmp-1501705391.32-90901879489510/ >/dev/null 2>&1
- 1435  1434     0     0 2:name=systemd:/user/900.us 4   0  19 pts/0    /usr/bin/python /home/vagrant/.ansible/tmp/ansible-tmp-1501705391.32-90901879489510/command
- 1436  1435     0     0 2:name=systemd:/user/900.us 0   0  19 pts/0    /bin/sh -c ps -eo pid,ppid,uid,gid,cgroup,f,ni,pri,tty,args -www 
- 1437  1436     0     0 2:name=systemd:/user/900.us 4   0  19 pts/0    ps -eo pid,ppid,uid,gid,cgroup,f,ni,pri,tty,args -www
+   49     2     0     0 -                           1   0  19 ?        [kworker/u2:3]
+   68     2     0     0 -                           1 -20  39 ?        [deferwq]
+   69     2     0     0 -                           1 -20  39 ?        [charger_manager]
+  111     2     0     0 -                           1 -20  39 ?        [kpsmoused]
+  112     2     0     0 -                           1   0  19 ?        [scsi_eh_2]
+  120     2     0     0 -                           1 -20  39 ?        [kdmflush]
+  121     2     0     0 -                           1 -20  39 ?        [bioset]
+  123     2     0     0 -                           1 -20  39 ?        [kdmflush]

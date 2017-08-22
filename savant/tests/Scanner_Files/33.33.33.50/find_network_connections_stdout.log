@@ -1,0 +1,9 @@
+Active Internet connections (servers and established)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+tcp        0      0 0.0.0.0:111             0.0.0.0:*               LISTEN      562/rpcbind     
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      1240/sshd       
+tcp        0      0 0.0.0.0:60259           0.0.0.0:*               LISTEN      592/rpc.statd   
+tcp        0      0 10.0.2.15:39585         91.189.91.26:80         TIME_WAIT   -               
+tcp        0     36 33.33.33.50:22          33.33.33.1:40432        ESTABLISHED 1375/sshd: vagrant 
+tcp6       0      0 :::111                  :::*                    LISTEN      562/rpcbind     
+tcp6       0      0 :::22                   :::*                    LISTEN      1240/sshd       

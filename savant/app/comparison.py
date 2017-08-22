@@ -9,7 +9,7 @@ spcalls = SPcalls()
 def run_comparison():
 	path = get_path()
 	execute_sql("comparisons.sql")
-	scanner_directory = path + "/mono/scanner/local/33.33.33.51/"
+	scanner_directory = path + "/mono/savant/tests/Scanner_Files/33.33.33.51/"
 
 	get_scanned.parse(scanner_directory)
 	record.record_comparison_flavors()
