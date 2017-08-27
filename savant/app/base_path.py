@@ -1,4 +1,4 @@
 import os
 
 def get_path():
-	return str(os.getcwd()).split("/mono", 1)[0]
+    return str(os.getcwd()).split("/mono", 1)[0]

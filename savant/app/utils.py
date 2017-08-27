@@ -4,10 +4,6 @@ import os
 from sqlalchemy import create_engine
 from app import app
 
-
-# connection = 'local' #or change it to local if you're running on local machine
-
-# if connection == 'local':
     
 class DBconn():
     def __init__(self):
