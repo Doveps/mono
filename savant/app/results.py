@@ -4,29 +4,42 @@ import sys, os
 from app import app
 from app import get_scanned, record, comparison
 from app.base_path import get_path
+from run_sql import execute_sql
 
 spcalls = SPcalls()
 
 
 @app.route('/doveps/api/flavor/create/', methods=['POST'])
 def create_flavors():
-    path = get_path()
-    scanner_directory = path + "/mono/savant/tests/Scanner_Files/33.33.33.50/"
+    filename = request.files['file']
 
-    get_scanned.parse(scanner_directory)
+    get_scanned.get_items(filename)
+
     record.record_base_flavors()
 
+    filename.close()
 
     return jsonify({"Status" : "OK", "Message" : "Saved"})
 
-@app.route('/doveps/api/flavor/compare/', methods=['POST'])
+@app.route('/doveps/api/flavor/compare/', methods=['GET', 'POST'])
 def compare():
-    comparison.run_comparison()
+    execute_sql("comparisons.sql")
+    filename = request.files['file']
 
-    return jsonify({"Debs" : {"New" : comparison.new_debs()},
-                    "Groups" : {"New" : comparison.new_groups()}
-                    })
+    get_scanned.get_items(filename)
+    record.record_comparison_flavors()
 
+    if str(filename.filename).__contains__("debs"):
+        return jsonify({"Debs" : {"New" : comparison.new_debs()}})
+
+    elif str(filename.filename).__contains__("groups"):
+        return jsonify({"Groups" : {"New" : comparison.new_groups()}})
+
+    elif str(filename.filename).__contains__("shadow"):
+        return jsonify({"Shadow" : {"New" : comparison.new_shadow()}})
+
+    elif str(filename.filename).__contains__("users"):
+        return jsonify({"Users" : {"New" : comparison.new_users()}})
 
 @app.route('/doveps/api/debs/', methods=['GET'])
 def show_debs():

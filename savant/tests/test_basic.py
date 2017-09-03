@@ -1,5 +1,6 @@
 import os
 import unittest
+from StringIO import StringIO
 from app import app
 from app.results import create_flavors, compare
 from app.run_sql import execute_sql
@@ -9,13 +10,21 @@ class TestDoveps(unittest.TestCase):
     execute_sql("functions.sql")
 
     def test_acreate_flavor(self):
+        path = str(os.getcwd()).split("/mono", 1)[0]
         tester = app.test_client(self)
-        response = tester.post('/doveps/api/flavor/create/', content_type = 'json')
+        response = tester.post('/doveps/api/flavor/create/',
+        data = {
+            'file': (StringIO('My inputs'),(path + '/mono/savant/tests/Scanner_Files/33.33.33.50/find_debs_stdout.log'))
+        })
         self.assertEqual(response.status_code, 200)
 
     def test_compare(self):
+        path = str(os.getcwd()).split("/mono", 1)[0]
         tester = app.test_client(self)
-        response = tester.post('/doveps/api/flavor/compare/', content_type = 'json')
+        response = tester.post('/doveps/api/flavor/compare/',
+        data = {
+            'file': (StringIO('My inputs'),(path + '/mono/savant/tests/Scanner_Files/33.33.33.51/find_debs_stdout.log'))
+        })
         self.assertEqual(response.status_code, 200)
  
 if __name__ == '__main__':

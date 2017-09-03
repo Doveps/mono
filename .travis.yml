@@ -7,7 +7,6 @@ install:
   - "pip install -r bassist/requirements.txt"
   - "pip install -e savant/."
   - "pip install -e bassist/."
-  - "sudo apt-get install vagrant"
 env:
   - DB=pgsql
 service:
@@ -16,4 +15,12 @@ before_script:
   - psql -c 'drop database if exists travis_ci_test;' -U postgres
   - psql -c 'create database travis_ci_test;' -U postgres
 
-script: python savant/tests/test_basic.py
+after_deploy:
+  - ls
+  - curl -F file=@home/travis/build/Doveps/mono/Savant/tests/Scanner_Files/33.33.33.50/find_debs_stdout.log http://127.0.0.1:5000/doveps/api/flavor/create/
+  - curl -F file=@home/travis/build/Doveps/mono/Savanttests/Scanner_Files/33.33.33.50/find_groups_stdout.log http://127.0.0.1:5000/doveps/api/flavor/create/
+  - curl -F file=@home/travis/build/Doveps/mono/Savanttests/Scanner_Files/33.33.33.50/find_shadow_stdout.log http://127.0.0.1:5000/doveps/api/flavor/create/
+  - curl -F file=@home/travis/build/Doveps/mono/Savanttests/Scanner_Files/33.33.33.50/find_users_stdout.log http://127.0.0.1:5000/doveps/api/flavor/create/
+
+script:
+  - python savant/tests/test_basic.py

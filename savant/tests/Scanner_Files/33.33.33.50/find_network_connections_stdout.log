@@ -7,3 +7,53 @@ tcp        0      0 10.0.2.15:39585         91.189.91.26:80         TIME_WAIT   
 tcp        0     36 33.33.33.50:22          33.33.33.1:40432        ESTABLISHED 1375/sshd: vagrant 
 tcp6       0      0 :::111                  :::*                    LISTEN      562/rpcbind     
 tcp6       0      0 :::22                   :::*                    LISTEN      1240/sshd       
+tcp6       0      0 :::43914                :::*                    LISTEN      592/rpc.statd   
+udp        0      0 0.0.0.0:111             0.0.0.0:*                           562/rpcbind     
+udp        0      0 0.0.0.0:58501           0.0.0.0:*                           592/rpc.statd   
+udp        0      0 0.0.0.0:716             0.0.0.0:*                           562/rpcbind     
+udp        0      0 127.0.0.1:768           0.0.0.0:*                           592/rpc.statd   
+udp        0      0 0.0.0.0:50998           0.0.0.0:*                           654/dhclient    
+udp        0      0 0.0.0.0:68              0.0.0.0:*                           654/dhclient    
+udp6       0      0 :::16207                :::*                                654/dhclient    
+udp6       0      0 :::111                  :::*                                562/rpcbind     
+udp6       0      0 :::40355                :::*                                592/rpc.statd   
+udp6       0      0 :::716                  :::*                                562/rpcbind     
+Active UNIX domain sockets (servers and established)
+Proto RefCnt Flags       Type       State         I-Node   PID/Program name    Path
+unix  2      [ ACC ]     STREAM     LISTENING     8235     412/dbus-daemon     /var/run/dbus/system_bus_socket
+unix  2      [ ACC ]     SEQPACKET  LISTENING     7765     322/systemd-udevd   /run/udev/control
+unix  2      [ ACC ]     STREAM     LISTENING     7476     1/init              @/com/ubuntu/upstart
+unix  9      [ ]         DGRAM                    8330     428/rsyslogd        /dev/log
+unix  2      [ ACC ]     STREAM     LISTENING     8951     562/rpcbind         /run/rpcbind.sock
+unix  3      [ ]         STREAM     CONNECTED     7905     392/upstart-file-br 
+unix  2      [ ]         DGRAM                    9091     654/dhclient        
+unix  3      [ ]         STREAM     CONNECTED     7733     1/init              @/com/ubuntu/upstart
+unix  2      [ ]         DGRAM                    27491    1691/sudo           
+unix  3      [ ]         STREAM     CONNECTED     12421    1393/0              
+unix  3      [ ]         STREAM     CONNECTED     10809    1122/systemd-hostna 
+unix  2      [ ]         DGRAM                    10799    412/dbus-daemon     
+unix  3      [ ]         STREAM     CONNECTED     8805     412/dbus-daemon     /var/run/dbus/system_bus_socket
+unix  3      [ ]         STREAM     CONNECTED     8284     420/rpc.idmapd      
+unix  3      [ ]         STREAM     CONNECTED     7715     310/upstart-udev-br 
+unix  2      [ ]         DGRAM                    27502    1693/python         
+unix  3      [ ]         STREAM     CONNECTED     8911     548/upstart-socket- 
+unix  2      [ ]         STREAM     CONNECTED     27489    1691/sudo           
+unix  3      [ ]         STREAM     CONNECTED     8285     420/rpc.idmapd      
+unix  2      [ ]         DGRAM                    8785     478/systemd-logind  
+unix  3      [ ]         STREAM     CONNECTED     8917     1/init              @/com/ubuntu/upstart
+unix  3      [ ]         STREAM     CONNECTED     9846     412/dbus-daemon     /var/run/dbus/system_bus_socket
+unix  2      [ ]         DGRAM                    9027     592/rpc.statd       
+unix  3      [ ]         DGRAM                    7803     322/systemd-udevd   
+unix  3      [ ]         STREAM     CONNECTED     12422    1375/sshd: vagrant  
+unix  3      [ ]         DGRAM                    7804     322/systemd-udevd   
+unix  3      [ ]         STREAM     CONNECTED     8804     478/systemd-logind  
+unix  3      [ ]         STREAM     CONNECTED     27456    1375/sshd: vagrant  
+unix  3      [ ]         STREAM     CONNECTED     8289     1/init              
+unix  3      [ ]         STREAM     CONNECTED     8268     412/dbus-daemon     
+unix  3      [ ]         STREAM     CONNECTED     9845     938/VBoxService     
+unix  3      [ ]         STREAM     CONNECTED     7914     1/init              @/com/ubuntu/upstart
+unix  3      [ ]         STREAM     CONNECTED     10810    412/dbus-daemon     /var/run/dbus/system_bus_socket
+unix  2      [ ]         DGRAM                    12359    1375/sshd: vagrant  
+unix  3      [ ]         STREAM     CONNECTED     8290     412/dbus-daemon     /var/run/dbus/system_bus_socket
+unix  3      [ ]         STREAM     CONNECTED     27457    412/dbus-daemon     /var/run/dbus/system_bus_socket
+unix  3      [ ]         STREAM     CONNECTED     8269     412/dbus-daemon     
