@@ -11,35 +11,26 @@ spcalls = SPcalls()
 
 @app.route('/doveps/api/flavor/create/', methods=['POST'])
 def create_flavors():
-    filename = request.files['file']
+    filenames = request.files.getlist('files[]')
 
-    get_scanned.get_items(filename)
+    get_scanned.get_items(filenames)
 
     record.record_base_flavors()
-
-    filename.close()
 
     return jsonify({"Status" : "OK", "Message" : "Saved"})
 
 @app.route('/doveps/api/flavor/compare/', methods=['GET', 'POST'])
 def compare():
     execute_sql("comparisons.sql")
-    filename = request.files['file']
+    filenames = request.files.getlist('files[]')
 
-    get_scanned.get_items(filename)
+    get_scanned.get_items(filenames)
     record.record_comparison_flavors()
 
-    if str(filename.filename).__contains__("debs"):
-        return jsonify({"Debs" : {"New" : comparison.new_debs()}})
-
-    elif str(filename.filename).__contains__("groups"):
-        return jsonify({"Groups" : {"New" : comparison.new_groups()}})
-
-    elif str(filename.filename).__contains__("shadow"):
-        return jsonify({"Shadow" : {"New" : comparison.new_shadow()}})
-
-    elif str(filename.filename).__contains__("users"):
-        return jsonify({"Users" : {"New" : comparison.new_users()}})
+    return jsonify({"Debs" : {"New" : comparison.new_debs()}},
+                {"Groups" : {"New" : comparison.new_groups()}},
+                {"Shadow" : {"New" : comparison.new_shadow()}},
+                {"Users" : {"New" : comparison.new_users()}})
 
 @app.route('/doveps/api/debs/', methods=['GET'])
 def show_debs():

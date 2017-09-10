@@ -21,18 +21,19 @@ def parse(scanner_directory):
         parser.parse()
 
 
-def get_items(filename):
-    if str(filename.filename).__contains__("debs"):
-        get_debs(filename)
+def get_items(filenames):
+    for filename in filenames:
+        if "debs" in str(filename.filename):
+            get_debs(filename)
 
-    elif str(filename.filename).__contains__("groups"):
-        get_groups(filename)
+        elif "groups" in str(filename.filename):
+            get_groups(filename)
 
-    elif str(filename.filename).__contains__("shadow"):
-        get_shadow(filename)
+        elif "shadow" in str(filename.filename):
+            get_shadow(filename)
 
-    elif str(filename.filename).__contains__("users"):
-        get_users(filename)
+        elif "users" in str(filename.filename):
+            get_users(filename)
 
 def get_debs(filename):
     content = []

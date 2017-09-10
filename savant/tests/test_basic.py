@@ -14,7 +14,10 @@ class TestDoveps(unittest.TestCase):
         tester = app.test_client(self)
         response = tester.post('/doveps/api/flavor/create/',
         data = {
-            'file': (StringIO('My inputs'),(path + '/mono/savant/tests/Scanner_Files/33.33.33.50/find_debs_stdout.log'))
+            'file': (StringIO('My inputs'),(path + '/mono/savant/tests/Scanner_Files/33.33.33.50/find_debs_stdout.log')),
+            'file': (StringIO('My inputs'),(path + '/mono/savant/tests/Scanner_Files/33.33.33.50/find_groups_stdout.log')),
+            'file': (StringIO('My inputs'),(path + '/mono/savant/tests/Scanner_Files/33.33.33.50/find_shadow_stdout.log')),
+            'file': (StringIO('My inputs'),(path + '/mono/savant/tests/Scanner_Files/33.33.33.50/find_users_stdout.log'))
         })
         self.assertEqual(response.status_code, 200)
 
@@ -23,7 +26,10 @@ class TestDoveps(unittest.TestCase):
         tester = app.test_client(self)
         response = tester.post('/doveps/api/flavor/compare/',
         data = {
-            'file': (StringIO('My inputs'),(path + '/mono/savant/tests/Scanner_Files/33.33.33.51/find_debs_stdout.log'))
+            'file': (StringIO('My inputs'),(path + '/mono/savant/tests/Scanner_Files/33.33.33.51/find_debs_stdout.log')),
+            'file': (StringIO('My inputs'),(path + '/mono/savant/tests/Scanner_Files/33.33.33.51/find_groups_stdout.log')),
+            'file': (StringIO('My inputs'),(path + '/mono/savant/tests/Scanner_Files/33.33.33.51/find_shadow_stdout.log')),
+            'file': (StringIO('My inputs'),(path + '/mono/savant/tests/Scanner_Files/33.33.33.51/find_users_stdout.log'))
         })
         self.assertEqual(response.status_code, 200)
  
