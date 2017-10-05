@@ -12,9 +12,7 @@ spcalls = SPcalls()
 @app.route('/doveps/api/flavor/create/', methods=['POST'])
 def create_flavors():
     filenames = request.files.getlist('files[]')
-
     get_scanned.get_items(filenames)
-
     record.record_base_flavors()
 
     return jsonify({"Status" : "OK", "Message" : "Saved"})

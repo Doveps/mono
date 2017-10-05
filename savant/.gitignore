@@ -2,4 +2,5 @@ app/*.pyc
 *.pyc
 savant.egg-info
 savant.egg-info/*.*
-flavor
+profile.txt
+profile.text

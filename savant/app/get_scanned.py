@@ -20,7 +20,6 @@ def parse(scanner_directory):
         logger.debug('parsing: %s', parser.path)
         parser.parse()
 
-
 def get_items(filenames):
     for filename in filenames:
         if "debs" in str(filename.filename):

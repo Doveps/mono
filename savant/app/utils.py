@@ -1,13 +1,30 @@
 import sys
 import json, flask
 import os
+import os
 from sqlalchemy import create_engine
 from app import app
+from app.base_path import get_path
 
     
 class DBconn():
     def __init__(self):
-        engine = create_engine("postgresql://postgres:postgres@127.0.0.1:5432/travis_ci_test")
+
+        path = get_path() + "/mono/savant/app"
+
+        os.chdir(path)
+
+
+        with open('db_config.json', 'r') as db_file:
+            db_info = json.load(db_file)
+
+        db_name = db_info["database"]["database_name"]
+        username = db_info["database"]["username"]
+        password = db_info["database"]["password"]
+        host = db_info["database"]["host"]
+        engine_name = "postgresql://" + username + ":" + password + "@" + host + ":5432/" + db_name
+
+        engine = create_engine(engine_name)
         self.conn = engine.connect()
         self.trans = self.conn.begin()
 
