@@ -4,3 +4,4 @@ savant.egg-info
 savant.egg-info/*.*
 profile.txt
 profile.text
+app/db_config.json

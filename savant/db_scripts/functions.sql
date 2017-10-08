@@ -114,7 +114,7 @@ CREATE OR REPLACE FUNCTION deb_exists(in par_stat TEXT, in par_name TEXT, in par
       RETURN response;
       
     END
-  $$
+  $$    
 LANGUAGE 'plpgsql';
 
 CREATE OR REPLACE FUNCTION group_exists(in par_group_name TEXT, in par_password TEXT, in par_gid TEXT, in par_users TEXT) 

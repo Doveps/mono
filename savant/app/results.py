@@ -1,13 +1,13 @@
 from flask import Flask, jsonify, request
-from utils import SPcalls
+from utils import SPcalls, DBconn
 import sys, os
 from app import app
 from app import get_scanned, record, comparison
 from app.base_path import get_path
 from run_sql import execute_sql
+import timeit, logging
 
 spcalls = SPcalls()
-
 
 @app.route('/doveps/api/flavor/create/', methods=['POST'])
 def create_flavors():

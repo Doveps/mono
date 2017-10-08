@@ -44,7 +44,10 @@ def get_debs(filename):
         parts = data.split()
 
         (stat, name, vers, arch) = parts[0:4]
-        debs.append(parts[0:4])
+        if parts[0:4] not in debs:
+            debs.append(parts[0:4])
+        else:
+            continue
 
 def get_groups(filename):
     content = []
@@ -57,7 +60,10 @@ def get_groups(filename):
 
             (group_name, password, gid, users) = parts[0:4]
 
-            groups.append(parts[0:4])
+            if parts[0:4] not in groups:
+                groups.append(parts[0:4])
+            else:
+                continue
 
 def get_shadow(filename):
     content = [] 
@@ -71,7 +77,10 @@ def get_shadow(filename):
         (user_name, password, lastchanged, minimum, maximum,
                         warn, inactive, expire, reserved) = parts[0:9]
 
-        shadow.append(parts[0:9])
+        if parts[0:9] not in shadow:
+            shadow.append(parts[0:9])
+        else:
+            continue
 
 def get_users(filename):
     content = []
@@ -85,4 +94,7 @@ def get_users(filename):
 
         (user_name, password, uid, gid, description, path, shell) = parts[0:7]
 
-        users.append(parts[0:7])
+        if parts[0:9] not in users:
+            users.append(parts[0:7])
+        else:
+            continue

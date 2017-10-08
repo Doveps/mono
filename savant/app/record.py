@@ -1,55 +1,60 @@
-# from bassist.parser.log_file import debs_stdout, groups_stdout, shadow_stdout, users_stdout
-# from bassist.parser.log_file import groups_stdout, shadow_stdout, users_stdout
+import os
+import json
 from app import app
+from app.base_path import get_path
 from app import get_scanned
 import store_data, check_exists
+import psycopg2
+import timeit
+
+
 
 def record_base_flavors():
-	for deb in get_scanned.debs:
-		if check_exists.deb_exists(deb[0], deb[1], deb[2], deb[3])[0][0] == 'FALSE':
-			store_data.store_debs(deb[0], deb[1], deb[2], deb[3])
-		else:
-			continue
+    path = get_path() + "/mono/savant/app"
+    os.chdir(path)
 
-	for group in get_scanned.groups:
-		if check_exists.group_exists(group[0], group[1], group[2], group[3])[0][0] == 'FALSE':
-			store_data.store_groups(group[0], group[1], group[2], group[3])
-		else:
-			continue
+    with open('db_config.json', 'r') as db_file:
+        db_info = json.load(db_file)
 
-	for shad in get_scanned.shadow:
-		if check_exists.shadow_exists(shad[0], shad[1], shad[2], shad[3], shad[4], shad[5], shad[6], shad[7], shad[8])[0][0] == 'FALSE':
-			store_data.store_shadow(shad[0], shad[1], shad[2], shad[3], shad[4], shad[5], shad[6], shad[7], shad[8])
-		else:
-			continue
+    db_name = db_info["database"]["database_name"]
+    username = db_info["database"]["username"]
+    password = db_info["database"]["password"]
+    host = db_info["database"]["host"]
+    engine_name = "postgresql://" + username + ":" + password + "@" + host + ":5432/" + db_name
+    conn = psycopg2.connect(engine_name)
+    cur = conn.cursor()
 
-	for user in get_scanned.users:
-		if check_exists.user_exists(user[0], user[1], user[2], user[3], user[4], user[5], user[6])[0][0] == 'FALSE':
-			store_data.store_users(user[0], user[1], user[2], user[3], user[4], user[5], user[6])
-		else:
-			continue
+    cur.executemany("select store_debs(%s, %s ,%s, %s)", get_scanned.debs)
+    group_start_time = timeit.default_timer()
+    cur.executemany("select store_groups(%s, %s, %s, %s)", get_scanned.groups)
+    cur.executemany("select store_shadow(%s, %s, %s, %s, %s, %s, %s, %s, %s)", get_scanned.shadow)
+    cur.executemany("select store_users(%s, %s, %s, %s,%s, %s, %s)", get_scanned.users)
+    
+    conn.commit()
+    cur.close()
+    conn.close()
 
 def record_comparison_flavors():
-	for deb in get_scanned.debs:
-		if check_exists.deb2_exists(deb[0], deb[1], deb[2], deb[3])[0][0] == 'FALSE':
-			store_data.store_debs2(deb[0], deb[1], deb[2], deb[3])
-		else:
-			continue
+    path = get_path() + "/mono/savant/app"
+    os.chdir(path)
 
-	for group in get_scanned.groups:
-		if check_exists.group2_exists(group[0], group[1], group[2], group[3])[0][0] == 'FALSE':
-			store_data.store_groups2(group[0], group[1], group[2], group[3])
-		else:
-			continue
+    with open('db_config.json', 'r') as db_file:
+        db_info = json.load(db_file)
 
-	for shad in get_scanned.shadow:
-		if check_exists.shadow2_exists(shad[0], shad[1], shad[2], shad[3], shad[4], shad[5], shad[6], shad[7], shad[8])[0][0] == 'FALSE':
-			store_data.store_shadow2(shad[0], shad[1], shad[2], shad[3], shad[4], shad[5], shad[6], shad[7], shad[8])
-		else:
-			continue
+    db_name = db_info["database"]["database_name"]
+    username = db_info["database"]["username"]
+    password = db_info["database"]["password"]
+    host = db_info["database"]["host"]
+    engine_name = "postgresql://" + username + ":" + password + "@" + host + ":5432/" + db_name
+    conn = psycopg2.connect(engine_name)
+    cur = conn.cursor()
 
-	for user in get_scanned.users:
-		if check_exists.user2_exists(user[0], user[1], user[2], user[3], user[4], user[5], user[6])[0][0] == 'FALSE':
-			store_data.store_users2(user[0], user[1], user[2], user[3], user[4], user[5], user[6])
-		else:
-			continue
+    cur.executemany("select store_debs2(%s, %s ,%s, %s)", get_scanned.debs)
+    group_start_time = timeit.default_timer()
+    cur.executemany("select store_groups2(%s, %s, %s, %s)", get_scanned.groups)
+    cur.executemany("select store_shadow2(%s, %s, %s, %s, %s, %s, %s, %s, %s)", get_scanned.shadow)
+    cur.executemany("select store_users2(%s, %s, %s, %s,%s, %s, %s)", get_scanned.users)
+    
+    conn.commit()
+    cur.close()
+    conn.close()

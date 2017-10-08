@@ -4,3 +4,4 @@ markdown
 django-filter
 pyyaml
 pytest-flask
+requests-toolbelt
