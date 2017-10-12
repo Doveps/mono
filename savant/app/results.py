@@ -5,9 +5,11 @@ from app import app
 from app import get_scanned, record, comparison
 from app.base_path import get_path
 from run_sql import execute_sql
-import timeit, logging
+import io, json, timeit, logging, datetime
 
 spcalls = SPcalls()
+now = datetime.datetime.now()
+
 
 @app.route('/doveps/api/flavor/create/', methods=['POST'])
 def create_flavors():
@@ -25,10 +27,22 @@ def compare():
     get_scanned.get_items(filenames)
     record.record_comparison_flavors()
 
-    return jsonify({"Debs" : {"New" : comparison.new_debs()}},
-                {"Groups" : {"New" : comparison.new_groups()}},
-                {"Shadow" : {"New" : comparison.new_shadow()}},
-                {"Users" : {"New" : comparison.new_users()}})
+    json_file = "Comparison-" + now.strftime("%Y-%m-%d_%H:%M") + ".json"
+
+    new_packages =  json.dumps([{"Debs" : {"New" : comparison.new_debs()}},
+                                {"Groups" : {"New" : comparison.new_groups()}},
+                                {"Shadow" : {"New" : comparison.new_shadow()}},
+                                {"Users" : {"New" : comparison.new_users()}}], indent=4, sort_keys=True)
+
+    with io.open(json_file, 'w', encoding='utf-8') as data:
+        data.write(unicode(new_packages))
+
+    return new_packages
+
+@app.route('/doveps/api/action/create', methods=['POST'])
+def create_action(json_file, name, resource, action):
+
+    return jsonify({"Status" : "OK", "Message" : "Linked"})
 
 @app.route('/doveps/api/debs/', methods=['GET'])
 def show_debs():
