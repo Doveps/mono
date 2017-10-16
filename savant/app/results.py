@@ -5,7 +5,7 @@ from app import app
 from app import get_scanned, record, comparison
 from app.base_path import get_path
 from run_sql import execute_sql
-import io, json, timeit, logging, datetime
+import io, json, timeit, logging, datetime, psycopg2
 
 spcalls = SPcalls()
 now = datetime.datetime.now()
@@ -39,9 +39,40 @@ def compare():
 
     return new_packages
 
-@app.route('/doveps/api/action/create', methods=['POST'])
+@app.route('/doveps/api/action/create/<json_file>/<name>/<resource>/<action>', methods=['GET'])
 def create_action(json_file, name, resource, action):
+    path = get_path() + "/mono/savant/app"
+    os.chdir(path)
 
+    with open('db_config.json', 'r') as db_file:
+        db_info = json.load(db_file)
+
+    db_name = db_info["database"]["database_name"]
+    username = db_info["database"]["username"]
+    password = db_info["database"]["password"]
+    host = db_info["database"]["host"]
+    engine_name = "postgresql://" + username + ":" + password + "@" + host + ":5432/" + db_name
+    conn = psycopg2.connect(engine_name)
+    cur = conn.cursor()
+    
+    if resource == 'Debs':
+        cur.execute("select get_debs_id('" + name + "')")
+    elif resource == 'Groups':
+        cur.execute("select get_groups_id('" + name + "')")
+    elif resource == 'Shadow':
+        cur.execute("select get_shadow_id('" + name + "')")
+    elif resource == 'Users':
+        cur.execute("select get_users_id('" + name + "')")
+        
+    name_id = cur.fetchone()[0]
+    name_id = int(name_id)
+
+    cur.execute("select store_knowledge(%s, %s, %s, %s)", (name, resource, action, name_id))
+
+    conn.commit()
+    cur.close()
+    conn.close()
+     
     return jsonify({"Status" : "OK", "Message" : "Linked"})
 
 @app.route('/doveps/api/debs/', methods=['GET'])

@@ -177,3 +177,45 @@ CREATE OR REPLACE FUNCTION user_exists(in par_username TEXT, in par_password TEX
     END
   $$
 LANGUAGE 'plpgsql';
+
+-- ID Getter Functions --
+
+CREATE OR REPLACE FUNCTION get_debs_id(in par_name TEXT)
+ RETURNS BIGINT AS
+$$
+    SELECT id
+    FROM Debs
+     WHERE
+        name=par_name;
+$$
+LANGUAGE 'sql';
+
+CREATE OR REPLACE FUNCTION get_groups_id(in par_group_name TEXT)
+ RETURNS BIGINT AS
+$$
+    SELECT id
+    FROM Groups
+     WHERE
+        group_name=par_group_name;
+$$
+LANGUAGE 'sql';
+
+CREATE OR REPLACE FUNCTION get_shadow_id(in par_username TEXT)
+ RETURNS BIGINT AS
+$$
+    SELECT id
+    FROM Shadow
+     WHERE
+        username=par_username;
+$$
+LANGUAGE 'sql';
+
+CREATE OR REPLACE FUNCTION get_users_id(in par_username TEXT)
+ RETURNS BIGINT AS
+$$
+    SELECT id
+    FROM Users
+     WHERE
+        username=par_username;
+$$
+LANGUAGE 'sql';

@@ -6,10 +6,10 @@ from app import get_scanned
 import store_data, check_exists
 import psycopg2
 import timeit
-
-
+from utils import SPcalls
 
 def record_base_flavors():
+    spcalls = SPcalls()
     path = get_path() + "/mono/savant/app"
     os.chdir(path)
 
@@ -28,11 +28,12 @@ def record_base_flavors():
     group_start_time = timeit.default_timer()
     cur.executemany("select store_groups(%s, %s, %s, %s)", get_scanned.groups)
     cur.executemany("select store_shadow(%s, %s, %s, %s, %s, %s, %s, %s, %s)", get_scanned.shadow)
-    cur.executemany("select store_users(%s, %s, %s, %s,%s, %s, %s)", get_scanned.users)
-    
+    cur.executemany("select store_users(%s, %s, %s, %s,%s, %s, %s)", get_scanned.users)    
+
     conn.commit()
     cur.close()
     conn.close()
+
 
 def record_comparison_flavors():
     path = get_path() + "/mono/savant/app"

@@ -42,6 +42,14 @@ CREATE TABLE IF NOT EXISTS Users2(
   UNIQUE (username, password, uid, gid, description, user_path, shell)
 );
 
+CREATE TABLE IF NOT EXISTS Knowledge(
+    id SERIAL8 PRIMARY KEY,
+    name TEXT,
+    resource TEXT,
+    action TEXT,
+    reference INT
+);
+
 
 -- Storing Functions --
 
@@ -99,6 +107,20 @@ BEGIN
 
   INSERT INTO Users2(username, password, uid, gid, description, user_path, shell)
    VALUES (par_username, par_password, par_uid, par_gid, par_description, par_user_path, par_shell);
+  loc_res = 'OK';
+  return loc_res;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE OR REPLACE FUNCTION store_knowledge(in par_name TEXT, in par_resource TEXT, in par_action TEXT, in par_reference INT)
+ RETURNS TEXT AS
+$$
+DECLARE
+  loc_res  TEXT;
+BEGIN
+
+  INSERT INTO knowledge(name, resource, action, reference) VALUES (par_name, par_resource, par_action, par_reference);
   loc_res = 'OK';
   return loc_res;
 END;
@@ -230,3 +252,4 @@ CREATE OR REPLACE FUNCTION user2_exists(in par_username TEXT, in par_password TE
     END
   $$
 LANGUAGE 'plpgsql';
+
