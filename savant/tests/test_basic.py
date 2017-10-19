@@ -3,11 +3,11 @@ import unittest
 from StringIO import StringIO
 from app import app
 from app.results import create_flavors, compare
-from app.run_sql import execute_sql
+from app import query
  
 class TestDoveps(unittest.TestCase):
-    execute_sql("tables.sql")
-    execute_sql("functions.sql")
+    query.execute_sql("tables.sql")
+    query.execute_sql("functions.sql")
 
     def test_acreate_flavor(self):
         path = str(os.getcwd()).split("/mono", 1)[0]

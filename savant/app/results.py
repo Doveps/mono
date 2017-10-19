@@ -1,38 +1,35 @@
 from flask import Flask, jsonify, request
-from utils import SPcalls, DBconn
 import sys, os
 from app import app
-from app import get_scanned, record, comparison
+from app import get_scanned, query
 from app.base_path import get_path
-from run_sql import execute_sql
 import io, json, timeit, logging, datetime, psycopg2
 
-spcalls = SPcalls()
+# spcalls = SPcalls()
 now = datetime.datetime.now()
-
 
 @app.route('/doveps/api/flavor/create/', methods=['POST'])
 def create_flavors():
     filenames = request.files.getlist('files[]')
     get_scanned.get_items(filenames)
-    record.record_base_flavors()
+    query.record_base_flavors()
 
     return jsonify({"Status" : "OK", "Message" : "Saved"})
 
 @app.route('/doveps/api/flavor/compare/', methods=['GET', 'POST'])
 def compare():
-    execute_sql("comparisons.sql")
+    query.execute_sql("comparisons.sql")
     filenames = request.files.getlist('files[]')
 
     get_scanned.get_items(filenames)
-    record.record_comparison_flavors()
+    query.record_comparison_flavors()
 
     json_file = "Comparison-" + now.strftime("%Y-%m-%d_%H:%M") + ".json"
 
-    new_packages =  json.dumps([{"Debs" : {"New" : comparison.new_debs()}},
-                                {"Groups" : {"New" : comparison.new_groups()}},
-                                {"Shadow" : {"New" : comparison.new_shadow()}},
-                                {"Users" : {"New" : comparison.new_users()}}], indent=4, sort_keys=True)
+    new_packages =  json.dumps([{"Debs" : {"New" : query.new_debs()}},
+                                {"Groups" : {"New" : query.new_groups()}},
+                                {"Shadow" : {"New" : query.new_shadow()}},
+                                {"Users" : {"New" : query.new_users()}}], indent=4, sort_keys=True)
 
     with io.open(json_file, 'w', encoding='utf-8') as data:
         data.write(unicode(new_packages))
@@ -41,37 +38,7 @@ def compare():
 
 @app.route('/doveps/api/action/create/<json_file>/<name>/<resource>/<action>', methods=['GET'])
 def create_action(json_file, name, resource, action):
-    path = get_path() + "/mono/savant/app"
-    os.chdir(path)
-
-    with open('db_config.json', 'r') as db_file:
-        db_info = json.load(db_file)
-
-    db_name = db_info["database"]["database_name"]
-    username = db_info["database"]["username"]
-    password = db_info["database"]["password"]
-    host = db_info["database"]["host"]
-    engine_name = "postgresql://" + username + ":" + password + "@" + host + ":5432/" + db_name
-    conn = psycopg2.connect(engine_name)
-    cur = conn.cursor()
-    
-    if resource == 'Debs':
-        cur.execute("select get_debs_id('" + name + "')")
-    elif resource == 'Groups':
-        cur.execute("select get_groups_id('" + name + "')")
-    elif resource == 'Shadow':
-        cur.execute("select get_shadow_id('" + name + "')")
-    elif resource == 'Users':
-        cur.execute("select get_users_id('" + name + "')")
-        
-    name_id = cur.fetchone()[0]
-    name_id = int(name_id)
-
-    cur.execute("select store_knowledge(%s, %s, %s, %s)", (name, resource, action, name_id))
-
-    conn.commit()
-    cur.close()
-    conn.close()
+    query.record_knowledge()
      
     return jsonify({"Status" : "OK", "Message" : "Linked"})
 
