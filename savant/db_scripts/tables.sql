@@ -38,3 +38,31 @@ CREATE TABLE IF NOT EXISTS Users(
 	shell TEXT
 );
 
+CREATE TABLE IF NOT EXISTS Scan(
+    id SERIAL8 PRIMARY KEY,
+    scan_timestamp TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS ScanDebs(
+    id SERIAL8 PRIMARY KEY,
+    debs_id INT REFERENCES Debs (id),
+    scan_timestamp_id INT REFERENCES Scan (id)
+);
+
+CREATE TABLE IF NOT EXISTS ScanGroups(
+    id SERIAL8 PRIMARY KEY,
+    groups_id INT REFERENCES Groups (id),
+    scan_timestamp_id INT REFERENCES Scan (id)
+);
+
+CREATE TABLE IF NOT EXISTS ScanShadow(
+    id SERIAL8 PRIMARY KEY,
+    shadow_id INT REFERENCES Shadow (id),
+    scan_timestamp_id INT REFERENCES Scan (id)
+);
+
+CREATE TABLE IF NOT EXISTS ScanUsers(
+    id SERIAL8 PRIMARY KEY,
+    users_id INT REFERENCES Users (id),
+    scan_timestamp_id INT REFERENCES Scan (id)
+);

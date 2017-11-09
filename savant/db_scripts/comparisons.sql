@@ -50,6 +50,29 @@ CREATE TABLE IF NOT EXISTS Knowledge(
     reference INT
 );
 
+CREATE TABLE IF NOT EXISTS KnowledgeDebs(
+    id SERIAL8 PRIMARY KEY,
+    knowledge_id INT REFERENCES Knowledge (id),
+    debs_id INT REFERENCES Debs (id)
+);
+
+CREATE TABLE IF NOT EXISTS KnowledgeGroups(
+    id SERIAL8 PRIMARY KEY,
+    knowledge_id INT REFERENCES Knowledge (id),
+    groups_id INT REFERENCES Groups (id)
+);
+
+CREATE TABLE IF NOT EXISTS KnowledgeShadow(
+    id SERIAL8 PRIMARY KEY,
+    knowledge_id INT REFERENCES Knowledge (id),
+    shadow_id INT REFERENCES Shadow (id)
+);
+
+CREATE TABLE IF NOT EXISTS KnowledgeUsers(
+    id SERIAL8 PRIMARY KEY,
+    knowledge_id INT REFERENCES Knowledge (id),
+    users_id INT REFERENCES Users (id)
+);
 
 -- Storing Functions --
 

@@ -43,6 +43,7 @@ def execute_sql(sql_file):
 def record_base_flavors():
     set_engine_name()
 
+    cur.execute("select store_datetime()")
     cur.executemany("select store_debs(%s, %s ,%s, %s)", get_scanned.debs)
     cur.executemany("select store_groups(%s, %s, %s, %s)", get_scanned.groups)
     cur.executemany("select store_shadow(%s, %s, %s, %s, %s, %s, %s, %s, %s)", get_scanned.shadow)

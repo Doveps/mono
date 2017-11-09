@@ -22,6 +22,7 @@ def compare():
     filenames = request.files.getlist('files[]')
 
     get_scanned.get_items(filenames)
+    query.record_base_flavors()
     query.record_comparison_flavors()
 
     json_file = "Comparison-" + now.strftime("%Y-%m-%d_%H:%M") + ".json"
