@@ -66,3 +66,34 @@ CREATE TABLE IF NOT EXISTS ScanUsers(
     users_id INT REFERENCES Users (id),
     scan_timestamp_id INT REFERENCES Scan (id)
 );
+
+CREATE TABLE IF NOT EXISTS Knowledge(
+    id SERIAL8 PRIMARY KEY,
+    name TEXT,
+    resource TEXT,
+    action TEXT
+);
+
+CREATE TABLE IF NOT EXISTS KnowledgeDebs(
+    id SERIAL8 PRIMARY KEY,
+    debs_id INT REFERENCES Debs (id),
+    knowledge_id INT REFERENCES Knowledge (id)
+);
+
+CREATE TABLE IF NOT EXISTS KnowledgeGroups(
+    id SERIAL8 PRIMARY KEY,
+    groups_id INT REFERENCES Groups (id),
+    knowledge_id INT REFERENCES Knowledge (id)
+);
+
+CREATE TABLE IF NOT EXISTS KnowledgeShadow(
+    id SERIAL8 PRIMARY KEY,
+    shadow_id INT REFERENCES Shadow (id),
+    knowledge_id INT REFERENCES Knowledge (id)
+);
+
+CREATE TABLE IF NOT EXISTS KnowledgeUsers(
+    id SERIAL8 PRIMARY KEY,
+    users_id INT REFERENCES Users (id),
+    knowledge_id INT REFERENCES Knowledge (id)
+);

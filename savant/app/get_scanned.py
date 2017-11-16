@@ -34,7 +34,17 @@ def get_items(filenames):
         elif "users" in str(filename.filename):
             get_users(filename)
 
+def replace_blank(parts):
+    for i in xrange(len(parts)):
+        if parts[i] == '':
+            parts[i] = "N/A"
+
+    return parts
+
+
+
 def get_debs(filename):
+    del debs[:]
     content = []
 
     for line in filename:
@@ -44,28 +54,29 @@ def get_debs(filename):
         parts = data.split()
 
         (stat, name, vers, arch) = parts[0:4]
-        if parts[0:4] not in debs:
-            debs.append(parts[0:4])
-        else:
-            continue
+
+        parts[0:4] = replace_blank(parts[0:4])
+        debs.append(parts[0:4])
+
 
 def get_groups(filename):
+    del groups[:]
     content = []
 
     for line in filename:
         content.append(line)
 
-        for data in content:
-            parts = data.rstrip('\n').split(':')
+    for data in content:
+        parts = data.rstrip('\n').split(':')
 
-            (group_name, password, gid, users) = parts[0:4]
+        (group_name, password, gid, users) = parts[0:4]
 
-            if parts[0:4] not in groups:
-                groups.append(parts[0:4])
-            else:
-                continue
+        parts[0:4] = replace_blank(parts[0:4])
+        groups.append(parts[0:4])
+
 
 def get_shadow(filename):
+    del shadow[:]
     content = [] 
 
     for line in filename:
@@ -77,12 +88,12 @@ def get_shadow(filename):
         (user_name, password, lastchanged, minimum, maximum,
                         warn, inactive, expire, reserved) = parts[0:9]
 
-        if parts[0:9] not in shadow:
-            shadow.append(parts[0:9])
-        else:
-            continue
+        parts[0:9] = replace_blank(parts[0:9])
+        shadow.append(parts[0:9])
+
 
 def get_users(filename):
+    del users[:]
     content = []
 
 
@@ -94,7 +105,5 @@ def get_users(filename):
 
         (user_name, password, uid, gid, description, path, shell) = parts[0:7]
 
-        if parts[0:9] not in users:
-            users.append(parts[0:7])
-        else:
-            continue
+        parts[0:7] = replace_blank(parts[0:7])
+        users.append(parts[0:7])

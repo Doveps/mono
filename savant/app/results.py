@@ -12,18 +12,16 @@ now = datetime.datetime.now()
 def create_flavors():
     filenames = request.files.getlist('files[]')
     get_scanned.get_items(filenames)
-    query.record_base_flavors()
+    query.record_flavors()
 
     return jsonify({"Status" : "OK", "Message" : "Saved"})
 
 @app.route('/doveps/api/flavor/compare/', methods=['GET', 'POST'])
 def compare():
-    query.execute_sql("comparisons.sql")
     filenames = request.files.getlist('files[]')
 
     get_scanned.get_items(filenames)
-    query.record_base_flavors()
-    query.record_comparison_flavors()
+    query.record_flavors()
 
     json_file = "Comparison-" + now.strftime("%Y-%m-%d_%H:%M") + ".json"
 
@@ -39,7 +37,7 @@ def compare():
 
 @app.route('/doveps/api/action/create/<json_file>/<name>/<resource>/<action>', methods=['GET'])
 def create_action(json_file, name, resource, action):
-    query.record_knowledge()
+    query.record_knowledge(json_file, name, resource, action)
      
     return jsonify({"Status" : "OK", "Message" : "Linked"})
 

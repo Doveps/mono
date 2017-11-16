@@ -40,7 +40,7 @@ def execute_sql(sql_file):
     cur.close()
     conn.close()
 
-def record_base_flavors():
+def record_flavors():
     set_engine_name()
 
     cur.execute("select store_datetime()")
@@ -53,43 +53,63 @@ def record_base_flavors():
     cur.close()
     conn.close()
 
-def record_comparison_flavors():
+def record_knowledge(json_file, name, resource, action):
     set_engine_name()
 
-    cur.executemany("select store_debs2(%s, %s ,%s, %s)", get_scanned.debs)
-    cur.executemany("select store_groups2(%s, %s, %s, %s)", get_scanned.groups)
-    cur.executemany("select store_shadow2(%s, %s, %s, %s, %s, %s, %s, %s, %s)", get_scanned.shadow)
-    cur.executemany("select store_users2(%s, %s, %s, %s,%s, %s, %s)", get_scanned.users)    
+    cur.execute("select store_knowledge(%s, %s, %s)", (name, resource, action))
+
+    with open(json_file, 'r') as json_res:
+        res =  json.load(json_res)
+
+    debs = res[0]
+    new_debs = debs["Debs"]["New"]
+    groups = res[1]
+    new_groups = groups["Groups"]["New"]
+    shadow = res[2]
+    new_shadow = shadow["Shadow"]["New"]
+    users = res[3]
+    new_users = users["Users"]["New"]
+
+    knowledge_debs(new_debs)
+    knowledge_groups(new_groups)
+    knowledge_shadow(new_shadow)
+    knowledge_users(new_users)
 
     conn.commit()
     cur.close()
     conn.close()
 
-def record_knowledge():
-    set_engine_name()
-    
-    if resource == 'Debs':
-        cur.execute("select get_debs_id('" + name + "')")
-    elif resource == 'Groups':
-        cur.execute("select get_groups_id('" + name + "')")
-    elif resource == 'Shadow':
-        cur.execute("select get_shadow_id('" + name + "')")
-    elif resource == 'Users':
-        cur.execute("select get_users_id('" + name + "')")
-        
-    name_id = cur.fetchone()[0]
-    name_id = int(name_id)
+def knowledge_debs(new_debs):
+    if new_debs[0] != "No changes":
+        for nd in new_debs:
+            deb = cur.execute("select store_knowledge_debs(%s, %s ,%s, %s)", (nd["Stat"], nd["Name"], nd["Version"], nd["Architecture"]))
 
-    cur.execute("select store_knowledge(%s, %s, %s, %s)", (name, resource, action, name_id))
+def knowledge_groups(new_groups):
+    if new_groups[0] != "No changes":
+        for ng in new_groups:
+            cur.execute("select store_knowledge_groups(%s, %s ,%s, %s)", (ng["Group Name"], ng["Password"], ng["Gid"], ng["Users"]))
 
-    conn.commit()
-    cur.close()
-    conn.close()
+def knowledge_shadow(new_shadow):
+    if new_shadow[0] != "No changes":
+
+        for ns in new_shadow:
+            cur.execute("select store_knowledge_shadow(%s, %s ,%s, %s, %s, %s ,%s, %s, %s)", (ns["Username"], ns["Password"],
+                                                                                            ns["Last Changed"], ns["Minimum"],
+                                                                                            ns["Maximum"],
+                                                                                            ns["Warn"], ns["Inactive"],
+                                                                                            ns["Expire"], ns["Reserve"]))
+
+def knowledge_users(new_users):
+    if new_users[0] != "No changes":
+        for nu in new_users:
+            cur.execute("select store_knowledge_users(%s, %s ,%s, %s, %s, %s, %s )", (nu["Username"], nu["Password"],
+                                                                                    nu["UID"], nu["GID"],
+                                                                                    nu["Description"], nu["Path"], nu["Shell"]))
 
 def new_debs():
     set_engine_name()
 
-    debs = cur.execute("select get_debs2_unique()")
+    debs = cur.execute("select get_debs_unique()")
     debs = cur.fetchall()
     new_debs = []
 
@@ -97,16 +117,10 @@ def new_debs():
         for deb in debs:
             d = str(deb[0])
             db = d.split(',')
-            if db[3] is None:
-                new_debs.append({"Stat" : db[0][1:],
-                                "Name" : db[1],
-                                "Version" : db[2],
-                                "Architecture" : db[3][:len(db[3]) - 1]})
-            else:
-                new_debs.append({"Stat" : db[0][1:],
-                                "Name" : db[1],
-                                "Version" : db[2],
-                                "Architecture" : db[3]})
+            new_debs.append({"Stat" : db[0][1:],
+                            "Name" : db[1],
+                            "Version" : db[2],
+                            "Architecture" : db[3][:len(db[3]) - 1]})
     else:
         new_debs.append('No changes')
 
@@ -119,7 +133,7 @@ def new_debs():
 def new_groups():
     set_engine_name()
 
-    groups = cur.execute("select get_groups2_unique()")
+    groups = cur.execute("select get_groups_unique()")
     groups = cur.fetchall()
     new_groups = []
 
@@ -127,16 +141,10 @@ def new_groups():
         for group in groups:
             g = str(group[0])
             gr = g.split(',')
-            if gr[3] is None:
-                new_groups.append({"Group Name" : gr[0][1:],
-                                    "Password" : gr[1],
-                                    "Gid" : gr[2],
-                                    "Users" : gr[3][:len(gr[3]) - 1]})
-            else:
-                new_groups.append({"Group Name" : gr[0][1:],
-                                    "Password" : gr[1],
-                                    "Gid" : gr[2],
-                                    "Users" : gr[3]})
+            new_groups.append({"Group Name" : gr[0][1:],
+                                "Password" : gr[1],
+                                "Gid" : gr[2],
+                                "Users" : gr[3][:len(gr[3]) - 1]})
     else:
         new_groups.append('No changes')
 
@@ -149,7 +157,7 @@ def new_groups():
 def new_shadow():
     set_engine_name()
 
-    shadow = cur.execute("select get_shadow2_unique()")
+    shadow = cur.execute("select get_shadow_unique()")
     shadow = cur.fetchall()
     new_shadow = []
 
@@ -157,8 +165,7 @@ def new_shadow():
         for shad in shadow:
             s = str(shad[0])
             sh = s.split(',')
-            if sh[8] is None:
-                new_shadow.append({"Username" : sh[0][1:],
+            new_shadow.append({"Username" : sh[0][1:],
                                 "Password" : sh[1],
                                 "Last Changed" : sh[2],
                                 "Minimum" : sh[3],
@@ -167,16 +174,6 @@ def new_shadow():
                                 "Inactive" : sh[6],
                                 "Expire" : sh[7],
                                 "Reserve" : sh[8][:len(sh[8]) - 1]})
-            else:
-                new_shadow.append({"Username" : sh[0][1:],
-                                "Password" : sh[1],
-                                "Last Changed" : sh[2],
-                                "Minimum" : sh[3],
-                                "Maximum" : sh[4],
-                                "Warn" : sh[5],
-                                "Inactive" : sh[6],
-                                "Expire" : sh[7],
-                                "Reserve" : sh[8]})
     else:
         new_shadow.append('No changes')
 
@@ -189,7 +186,7 @@ def new_shadow():
 def new_users():
     set_engine_name()
 
-    users = cur.execute("select get_users2_unique()")
+    users = cur.execute("select get_users_unique()")
     users = cur.fetchall()
     new_users = []
 
@@ -197,22 +194,13 @@ def new_users():
         for user in users:
             u = str(user[0])
             us = u.split(',')
-            if us[6] is None:
-                new_users.append({"Username" : us[0][1:],
+            new_users.append({"Username" : us[0][1:],
                                 "Password" : us[1],
                                 "UID" : us[2],
                                 "GID" : us[3],
                                 "Description" : us[4],
                                 "Path" : us[5],
-                                "Shell" : us[6][len(us[6]) - 1]})
-            else:
-                new_users.append({"Username" : us[0][1:],
-                                "Password" : us[1],
-                                "UID" : us[2],
-                                "GID" : us[3],
-                                "Description" : us[4],
-                                "Path" : us[5],
-                                "Shell" : us[6]})
+                                "Shell" : us[6][:len(us[6]) - 1]})
 
     else:
         new_users.append('No changes')
