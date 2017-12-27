@@ -37,7 +37,7 @@ def get_items(filenames):
 def replace_blank(parts):
     for i in xrange(len(parts)):
         if parts[i] == '':
-            parts[i] = "N/A"
+            parts[i] = None
 
     return parts
 
