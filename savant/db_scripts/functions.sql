@@ -33,12 +33,17 @@ DECLARE
   loc_res  TEXT;
   row_id INT;
 BEGIN
-    IF EXISTS(SELECT 1 FROM Debs WHERE stat=par_stat AND name=par_name AND version=par_version AND architecture=par_arch) THEN
-        SELECT id INTO row_id FROM Debs WHERE stat=par_stat AND name=par_name AND version=par_version AND architecture=par_arch;
+    IF EXISTS(SELECT 1 FROM Debs WHERE (stat=par_stat OR stat IS NULL) AND (name=par_name OR name IS NULL)
+         AND (version=par_version OR version IS NULL) AND (architecture=par_arch OR architecture IS NULL)) THEN
+
+         SELECT id INTO row_id FROM Debs WHERE (stat=par_stat OR stat IS NULL) AND (name=par_name OR name IS NULL)
+         AND (version=par_version OR version IS NULL) AND (architecture=par_arch OR architecture IS NULL);
         INSERT INTO ScanDebs(debs_id, scan_timestamp_id) VALUES (row_id, get_last_scan());
+
     ELSE
         INSERT INTO Debs(stat, name, version, architecture) VALUES (par_stat, par_name, par_version, par_arch);
-        SELECT id INTO row_id FROM Debs WHERE stat=par_stat AND name=par_name AND version=par_version AND architecture=par_arch;
+        SELECT id INTO row_id FROM Debs WHERE (stat=par_stat OR stat IS NULL) AND (name=par_name OR name IS NULL)
+         AND (version=par_version OR version IS NULL) AND (architecture=par_arch OR architecture IS NULL);
         INSERT INTO ScanDebs(debs_id, scan_timestamp_id) VALUES (row_id, get_last_scan());
     END IF;
 
@@ -55,12 +60,17 @@ DECLARE
   loc_res  TEXT;
   row_id INT;
 BEGIN
-    IF EXISTS(SELECT 1 FROM Groups WHERE group_name=par_group_name AND password=par_password AND gid=par_gid AND users=par_users) THEN
-        SELECT id INTO row_id FROM Groups WHERE group_name=par_group_name AND password=par_password AND gid=par_gid AND users=par_users;
+    IF EXISTS(SELECT 1 FROM Groups WHERE (group_name=par_group_name OR group_name IS NULL) AND (password=par_password OR password IS NULL)
+         AND (gid=par_gid OR gid IS NULL) AND (users=par_users OR users IS NULL)) THEN
+
+         SELECT id INTO row_id FROM Groups WHERE (group_name=par_group_name OR group_name IS NULL) AND (password=par_password OR password IS NULL)
+         AND (gid=par_gid OR gid IS NULL) AND (users=par_users OR users IS NULL);
         INSERT INTO ScanGroups(groups_id, scan_timestamp_id) VALUES (row_id, get_last_scan());
+
     ELSE
         INSERT INTO Groups(group_name, password, gid, users) VALUES (par_group_name, par_password, par_gid, par_users);
-        SELECT id INTO row_id FROM Groups WHERE group_name=par_group_name AND password=par_password AND gid=par_gid AND users=par_users;
+        SELECT id INTO row_id FROM Groups WHERE (group_name=par_group_name OR group_name IS NULL) AND (password=par_password OR password IS NULL)
+         AND (gid=par_gid OR gid IS NULL) AND (users=par_users OR users IS NULL);
         INSERT INTO ScanGroups(groups_id, scan_timestamp_id) VALUES (row_id, get_last_scan());
     END IF;
 
@@ -78,16 +88,24 @@ DECLARE
   loc_res  TEXT;
   row_id INT;
 BEGIN
-    IF EXISTS(SELECT 1 FROM Shadow WHERE username=par_username AND password=par_password AND lastchanged=par_lastchanged AND
-       minimum=par_min AND maximum=par_max AND warn=par_warn AND inactive=par_inactive AND expire=par_expire AND reserve=par_reserve) THEN
-        SELECT id INTO row_id FROM Shadow WHERE username=par_username AND password=par_password AND lastchanged=par_lastchanged AND
-       minimum=par_min AND maximum=par_max AND warn=par_warn AND inactive=par_inactive AND expire=par_expire AND reserve=par_reserve;
+    IF EXISTS(SELECT 1 FROM Shadow WHERE (username=par_username OR username IS NULL) AND (password=par_password OR password IS NULL)
+         AND (lastchanged=par_lastchanged OR lastchanged IS NULL) AND (minimum=par_min OR minimum IS NULL)
+         AND (maximum=par_max OR maximum IS NULL) AND (warn=par_warn OR warn IS NULL) AND (inactive=par_inactive OR inactive IS NULL)
+         AND (expire=par_expire OR expire IS NULL) AND (reserve=par_reserve OR reserve IS NULL)) THEN
+
+            SELECT id INTO row_id FROM Shadow WHERE (username=par_username OR username IS NULL) AND (password=par_password OR password IS NULL)
+         AND (lastchanged=par_lastchanged OR lastchanged IS NULL) AND (minimum=par_min OR minimum IS NULL)
+         AND (maximum=par_max OR maximum IS NULL) AND (warn=par_warn OR warn IS NULL) AND (inactive=par_inactive OR inactive IS NULL)
+         AND (expire=par_expire OR expire IS NULL) AND (reserve=par_reserve OR reserve IS NULL);
         INSERT INTO ScanShadow(shadow_id, scan_timestamp_id) VALUES (row_id, get_last_scan());
+
     ELSE
         INSERT INTO Shadow(username, password, lastchanged, minimum, maximum, warn, inactive, expire, reserve)
         VALUES (par_username, par_password, par_lastchanged, par_min, par_max, par_warn, par_inactive, par_expire, par_reserve);
-        SELECT id INTO row_id FROM Shadow WHERE username=par_username AND password=par_password AND lastchanged=par_lastchanged AND
-       minimum=par_min AND maximum=par_max AND warn=par_warn AND inactive=par_inactive AND expire=par_expire AND reserve=par_reserve;
+        SELECT id INTO row_id FROM Shadow WHERE (username=par_username OR username IS NULL) AND (password=par_password OR password IS NULL)
+         AND (lastchanged=par_lastchanged OR lastchanged IS NULL) AND (minimum=par_min OR minimum IS NULL)
+         AND (maximum=par_max OR maximum IS NULL) AND (warn=par_warn OR warn IS NULL) AND (inactive=par_inactive OR inactive IS NULL)
+         AND (expire=par_expire OR expire IS NULL) AND (reserve=par_reserve OR reserve IS NULL);
         INSERT INTO ScanShadow(shadow_id, scan_timestamp_id) VALUES (row_id, get_last_scan());
     END IF;
 
@@ -105,16 +123,25 @@ DECLARE
   loc_res  TEXT;
   row_id INT;
 BEGIN
-    IF EXISTS(SELECT 1 FROM Users WHERE username=par_username AND password=par_password AND uid=par_uid AND gid=par_gid AND
-        description=par_description AND user_path=par_user_path AND shell=par_shell) THEN
-        SELECT id INTO row_id FROM Users WHERE username=par_username AND password=par_password AND uid=par_uid AND gid=par_gid AND
-        description=par_description AND user_path=par_user_path AND shell=par_shell;
+    IF EXISTS(SELECT 1 FROM Users WHERE (username=par_username OR username IS NULL) AND (password=par_password OR password IS NULL)
+         AND (uid=par_uid OR uid IS NULL) AND (gid=par_gid OR gid IS NULL)
+         AND (description=par_description OR description IS NULL) AND (user_path=par_user_path OR user_path IS NULL)
+         AND (shell=par_shell OR shell IS NULL)) THEN
+
+            SELECT id INTO row_id FROM Users WHERE (username=par_username OR username IS NULL) AND (password=par_password OR password IS NULL)
+         AND (uid=par_uid OR uid IS NULL) AND (gid=par_gid OR gid IS NULL)
+         AND (description=par_description OR description IS NULL) AND (user_path=par_user_path OR user_path IS NULL)
+         AND (shell=par_shell OR shell IS NULL);
         INSERT INTO ScanUsers(users_id, scan_timestamp_id) VALUES (row_id, get_last_scan());
+
     ELSE
+
         INSERT INTO Users(username, password, uid, gid, description, user_path, shell)
         VALUES (par_username, par_password, par_uid, par_gid, par_description, par_user_path, par_shell);
-        SELECT id INTO row_id FROM Users WHERE username=par_username AND password=par_password AND uid=par_uid AND gid=par_gid AND
-        description=par_description AND user_path=par_user_path AND shell=par_shell;
+        SELECT id INTO row_id FROM Users WHERE (username=par_username OR username IS NULL) AND (password=par_password OR password IS NULL)
+         AND (uid=par_uid OR uid IS NULL) AND (gid=par_gid OR gid IS NULL)
+         AND (description=par_description OR description IS NULL) AND (user_path=par_user_path OR user_path IS NULL)
+         AND (shell=par_shell OR shell IS NULL);
         INSERT INTO ScanUsers(users_id, scan_timestamp_id) VALUES (row_id, get_last_scan());
     END IF;
 
