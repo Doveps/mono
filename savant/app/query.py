@@ -58,6 +58,7 @@ class Query:
         self.engine_name = "postgresql://" + self.username + ":" + self.password + "@" + self.host + ":5432/" + self.db_name
 
         self.conn = psycopg2.connect(self.engine_name)
+        print "Cursor is closed: ", self.conn.cursor().closed
         self.cur = self.conn.cursor()
 
     # def set_engine_name(self):
@@ -118,22 +119,22 @@ class Query:
         # self.conn.close()
 
     def knowledge_debs(self, new_debs):
-        if self.new_debs[0] != "No changes":
-            for self.nd in self.new_debs:
+        if new_debs[0] != "No changes":
+            for self.nd in new_debs:
                 self.deb = self.cur.execute("select store_knowledge_debs(%s, %s ,%s, %s)",
                                                                                      (self.nd["Stat"], self.nd["Name"],
                                                                                         self.nd["Version"], self.nd["Architecture"]))
 
     def knowledge_groups(self, new_groups):
-        if self.new_groups[0] != "No changes":
-            for self.ng in self.new_groups:
+        if new_groups[0] != "No changes":
+            for self.ng in new_groups:
                 self.cur.execute("select store_knowledge_groups(%s, %s ,%s, %s)",
                                                                         (self.ng["Group Name"], self.ng["Password"],
                                                                          self.ng["Gid"], self.ng["Users"]))
 
     def knowledge_shadow(self, new_shadow):
-        if self.new_shadow[0] != "No changes":
-            for self.ns in self.new_shadow:
+        if new_shadow[0] != "No changes":
+            for self.ns in new_shadow:
                 self.cur.execute("select store_knowledge_shadow(%s, %s ,%s, %s, %s, %s ,%s, %s, %s)",
                                                                                             (self.ns["Username"], self.ns["Password"],
                                                                                             self.ns["Last Changed"],
@@ -142,8 +143,8 @@ class Query:
                                                                                             self.ns["Expire"], self.ns["Reserve"]))
 
     def knowledge_users(self, new_users):
-        if self.new_users[0] != "No changes":
-            for self.nu in self.new_users:
+        if new_users[0] != "No changes":
+            for self.nu in new_users:
                 self.cur.execute("select store_knowledge_users(%s, %s ,%s, %s, %s, %s, %s )",
                                                                                 (self.nu["Username"], self.nu["Password"],
                                                                                 self.nu["UID"], self.nu["GID"],
