@@ -23,15 +23,15 @@ def compare():
     filenames = request.files.getlist('files[]')
 
     get_scanned.get_items(filenames)
-    que_records = query.Query()
-    que_records.record_flavors()
+    que_compare = query.Query()
+    que_compare.record_flavors()
 
     json_file = "Comparison-" + now.strftime("%Y-%m-%d_%H:%M") + ".json"
 
-    new_packages =  json.dumps([{"Debs" : {"New" : que_records.new_debs()}},
-                                {"Groups" : {"New" : que_records.new_groups()}},
-                                {"Shadow" : {"New" : que_records.new_shadow()}},
-                                {"Users" : {"New" : que_records.new_users()}}], indent=4, sort_keys=True)
+    new_packages =  json.dumps([{"Debs" : {"New" : que_compare.new_debs()}},
+                                {"Groups" : {"New" : que_compare.new_groups()}},
+                                {"Shadow" : {"New" : que_compare.new_shadow()}},
+                                {"Users" : {"New" : que_compare.new_users()}}], indent=4, sort_keys=True)
 
     with io.open(json_file, 'w', encoding='utf-8') as data:
         data.write(unicode(new_packages))
@@ -40,7 +40,8 @@ def compare():
 
 @app.route('/doveps/api/action/create/<json_file>/<name>/<resource>/<action>', methods=['GET'])
 def create_action(json_file, name, resource, action):
-    query.record_knowledge(json_file, name, resource, action)
+    que_records = query.Query()
+    que_records.record_knowledge(json_file, name, resource, action)
      
     return jsonify({"Status" : "OK", "Message" : "Linked"})
 
