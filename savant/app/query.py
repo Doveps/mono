@@ -113,8 +113,8 @@ class Query:
         knowledge_users(new_users)
 
         self.conn.commit()
-        self.cur.close()
-        self.conn.close()
+        # self.cur.close()
+        # self.conn.close()
 
     def knowledge_debs(new_debs):
         if new_debs[0] != "No changes":
