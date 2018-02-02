@@ -12,7 +12,9 @@ now = datetime.datetime.now()
 def create_flavors():
     filenames = request.files.getlist('files[]')
     get_scanned.get_items(filenames)
-    query.record_flavors()
+    # query.record_flavors()
+    que = query.Query()
+    que.record_flavors()
 
     return jsonify({"Status" : "OK", "Message" : "Saved"})
 
@@ -21,14 +23,15 @@ def compare():
     filenames = request.files.getlist('files[]')
 
     get_scanned.get_items(filenames)
-    query.record_flavors()
+    que = query.Query()
+    que.record_flavors()
 
     json_file = "Comparison-" + now.strftime("%Y-%m-%d_%H:%M") + ".json"
 
-    new_packages =  json.dumps([{"Debs" : {"New" : query.new_debs()}},
-                                {"Groups" : {"New" : query.new_groups()}},
-                                {"Shadow" : {"New" : query.new_shadow()}},
-                                {"Users" : {"New" : query.new_users()}}], indent=4, sort_keys=True)
+    new_packages =  json.dumps([{"Debs" : {"New" : que.new_debs()}},
+                                {"Groups" : {"New" : que.new_groups()}},
+                                {"Shadow" : {"New" : que.new_shadow()}},
+                                {"Users" : {"New" : que.new_users()}}], indent=4, sort_keys=True)
 
     with io.open(json_file, 'w', encoding='utf-8') as data:
         data.write(unicode(new_packages))
