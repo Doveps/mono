@@ -89,8 +89,8 @@ class Query:
         self.cur.executemany("select store_users(%s, %s, %s, %s,%s, %s, %s)", get_scanned.users)    
 
         self.conn.commit()
-        self.cur.close()
-        self.conn.close()
+        # self.cur.close()
+        # self.conn.close()
 
     def record_knowledge(self, json_file, name, resource, action):
         # set_engine_name()
