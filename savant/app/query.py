@@ -7,43 +7,8 @@ from app import app
 from app.base_path import get_path
 from app import get_scanned
 
-# def set_engine_name():
-#     global conn, cur
-
-#     path = get_path() + "/mono/savant/app"
-#     os.chdir(path)
-
-#     with open('db_config.json', 'r') as db_file:
-#         db_info = json.load(db_file)
-
-#     db_name = db_info["database"]["database_name"]
-#     username = db_info["database"]["username"]
-#     password = db_info["database"]["password"]
-#     host = db_info["database"]["host"]
-#     engine_name = "postgresql://" + username + ":" + password + "@" + host + ":5432/" + db_name
-
-#     conn = psycopg2.connect(engine_name)
-#     cur = conn.cursor()
-
-def execute_sql(sql_file):
-    set_engine_name()
-
-    path = get_path()
-    if not path.__contains__("/mono/savant/db_script"):
-        db_directory = path + "/mono/savant/db_scripts"
-    else:
-        db_directory = path
-
-    os.chdir(db_directory)
-    cur.execute(open(str(sql_file), "r").read())
-    conn.commit()
-    cur.close()
-    conn.close()
-
 class Query:
     def __init__(self):
-        # global conn, cur
-        print "Inside init"
 
         self.path = get_path() + "/mono/savant/app"
         os.chdir(self.path)
@@ -58,42 +23,18 @@ class Query:
         self.engine_name = "postgresql://" + self.username + ":" + self.password + "@" + self.host + ":5432/" + self.db_name
 
         self.conn = psycopg2.connect(self.engine_name)
-        print "Cursor is closed: ", self.conn.cursor().closed
         self.cur = self.conn.cursor()
 
-    # def set_engine_name(self):
-    #     global conn, cur
-
-    #     path = get_path() + "/mono/savant/app"
-    #     os.chdir(path)
-
-    #     with open('db_config.json', 'r') as db_file:
-    #         db_info = json.load(db_file)
-
-    #     db_name = db_info["database"]["database_name"]
-    #     username = db_info["database"]["username"]
-    #     password = db_info["database"]["password"]
-    #     host = db_info["database"]["host"]
-    #     engine_name = "postgresql://" + username + ":" + password + "@" + host + ":5432/" + db_name
-
-    #     conn = psycopg2.connect(engine_name)
-    #     cur = conn.cursor()
-
     def record_flavors(self):
-        # set_engine_name()
 
         self.cur.execute("select store_datetime()")
         self.cur.executemany("select store_debs(%s, %s ,%s, %s)", get_scanned.debs)
         self.cur.executemany("select store_groups(%s, %s, %s, %s)", get_scanned.groups)
         self.cur.executemany("select store_shadow(%s, %s, %s, %s, %s, %s, %s, %s, %s)", get_scanned.shadow)
-        self.cur.executemany("select store_users(%s, %s, %s, %s,%s, %s, %s)", get_scanned.users)    
-
+        self.cur.executemany("select store_users(%s, %s, %s, %s,%s, %s, %s)", get_scanned.users)
         self.conn.commit()
-        # self.cur.close()
-        # self.conn.close()
 
     def record_knowledge(self, json_file, name, resource, action):
-        # set_engine_name()
 
         self.cur.execute("select store_knowledge(%s, %s, %s)", (name, resource, action))
 
@@ -113,10 +54,7 @@ class Query:
         self.knowledge_groups(new_groups)
         self.knowledge_shadow(new_shadow)
         self.knowledge_users(new_users)
-
         self.conn.commit()
-        # self.cur.close()
-        # self.conn.close()
 
     def knowledge_debs(self, new_debs):
         if new_debs[0] != "No changes":
@@ -150,7 +88,6 @@ class Query:
                                                                                 self.nu["UID"], self.nu["GID"],
                                                                                 self.nu["Description"], self.nu["Path"], self.nu["Shell"]))
     def new_debs(self):
-        # set_engine_name()
 
         self.debs = self.cur.execute("select get_debs_unique()")
         self.debs = self.cur.fetchall()
@@ -168,13 +105,10 @@ class Query:
             self.new_debs.append('No changes')
 
         self.conn.commit()
-        # self.cur.close()
-        # self.conn.close()
 
         return self.new_debs
 
     def new_groups(self):
-        # set_engine_name()
 
         self.groups = self.cur.execute("select get_groups_unique()")
         self.groups = self.cur.fetchall()
@@ -192,13 +126,10 @@ class Query:
             self.new_groups.append('No changes')
 
         self.conn.commit()
-        # cur.close()
-        # conn.close()
 
         return self.new_groups
 
     def new_shadow(self):
-        # set_engine_name()
 
         self.shadow = self.cur.execute("select get_shadow_unique()")
         self.shadow = self.cur.fetchall()
@@ -221,8 +152,6 @@ class Query:
             self.new_shadow.append('No changes')
 
         self.conn.commit()
-        # cur.close()
-        # conn.close()
         
         return self.new_shadow
 
@@ -249,7 +178,17 @@ class Query:
             self.new_users.append('No changes')
 
         self.conn.commit()
-        # cur.close()
-        # conn.close()
-
+        
         return self.new_users
+
+    def execute_sql(self, sql_file):
+
+        self.path = get_path()
+        if not self.path.__contains__("/mono/savant/db_script"):
+            self.db_directory = self.path + "/mono/savant/db_scripts"
+        else:
+            self.db_directory = self.path
+
+        os.chdir(self.db_directory)
+        self.cur.execute(open(str(sql_file), "r").read())
+        self.conn.commit()
