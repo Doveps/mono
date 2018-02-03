@@ -156,7 +156,6 @@ class Query:
         return self.new_shadow
 
     def new_users(self):
-        # set_engine_name()
 
         self.users = self.cur.execute("select get_users_unique()")
         self.users = self.cur.fetchall()
