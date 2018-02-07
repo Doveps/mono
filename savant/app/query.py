@@ -52,7 +52,6 @@ class Query:
 
         if new_debs[0] != "No changes":
             for self.nd in new_debs:
-                print "nd: ", self.nd
                 self.deb = self.cur.execute("select store_knowledge_debs(%s, %s ,%s, %s)",
                                                                                      (self.nd["Stat"], self.nd["Name"],
                                                                                         self.nd["Version"], self.nd["Architecture"]))
