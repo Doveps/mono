@@ -50,27 +50,19 @@ class Query:
         users = self.res[3]
         new_users = users["Users"]["New"]
 
-        self.knowledge_debs(new_debs)
-        self.knowledge_groups(new_groups)
-        self.knowledge_shadow(new_shadow)
-        self.knowledge_users(new_users)
-        self.conn.commit()
-
-    def knowledge_debs(self, new_debs):
         if new_debs[0] != "No changes":
             for self.nd in new_debs:
+                print "nd: ", self.nd
                 self.deb = self.cur.execute("select store_knowledge_debs(%s, %s ,%s, %s)",
                                                                                      (self.nd["Stat"], self.nd["Name"],
                                                                                         self.nd["Version"], self.nd["Architecture"]))
 
-    def knowledge_groups(self, new_groups):
         if new_groups[0] != "No changes":
             for self.ng in new_groups:
                 self.cur.execute("select store_knowledge_groups(%s, %s ,%s, %s)",
                                                                         (self.ng["Group Name"], self.ng["Password"],
                                                                          self.ng["Gid"], self.ng["Users"]))
 
-    def knowledge_shadow(self, new_shadow):
         if new_shadow[0] != "No changes":
             for self.ns in new_shadow:
                 self.cur.execute("select store_knowledge_shadow(%s, %s ,%s, %s, %s, %s ,%s, %s, %s)",
@@ -80,13 +72,14 @@ class Query:
                                                                                             self.ns["Warn"], self.ns["Inactive"],
                                                                                             self.ns["Expire"], self.ns["Reserve"]))
 
-    def knowledge_users(self, new_users):
         if new_users[0] != "No changes":
             for self.nu in new_users:
                 self.cur.execute("select store_knowledge_users(%s, %s ,%s, %s, %s, %s, %s )",
                                                                                 (self.nu["Username"], self.nu["Password"],
                                                                                 self.nu["UID"], self.nu["GID"],
                                                                                 self.nu["Description"], self.nu["Path"], self.nu["Shell"]))
+        self.conn.commit()
+
     def new_debs(self):
 
         self.debs = self.cur.execute("select get_debs_unique()")
