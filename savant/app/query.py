@@ -35,9 +35,7 @@ class Query:
         self.conn.commit()
 
     def record_knowledge(self, json_file, name, resource, action):
-
         self.cur.execute("select store_knowledge(%s, %s, %s)", (name, resource, action))
-
         with open(json_file, 'r') as json_res:
             self.res =  json.load(json_res)
 
@@ -52,31 +50,19 @@ class Query:
 
         if new_debs[0] != "No changes":
             for self.nd in new_debs:
-                self.deb = self.cur.execute("select store_knowledge_debs(%s, %s ,%s, %s)",
-                                                                                     (self.nd["Stat"], self.nd["Name"],
-                                                                                        self.nd["Version"], self.nd["Architecture"]))
+                self.deb = self.cur.execute("select store_knowledge_debs(%s, %s ,%s, %s)", (self.nd["Stat"], self.nd["Name"], self.nd["Version"], self.nd["Architecture"]))
 
         if new_groups[0] != "No changes":
             for self.ng in new_groups:
-                self.cur.execute("select store_knowledge_groups(%s, %s ,%s, %s)",
-                                                                        (self.ng["Group Name"], self.ng["Password"],
-                                                                         self.ng["Gid"], self.ng["Users"]))
+                self.cur.execute("select store_knowledge_groups(%s, %s ,%s, %s)", (self.ng["Group Name"], self.ng["Password"], self.ng["Gid"], self.ng["Users"]))
 
         if new_shadow[0] != "No changes":
             for self.ns in new_shadow:
-                self.cur.execute("select store_knowledge_shadow(%s, %s ,%s, %s, %s, %s ,%s, %s, %s)",
-                                                                                            (self.ns["Username"], self.ns["Password"],
-                                                                                            self.ns["Last Changed"],
-                                                                                            self.ns["Minimum"], self.ns["Maximum"],
-                                                                                            self.ns["Warn"], self.ns["Inactive"],
-                                                                                            self.ns["Expire"], self.ns["Reserve"]))
+                self.cur.execute("select store_knowledge_shadow(%s, %s ,%s, %s, %s, %s ,%s, %s, %s)", (self.ns["Username"], self.ns["Password"], self.ns["Last Changed"], self.ns["Minimum"], self.ns["Maximum"], self.ns["Warn"], self.ns["Inactive"], self.ns["Expire"], self.ns["Reserve"]))
 
         if new_users[0] != "No changes":
             for self.nu in new_users:
-                self.cur.execute("select store_knowledge_users(%s, %s ,%s, %s, %s, %s, %s )",
-                                                                                (self.nu["Username"], self.nu["Password"],
-                                                                                self.nu["UID"], self.nu["GID"],
-                                                                                self.nu["Description"], self.nu["Path"], self.nu["Shell"]))
+                self.cur.execute("select store_knowledge_users(%s, %s ,%s, %s, %s, %s, %s )",(self.nu["Username"], self.nu["Password"], self.nu["UID"], self.nu["GID"], self.nu["Description"], self.nu["Path"], self.nu["Shell"]))
         self.conn.commit()
 
     def new_debs(self):
