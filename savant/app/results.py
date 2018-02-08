@@ -4,8 +4,8 @@ from app import app
 from app import get_scanned, query
 import io, json, timeit, logging, datetime, psycopg2
 
-# spcalls = SPcalls()
 now = datetime.datetime.now()
+path = str(os.getcwd()).split("/mono", 1)[0]
 
 @app.route('/doveps/api/flavor/create/', methods=['POST'])
 def create_flavors():
@@ -32,7 +32,7 @@ def compare():
                                 {"Shadow" : {"New" : que_compare.new_shadow()}},
                                 {"Users" : {"New" : que_compare.new_users()}}], indent=4, sort_keys=True)
 
-    with io.open("app/" + json_file, 'w', encoding='utf-8') as data:
+    with io.open(path + "/mono/savant/app/" + json_file, 'w', encoding='utf-8') as data:
         data.write(unicode(new_packages))
 
     return new_packages
