@@ -4,7 +4,6 @@ import os
 import psycopg2
 from sqlalchemy import create_engine
 from app import app
-from app.base_path import get_path
 from app import get_scanned
 
 class Query:

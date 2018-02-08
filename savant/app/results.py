@@ -2,7 +2,6 @@ from flask import Flask, jsonify, request
 import sys, os
 from app import app
 from app import get_scanned, query
-from app.base_path import get_path
 import io, json, timeit, logging, datetime, psycopg2
 
 # spcalls = SPcalls()
