@@ -9,7 +9,7 @@ from app import get_scanned
 class Query:
     def __init__(self):
 
-        print "dir: ", os.getcwd()
+        print "dir jos: ", os.getcwd()
 
         with open('app/db_config.json', 'r') as db_file:
             db_info = json.load(db_file)
