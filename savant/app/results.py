@@ -32,7 +32,7 @@ def compare():
                                 {"Shadow" : {"New" : que_compare.new_shadow()}},
                                 {"Users" : {"New" : que_compare.new_users()}}], indent=4, sort_keys=True)
 
-    with io.open(json_file, 'w', encoding='utf-8') as data:
+    with io.open("app/" + json_file, 'w', encoding='utf-8') as data:
         data.write(unicode(new_packages))
 
     return new_packages

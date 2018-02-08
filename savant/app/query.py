@@ -9,10 +9,7 @@ from app import get_scanned
 class Query:
     def __init__(self):
 
-        self.path = get_path() + "/mono/savant/app"
-        os.chdir(self.path)
-
-        with open('db_config.json', 'r') as db_file:
+        with open('app/db_config.json', 'r') as db_file:
             db_info = json.load(db_file)
 
         self.db_name = db_info["database"]["database_name"]
@@ -35,7 +32,7 @@ class Query:
 
     def record_knowledge(self, json_file, name, resource, action):
         self.cur.execute("select store_knowledge(%s, %s, %s)", (name, resource, action))
-        with open(json_file, 'r') as json_res:
+        with open("app/" + json_file, 'r') as json_res:
             self.res =  json.load(json_res)
 
         debs = self.res[0]
