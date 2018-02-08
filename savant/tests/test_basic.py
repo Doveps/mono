@@ -6,9 +6,6 @@ from app.results import create_flavors, compare
 from app import query
  
 class TestDoveps(unittest.TestCase):
-    que_test = query.Query()
-    que_test.execute_sql("tables.sql")
-    que_test.execute_sql("functions.sql")
 
     def test_acreate_flavor(self):
         path = str(os.getcwd()).split("/mono", 1)[0]

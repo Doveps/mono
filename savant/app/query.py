@@ -157,15 +157,3 @@ class Query:
         self.conn.commit()
         
         return self.new_users
-
-    def execute_sql(self, sql_file):
-
-        self.path = get_path()
-        if not self.path.__contains__("/mono/savant/db_script"):
-            self.db_directory = self.path + "/mono/savant/db_scripts"
-        else:
-            self.db_directory = self.path
-
-        os.chdir(self.db_directory)
-        self.cur.execute(open(str(sql_file), "r").read())
-        self.conn.commit()
