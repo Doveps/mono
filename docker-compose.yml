@@ -11,7 +11,8 @@ services:
       - "5432:5432"
   savant:
     build: .
-    command: python savant/run.py
+    command: python savant/tests/test_basic.py
+    # command: python savant/run.py
     #command: bash
     expose:
       - "5000"
