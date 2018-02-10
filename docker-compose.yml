@@ -11,9 +11,9 @@ services:
       - "5432:5432"
   savant:
     build: .
-    # command: python savant/tests/test_basic.py
+    command: python savant/tests/test_basic.py
     # command: python savant/run.py
-    command: bash -c "sleep 10"
+    # command: bash -c "sleep 10"
     expose:
       - "5000"
     volumes:
