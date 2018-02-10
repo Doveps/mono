@@ -4,16 +4,19 @@ services:
     image: postgres
     #restart: always
     environment:
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: doveps
     expose:
       - "5432"
-    ports:
-      - "5432:5432"
+    volumes:
+      # https://gist.github.com/onjin/2dd3cc52ef79069de1faa2dfd456c945
+      - ./savant/db_scripts:/docker-entrypoint-initdb.d/
   savant:
     build: .
-    command: python savant/tests/test_basic.py
     # command: python savant/run.py
-    # command: bash -c "sleep 10"
+    command: python savant/tests/test_basic.py
+    #command: bash
     expose:
       - "5000"
     volumes:
