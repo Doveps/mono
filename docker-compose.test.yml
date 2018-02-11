@@ -1,3 +1,4 @@
+
 version: '3'
 services:
   db:
@@ -12,16 +13,8 @@ services:
     volumes:
       # https://gist.github.com/onjin/2dd3cc52ef79069de1faa2dfd456c945
       - ./savant/db_scripts:/docker-entrypoint-initdb.d/
-  savant:
+  tests:
     build: .
-    command: python savant/run.py
-   # command: python savant/tests/test_basic.py
-    #command: bash
-    expose:
-      - "5000"
-    volumes:
-      - .:/code
-    ports:
-      - "5000:5000"
+    command: python savant/tests/test_basic.py
     depends_on:
       - db
