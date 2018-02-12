@@ -4,168 +4,118 @@ import os
 import psycopg2
 from sqlalchemy import create_engine
 from app import app
-from app.base_path import get_path
 from app import get_scanned
 
-def set_engine_name():
-    global conn, cur
+path = str(os.getcwd()).split("/mono", 1)[0]
 
-    path = get_path() + "/mono/savant/app"
-    os.chdir(path)
+class Query:
+    def __init__(self):
 
-    with open('db_config.json', 'r') as db_file:
-        db_info = json.load(db_file)
+        with open(path + '/mono/savant/app/db_config.json', 'r') as db_file:
+            db_info = json.load(db_file)
 
-    db_name = db_info["database"]["database_name"]
-    username = db_info["database"]["username"]
-    password = db_info["database"]["password"]
-    host = db_info["database"]["host"]
-    engine_name = "postgresql://" + username + ":" + password + "@" + host + ":5432/" + db_name
+        self.db_name = db_info["database"]["database_name"]
+        self.username = db_info["database"]["username"]
+        self.password = db_info["database"]["password"]
+        self.host = db_info["database"]["host"]
+        self.engine_name = "postgresql://" + self.username + ":" + self.password + "@" + self.host + ":5432/" + self.db_name
 
-    conn = psycopg2.connect(engine_name)
-    cur = conn.cursor()
+        self.conn = psycopg2.connect(self.engine_name)
+        self.cur = self.conn.cursor()
 
-def execute_sql(sql_file):
-    set_engine_name()
+    def record_flavors(self):
 
-    path = get_path()
-    if not path.__contains__("/mono/savant/db_script"):
-        db_directory = path + "/mono/savant/db_scripts"
-    else:
-        db_directory = path
+        self.cur.execute("select store_datetime()")
+        self.cur.executemany("select store_debs(%s, %s ,%s, %s)", get_scanned.debs)
+        self.cur.executemany("select store_groups(%s, %s, %s, %s)", get_scanned.groups)
+        self.cur.executemany("select store_shadow(%s, %s, %s, %s, %s, %s, %s, %s, %s)", get_scanned.shadow)
+        self.cur.executemany("select store_users(%s, %s, %s, %s,%s, %s, %s)", get_scanned.users)
+        self.conn.commit()
 
-    os.chdir(db_directory)
-    cur.execute(open(str(sql_file), "r").read())
-    conn.commit()
-    cur.close()
-    conn.close()
+    def record_knowledge(self, json_file, name, resource, action):
+        self.cur.execute("select store_knowledge(%s, %s, %s)", (name, resource, action))
+        with open("app/" + json_file, 'r') as json_res:
+            self.res =  json.load(json_res)
 
-def record_flavors():
-    set_engine_name()
+        debs = self.res[0]
+        new_debs = debs["Debs"]["New"]
+        groups = self.res[1]
+        new_groups = groups["Groups"]["New"]
+        shadow = self.res[2]
+        new_shadow = shadow["Shadow"]["New"]
+        users = self.res[3]
+        new_users = users["Users"]["New"]
 
-    cur.execute("select store_datetime()")
-    cur.executemany("select store_debs(%s, %s ,%s, %s)", get_scanned.debs)
-    cur.executemany("select store_groups(%s, %s, %s, %s)", get_scanned.groups)
-    cur.executemany("select store_shadow(%s, %s, %s, %s, %s, %s, %s, %s, %s)", get_scanned.shadow)
-    cur.executemany("select store_users(%s, %s, %s, %s,%s, %s, %s)", get_scanned.users)    
+        if new_debs[0] != "No changes":
+            for self.nd in new_debs:
+                self.deb = self.cur.execute("select store_knowledge_debs(%s, %s ,%s, %s)", (self.nd["Stat"], self.nd["Name"], self.nd["Version"], self.nd["Architecture"]))
 
-    conn.commit()
-    cur.close()
-    conn.close()
+        if new_groups[0] != "No changes":
+            for self.ng in new_groups:
+                self.cur.execute("select store_knowledge_groups(%s, %s ,%s, %s)", (self.ng["Group Name"], self.ng["Password"], self.ng["Gid"], self.ng["Users"]))
 
-def record_knowledge(json_file, name, resource, action):
-    set_engine_name()
+        if new_shadow[0] != "No changes":
+            for self.ns in new_shadow:
+                self.cur.execute("select store_knowledge_shadow(%s, %s ,%s, %s, %s, %s ,%s, %s, %s)", (self.ns["Username"], self.ns["Password"], self.ns["Last Changed"], self.ns["Minimum"], self.ns["Maximum"], self.ns["Warn"], self.ns["Inactive"], self.ns["Expire"], self.ns["Reserve"]))
 
-    cur.execute("select store_knowledge(%s, %s, %s)", (name, resource, action))
+        if new_users[0] != "No changes":
+            for self.nu in new_users:
+                self.cur.execute("select store_knowledge_users(%s, %s ,%s, %s, %s, %s, %s )",(self.nu["Username"], self.nu["Password"], self.nu["UID"], self.nu["GID"], self.nu["Description"], self.nu["Path"], self.nu["Shell"]))
+        self.conn.commit()
 
-    with open(json_file, 'r') as json_res:
-        res =  json.load(json_res)
+    def new_debs(self):
 
-    debs = res[0]
-    new_debs = debs["Debs"]["New"]
-    groups = res[1]
-    new_groups = groups["Groups"]["New"]
-    shadow = res[2]
-    new_shadow = shadow["Shadow"]["New"]
-    users = res[3]
-    new_users = users["Users"]["New"]
+        self.debs = self.cur.execute("select get_debs_unique()")
+        self.debs = self.cur.fetchall()
+        self.new_debs = []
 
-    knowledge_debs(new_debs)
-    knowledge_groups(new_groups)
-    knowledge_shadow(new_shadow)
-    knowledge_users(new_users)
-
-    conn.commit()
-    cur.close()
-    conn.close()
-
-def knowledge_debs(new_debs):
-    if new_debs[0] != "No changes":
-        for nd in new_debs:
-            deb = cur.execute("select store_knowledge_debs(%s, %s ,%s, %s)", (nd["Stat"], nd["Name"], nd["Version"], nd["Architecture"]))
-
-def knowledge_groups(new_groups):
-    if new_groups[0] != "No changes":
-        for ng in new_groups:
-            cur.execute("select store_knowledge_groups(%s, %s ,%s, %s)", (ng["Group Name"], ng["Password"], ng["Gid"], ng["Users"]))
-
-def knowledge_shadow(new_shadow):
-    if new_shadow[0] != "No changes":
-
-        for ns in new_shadow:
-            cur.execute("select store_knowledge_shadow(%s, %s ,%s, %s, %s, %s ,%s, %s, %s)", (ns["Username"], ns["Password"],
-                                                                                            ns["Last Changed"], ns["Minimum"],
-                                                                                            ns["Maximum"],
-                                                                                            ns["Warn"], ns["Inactive"],
-                                                                                            ns["Expire"], ns["Reserve"]))
-
-def knowledge_users(new_users):
-    if new_users[0] != "No changes":
-        for nu in new_users:
-            cur.execute("select store_knowledge_users(%s, %s ,%s, %s, %s, %s, %s )", (nu["Username"], nu["Password"],
-                                                                                    nu["UID"], nu["GID"],
-                                                                                    nu["Description"], nu["Path"], nu["Shell"]))
-
-def new_debs():
-    set_engine_name()
-
-    debs = cur.execute("select get_debs_unique()")
-    debs = cur.fetchall()
-    new_debs = []
-
-    if len(debs) != 0:
-        for deb in debs:
-            d = str(deb[0])
-            db = d.split(',')
-            new_debs.append({"Stat" : db[0][1:],
+        if len(self.debs) != 0:
+            for self.deb in self.debs:
+                d = str(self.deb[0])
+                db = d.split(',')
+                self.new_debs.append({"Stat" : db[0][1:],
                             "Name" : db[1],
                             "Version" : db[2],
                             "Architecture" : db[3][:len(db[3]) - 1]})
-    else:
-        new_debs.append('No changes')
+        else:
+            self.new_debs.append('No changes')
 
-    conn.commit()
-    cur.close()
-    conn.close()
+        self.conn.commit()
 
-    return new_debs
+        return self.new_debs
 
-def new_groups():
-    set_engine_name()
+    def new_groups(self):
 
-    groups = cur.execute("select get_groups_unique()")
-    groups = cur.fetchall()
-    new_groups = []
+        self.groups = self.cur.execute("select get_groups_unique()")
+        self.groups = self.cur.fetchall()
+        self.new_groups = []
 
-    if len(groups) != 0:
-        for group in groups:
-            g = str(group[0])
-            gr = g.split(',')
-            new_groups.append({"Group Name" : gr[0][1:],
+        if len(self.groups) != 0:
+            for self.group in self.groups:
+                g = str(self.group[0])
+                gr = g.split(',')
+                self.new_groups.append({"Group Name" : gr[0][1:],
                                 "Password" : gr[1],
                                 "Gid" : gr[2],
                                 "Users" : gr[3][:len(gr[3]) - 1]})
-    else:
-        new_groups.append('No changes')
+        else:
+            self.new_groups.append('No changes')
 
-    conn.commit()
-    cur.close()
-    conn.close()
+        self.conn.commit()
 
-    return new_groups
+        return self.new_groups
 
-def new_shadow():
-    set_engine_name()
+    def new_shadow(self):
 
-    shadow = cur.execute("select get_shadow_unique()")
-    shadow = cur.fetchall()
-    new_shadow = []
+        self.shadow = self.cur.execute("select get_shadow_unique()")
+        self.shadow = self.cur.fetchall()
+        self.new_shadow = []
 
-    if len(shadow) != 0:
-        for shad in shadow:
-            s = str(shad[0])
-            sh = s.split(',')
-            new_shadow.append({"Username" : sh[0][1:],
+        if len(self.shadow) != 0:
+            for self.shad in self.shadow:
+                s = str(self.shad[0])
+                sh = s.split(',')
+                self.new_shadow.append({"Username" : sh[0][1:],
                                 "Password" : sh[1],
                                 "Last Changed" : sh[2],
                                 "Minimum" : sh[3],
@@ -174,27 +124,24 @@ def new_shadow():
                                 "Inactive" : sh[6],
                                 "Expire" : sh[7],
                                 "Reserve" : sh[8][:len(sh[8]) - 1]})
-    else:
-        new_shadow.append('No changes')
+        else:
+            self.new_shadow.append('No changes')
 
-    conn.commit()
-    cur.close()
-    conn.close()
+        self.conn.commit()
         
-    return new_shadow
+        return self.new_shadow
 
-def new_users():
-    set_engine_name()
+    def new_users(self):
 
-    users = cur.execute("select get_users_unique()")
-    users = cur.fetchall()
-    new_users = []
+        self.users = self.cur.execute("select get_users_unique()")
+        self.users = self.cur.fetchall()
+        self.new_users = []
 
-    if len(users) != 0:
-        for user in users:
-            u = str(user[0])
-            us = u.split(',')
-            new_users.append({"Username" : us[0][1:],
+        if len(self.users) != 0:
+            for self.user in self.users:
+                u = str(self.user[0])
+                us = u.split(',')
+                self.new_users.append({"Username" : us[0][1:],
                                 "Password" : us[1],
                                 "UID" : us[2],
                                 "GID" : us[3],
@@ -202,11 +149,9 @@ def new_users():
                                 "Path" : us[5],
                                 "Shell" : us[6][:len(us[6]) - 1]})
 
-    else:
-        new_users.append('No changes')
+        else:
+            self.new_users.append('No changes')
 
-    conn.commit()
-    cur.close()
-    conn.close()
-
-    return new_users
+        self.conn.commit()
+        
+        return self.new_users

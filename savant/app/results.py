@@ -2,17 +2,18 @@ from flask import Flask, jsonify, request
 import sys, os
 from app import app
 from app import get_scanned, query
-from app.base_path import get_path
 import io, json, timeit, logging, datetime, psycopg2
 
-# spcalls = SPcalls()
 now = datetime.datetime.now()
+path = str(os.getcwd()).split("/mono", 1)[0]
 
 @app.route('/doveps/api/flavor/create/', methods=['POST'])
 def create_flavors():
     filenames = request.files.getlist('files[]')
     get_scanned.get_items(filenames)
-    query.record_flavors()
+    # query.record_flavors()
+    que_flavors = query.Query()
+    que_flavors.record_flavors()
 
     return jsonify({"Status" : "OK", "Message" : "Saved"})
 
@@ -21,23 +22,25 @@ def compare():
     filenames = request.files.getlist('files[]')
 
     get_scanned.get_items(filenames)
-    query.record_flavors()
+    que_compare = query.Query()
+    que_compare.record_flavors()
 
     json_file = "Comparison-" + now.strftime("%Y-%m-%d_%H:%M") + ".json"
 
-    new_packages =  json.dumps([{"Debs" : {"New" : query.new_debs()}},
-                                {"Groups" : {"New" : query.new_groups()}},
-                                {"Shadow" : {"New" : query.new_shadow()}},
-                                {"Users" : {"New" : query.new_users()}}], indent=4, sort_keys=True)
+    new_packages =  json.dumps([{"Debs" : {"New" : que_compare.new_debs()}},
+                                {"Groups" : {"New" : que_compare.new_groups()}},
+                                {"Shadow" : {"New" : que_compare.new_shadow()}},
+                                {"Users" : {"New" : que_compare.new_users()}}], indent=4, sort_keys=True)
 
-    with io.open(json_file, 'w', encoding='utf-8') as data:
+    with io.open(path + "/mono/savant/app/" + json_file, 'w', encoding='utf-8') as data:
         data.write(unicode(new_packages))
 
     return new_packages
 
 @app.route('/doveps/api/action/create/<json_file>/<name>/<resource>/<action>', methods=['GET'])
 def create_action(json_file, name, resource, action):
-    query.record_knowledge(json_file, name, resource, action)
+    que_records = query.Query()
+    que_records.record_knowledge(json_file, name, resource, action)
      
     return jsonify({"Status" : "OK", "Message" : "Linked"})
 
