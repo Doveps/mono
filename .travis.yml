@@ -27,4 +27,4 @@ after_deploy:
   - curl -F file=@home/travis/build/Doveps/mono/Savanttests/Scanner_Files/33.33.33.50/find_users_stdout.log http://127.0.0.1:5000/doveps/api/flavor/create/
 
 script:
-  - python savant/tests/test_basic.py
+  - docker-compose -f docker-compose.test.yml up

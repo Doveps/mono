@@ -19,9 +19,6 @@ class Query:
         self.password = db_info["database"]["password"]
         self.host = db_info["database"]["host"]
         self.engine_name = "postgresql://" + self.username + ":" + self.password + "@" + self.host + ":5432/" + self.db_name
-
-	print "engine name: ", self.engine_name
-
         self.conn = psycopg2.connect(self.engine_name)
         self.cur = self.conn.cursor()
 
