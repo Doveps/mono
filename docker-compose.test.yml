@@ -14,7 +14,7 @@ services:
       - ./savant/db_scripts:/docker-entrypoint-initdb.d/
   tests:
     build: .
-    command: bash -c 'sleep 5; touch savant/app/db_config.json;  cat savant/app/db_config_travis.json >> savant/app/db_config.json; python savant/tests/test_basic.py'
+    command: bash -c 'sleep 5; rm -rf savant/app/db_config.json; touch savant/app/db_config.json;  cat savant/app/db_config_travis.json >> savant/app/db_config.json; python savant/tests/test_basic.py'
     expose:
       - "5000"
     volumes:
