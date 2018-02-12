@@ -15,7 +15,6 @@ services:
   tests:
     build: .
     command: python savant/tests/test_basic.py
-#    command: bash -c "while true; do sleep 5; done"
     expose:
       - "5000"
     volumes:
@@ -23,5 +22,4 @@ services:
     ports:
       - "5000:5000" 
     depends_on:
-      db:
-        condition: service_healthy
+      - db
