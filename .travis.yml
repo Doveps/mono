@@ -20,6 +20,8 @@ service:
   - cat savant/app/db_config_travis.json >> savant/app/db_config.json
   - docker-compose up -d
   - docker exec -it mono_savant_1 bash
+  - ls
+  - cat test.sh
 
 after_deploy:
   - ls
