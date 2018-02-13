@@ -18,10 +18,10 @@ service:
 #  - psql -U postgres -d travis_ci_test -a -f savant/db_scripts/functions.sql
   - touch savant/app/db_config.json
   - cat savant/app/db_config_travis.json >> savant/app/db_config.json
-  - docker-compose up -d
-  - docker exec -it mono_savant_1 bash
-  - ls
-  - cat test.sh
+#  - docker-compose up -d
+#  - docker exec -it mono_savant_1 bash
+#  - ls
+#  - cat test.sh
 
 after_deploy:
   - ls
@@ -31,4 +31,4 @@ after_deploy:
   - curl -F file=@home/travis/build/Doveps/mono/Savanttests/Scanner_Files/33.33.33.50/find_users_stdout.log http://127.0.0.1:5000/doveps/api/flavor/create/
 
 script:
-  - ./test.sh
+  - "docker-compose up -d; docker exec -it mono_savant_1 bash; ./test.sh"
