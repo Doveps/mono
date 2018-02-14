@@ -1,4 +1,4 @@
-version: '3'
+ersion: '3'
 services:
   db:
     image: postgres
@@ -25,3 +25,15 @@ services:
       - "5000:5000"
     depends_on:
       - db
+  tests:
+    build: .
+    command: bash -c 'sleep 5; rm -rf savant/app/db_config.json; touch savant/app/db_config.json;  cat savant/app/db_config_travis.json >> savant/app/$
+    expose:
+      - "5000"
+    volumes:
+      - .:/code
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+

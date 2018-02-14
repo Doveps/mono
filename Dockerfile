@@ -1,5 +1,6 @@
 FROM python:2
 ENV PYTHONUNBUFFERED 1
+ENV PATH=$PATH:/root/mono/test.sh
 RUN mkdir /code
 WORKDIR /code
 ADD . /code/
