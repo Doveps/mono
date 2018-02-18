@@ -15,7 +15,12 @@ service:
 #  - psql -c 'drop database if exists travis_ci_test;' -U postgres
 #  - psql -c 'create database travis_ci_test;' -U postgres
 #  - psql -U postgres -d travis_ci_test -a -f savant/db_scripts/tables.sql
-#  - psql -U postgres -d travis_ci_test -a -f savant/db_scripts/functions.sql
+#  - psql -U postgres -d travis_ci_test -a -f savant/db_scripts/functions.
+before_script:
+  - psql -c 'drop database if exists travis_ci_test;' -U postgres
+  - psql -c 'create database travis_ci_test;' -U postgres
+  - psql -U postgres -d travis_ci_test -a -f savant/db_scripts/tables.sql
+  - psql -U postgres -d travis_ci_test -a -f savant/db_scripts/functions.sql
   - touch savant/app/db_config.json
   - cat savant/app/db_config_travis.json >> savant/app/db_config.json
 #  - docker-compose up -d

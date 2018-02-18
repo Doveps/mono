@@ -10,7 +10,7 @@ path = str(os.getcwd()).split("/savant", 1)[0]
 
 class Query:
     def __init__(self):
-
+      
         with open(path + '/savant/app/db_config.json', 'r') as db_file:
             db_info = json.load(db_file)
 
@@ -19,6 +19,7 @@ class Query:
         self.password = db_info["database"]["password"]
         self.host = db_info["database"]["host"]
         self.engine_name = "postgresql://" + self.username + ":" + self.password + "@" + self.host + ":5432/" + self.db_name
+
         self.conn = psycopg2.connect(self.engine_name)
         self.cur = self.conn.cursor()
 
