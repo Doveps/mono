@@ -9,4 +9,5 @@ RUN pip install -r savant/requirements.txt
 RUN pip install -r bassist/requirements.txt
 RUN pip install -e savant/.
 RUN pip install -e bassist/.
-CMD ["python savant/run.py"]
+ENTRYPOINT ["python"]
+CMD ["savant/run.py"]
