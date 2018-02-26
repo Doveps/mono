@@ -11,7 +11,7 @@ path = str(os.getcwd()).split("/mono", 1)[0]
 class Query:
     def __init__(self):
 
-        with open(path + '/mono/savant/app/db_config.json', 'r') as db_file:
+        with open(path + '/mono/savant/app/db_config/db_config.json', 'r') as db_file:
             db_info = json.load(db_file)
 
         self.db_name = db_info["database"]["database_name"]
