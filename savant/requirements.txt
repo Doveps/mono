@@ -5,3 +5,4 @@ django-filter
 pyyaml
 pytest-flask
 requests-toolbelt
+psycopg2-binary
