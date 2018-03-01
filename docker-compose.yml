@@ -6,7 +6,6 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: doveps
-      DATABASE_URL: postgres://postgres:postgres@localhost:5432/doveps
     expose:
       - "5432"
     healthcheck:

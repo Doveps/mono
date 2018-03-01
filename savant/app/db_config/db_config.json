@@ -4,6 +4,6 @@
         "database_name" : "doveps",
         "username" : "postgres",
         "password" : "postgres",
-        "host": "localhost"
+        "host": "127.0.1.1"
     }
 }
