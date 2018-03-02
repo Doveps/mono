@@ -18,7 +18,7 @@ services:
       context: .
       dockerfile: savant/Dockerfile
     volumes:
-      - ./pg_hba.conf:/usr/local/etc/postgres/pg_hba.conf
+      - ./mono/savanat/pg_hba.conf:/usr/local/etc/postgres/pg_hba.conf
     depends_on:
       - db
     expose:
