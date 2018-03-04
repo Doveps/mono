@@ -13,6 +13,9 @@ services:
       interval: 30s
       timeout: 30s
       retries: 3
+    # TODO: find a way to dev locally without needing to expose this port!
+    ports:
+      - "5432:5432"
   savant:
     build:
       context: .

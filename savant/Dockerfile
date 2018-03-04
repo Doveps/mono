@@ -11,5 +11,6 @@ RUN pip install -r requirements.txt
 RUN pip install -r /mono/bassist/requirements.txt
 RUN pip install -e .
 RUN pip install -e /mono/bassist/.
+RUN cp db_config_docker.json db_config.json
 ENTRYPOINT ["python"]
 CMD ["run.py"]

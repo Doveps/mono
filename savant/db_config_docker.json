@@ -1,9 +1,9 @@
 {
     "database" : 
     {
-        "database_name" : "travis_ci_test",
+        "database_name" : "db_with_docker_compose",
         "username" : "postgres",
         "password" : "postgres",
-        "host": "127.0.0.1"
+        "host": "db"
     }
 }
