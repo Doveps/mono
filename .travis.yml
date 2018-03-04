@@ -3,6 +3,6 @@ services:
 sudo: true
 before_script:
   - docker-compose up -d
-script: "! (docker-compose ps | grep 'Exit 1')"
+script: docker exec mono_savant_1 python tests/test_basic.py
 after_script:
   - docker-compose logs
