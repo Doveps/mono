@@ -1,7 +1,7 @@
 {
     "database" : 
     {
-        "database_name" : "db_with_docker_compose",
+        "database_name" : "doveps",
         "username" : "postgres",
         "password" : "postgres",
         "host": "db"
