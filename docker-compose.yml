@@ -14,8 +14,8 @@ services:
       timeout: 30s
       retries: 3
     # UN-COMMENT for local testing:
-    ports:
-      - "5432:5432"
+    #ports:
+      #- "5432:5432"
   savant:
     build:
       context: .
