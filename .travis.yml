@@ -3,6 +3,7 @@ services:
 sudo: true
 before_script:
   - docker-compose up -d
+  - ./db/ready.sh
 script: docker exec mono_savant_1 python tests/test_basic.py
 after_script:
   - docker-compose logs
