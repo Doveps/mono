@@ -9,7 +9,7 @@ from app import get_scanned
 class Query:
     def __init__(self):
 
-        with open('db_config.json', 'r') as db_file:
+        with open('app/db_config.json', 'r') as db_file:
             db_info = json.load(db_file)
 
         self.db_name = db_info["database"]["database_name"]
@@ -153,3 +153,17 @@ class Query:
         self.conn.commit()
         
         return self.new_users
+
+    def null_cases(self):
+        self.cur.execute("select store_debs(%s, %s ,%s, %s)", ('stat', None, 'test', 'test'))
+        self.conn.commit()
+        self.cur.execute("select store_debs(%s, %s ,%s, %s)", ('stat', None, 'test', 'test'))
+        self.conn.commit()
+        self.cur.execute("select count(*) from debs where stat=%s and name is null and version=%s and architecture=%s", ('stat', 'test', 'test'))
+        count = self.cur.fetchone()
+        # self.assertEqual(count[0], 1)
+
+        if count[0] == 1:
+            return True
+        else:
+            return False
