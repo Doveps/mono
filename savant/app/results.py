@@ -47,8 +47,8 @@ def create_action(json_file, name, resource, action):
 @app.route('/doveps/api/test-cases/null-values/', methods=['GET'])
 def check_null():
     que_test = query.Query()
-
-    return jsonify({"Result" : que_test.null_cases()})
+    
+    return "null:", que_test.null_cases()
 
 @app.route('/doveps/api/debs/', methods=['GET'])
 def show_debs():
