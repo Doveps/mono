@@ -9,7 +9,7 @@ from app import get_scanned
 class Query:
     def __init__(self):
 
-        with open('db_config.json', 'r') as db_file:
+        with open('app/db_config.json', 'r') as db_file:
             db_info = json.load(db_file)
 
         self.db_name = db_info["database"]["database_name"]
@@ -155,11 +155,20 @@ class Query:
         return self.new_users
 
     def null_cases(self):
-        self.cur.execute("select store_debs(%s, %s ,%s, %s)", ('stat', None, 'test', 'test'))
+        self.cur.execute("select stat, name, version, architecture, count(*) \
+                         from Debs group by stat, name, version, architecture \
+                          having count(*) > 1")
+        self.cur.execute("select group_name, password, gid, users, count(*) \
+                         from Groups group by group_name, password, gid, users \
+                          having count(*) > 1")
+        self.cur.execute("select username, password, lastchanged, minimum, maximum, warn, inactive, expire, reserve, count(*) \
+                         from Shadow group by username, password, lastchanged, minimum, maximum, warn, inactive, expire, reserve \
+                          having count(*) > 1")
+        self.cur.execute("select username, password, uid, gid, description, user_path, shell, count(*) \
+                         from Users group by username, password, uid, gid, description, user_path, shell \
+                          having count(*) > 1")
+        
         self.conn.commit()
-        self.cur.execute("select store_debs(%s, %s ,%s, %s)", ('stat', None, 'test', 'test'))
-        self.conn.commit()
-        self.cur.execute("select count(*) from debs where stat=%s and name is null and version=%s and architecture=%s", ('stat', 'test', 'test'))
-        count = self.cur.fetchone()
+        count = self.cur.fetchall()
 
-        assert count[0] == 1
+        assert count == []
