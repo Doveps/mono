@@ -161,7 +161,6 @@ class Query:
         self.conn.commit()
         self.cur.execute("select count(*) from debs where stat=%s and name is null and version=%s and architecture=%s", ('stat', 'test', 'test'))
         count = self.cur.fetchone()
-        # self.assertEqual(count[0], 1)
 
         if count[0] == 1:
             return True
