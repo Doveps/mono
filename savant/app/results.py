@@ -11,9 +11,9 @@ path = str(os.getcwd()).split("/mono", 1)[0]
 def create_flavors():
     filenames = request.files.getlist('files[]')
     get_scanned.get_items(filenames)
-    # query.record_flavors()
     que_flavors = query.Query()
     que_flavors.record_flavors()
+    que_flavors.null_cases()
 
     return jsonify({"Status" : "OK", "Message" : "Saved"})
 
@@ -35,6 +35,8 @@ def compare():
     with io.open(path + "/mono/savant/app/" + json_file, 'w', encoding='utf-8') as data:
         data.write(unicode(new_packages))
 
+    que_compare.null_cases()
+
     return new_packages
 
 @app.route('/doveps/api/action/create/<json_file>/<name>/<resource>/<action>', methods=['GET'])
@@ -43,12 +45,6 @@ def create_action(json_file, name, resource, action):
     que_records.record_knowledge(json_file, name, resource, action)
      
     return jsonify({"Status" : "OK", "Message" : "Linked"})
-
-@app.route('/doveps/api/test-cases/null-values/', methods=['GET'])
-def check_null():
-    que_test = query.Query()
-    
-    return "null:", que_test.null_cases()
 
 @app.route('/doveps/api/debs/', methods=['GET'])
 def show_debs():
