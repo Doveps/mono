@@ -5,10 +5,19 @@ from app import app
 from app.results import create_flavors, compare
 from app import query
 import psycopg2, json, sqlalchemy
-from sqlalchemy import create_engine
  
 class TestDoveps(unittest.TestCase):
+    def setUp(self):
+	os.system("sh" + ".")
+	self.engine = sqlalchemy.create_engine('postgresql+psycopg2://postgres:postgres@127.0.0.1:5432/doveps')
+	self.connection = self.engine.connect()
+	
+	sql_file = open('./db/scripts/01_tables.sql', 'r')
+	queries = sql_file.read()
+	sql_file.close()
 
+	self.connection.execute(queries)
+	
     def test_acreate_flavor(self):
         path = str(os.getcwd()).split("/mono", 1)[0]
         tester = app.test_client(self)
