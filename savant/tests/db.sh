@@ -25,17 +25,8 @@ wait_for_line () {
     cat "$2" >/dev/null &
 }
 
-apt-get install software-properties-common
-add-apt-repository "deb https://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main"
-wget --quiet -O - https://postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add - 
-apt-get update
-apt-get remove libpq5
-apt-get install libpq-dev
-apt-get install postgresql-9.4
-/usr/lib/postgresql/9.1/bin/initdb /usr/local/var/postgres
-
  
-#check_for_cmd postgres
+check_for_cmd postgres
  
 trap "clean_exit" EXIT
  
