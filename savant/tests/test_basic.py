@@ -8,8 +8,14 @@ import psycopg2, json, sqlalchemy
  
 class TestDoveps(unittest.TestCase):
     def setUp(self):
-	os.system("sh" + ".")
-	self.engine = sqlalchemy.create_engine('postgresql+psycopg2://postgres:postgres@127.0.0.1:5432/doveps')
+#	os.system("sh db.sh")
+	url = os.getenv("DB_TEST_URL")
+	print "url: ", url
+	
+	if not url:
+		self.skipTest("No DB")
+#	self.engine = sqlalchemy.create_engine('postgresql+psycopg2://postgres:postgres@127.0.0.1:5432/doveps')
+	self.engine = sqlalchemy.create_engine(url)
 	self.connection = self.engine.connect()
 	
 	sql_file = open('./db/scripts/01_tables.sql', 'r')
