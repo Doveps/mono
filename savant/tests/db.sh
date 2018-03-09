@@ -26,7 +26,7 @@ wait_for_line () {
 }
 
  
-check_for_cmd postgres
+#check_for_cmd postgres
  
 trap "clean_exit" EXIT
  
