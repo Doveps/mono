@@ -7,3 +7,4 @@ before_script:
 script: docker exec mono_savant_1 python tests/test_basic.py
 after_script:
   - docker-compose logs
+  - cat savant/app/Com*
