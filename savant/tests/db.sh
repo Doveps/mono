@@ -25,13 +25,13 @@ wait_for_line () {
     cat "$2" >/dev/null &
 }
 
-sudo add-apt-repository "deb https://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main"
+add-apt-repository "deb https://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main"
 wget --quiet -O - https://postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add - 
-sudo apt-get update
-sudo apt-get remove libpq5
-sudo apt-get install libpq-dev
-sudo apt-get install postgresql-9.4
-#sudo /usr/lib/postgresql/9.1/bin/initdb /usr/local/var/postgres
+apt-get update
+apt-get remove libpq5
+apt-get install libpq-dev
+apt-get install postgresql-9.4
+/usr/lib/postgresql/9.1/bin/initdb /usr/local/var/postgres
 
  
 #check_for_cmd postgres
