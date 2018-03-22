@@ -1,5 +1,6 @@
 import os
 import unittest
+import testing.postgresql
 from StringIO import StringIO
 from app import app
 from app.results import create_flavors, compare
@@ -7,6 +8,10 @@ from app import query
 import psycopg2, json, sqlalchemy
  
 class TestDoveps(unittest.TestCase):
+
+    def setUp(self):
+        self.path = str(os.getcwd()).split("/mono", 1)[0]
+        self.postgresql = testing.postgresql.Postgresql(copy_data_from='/db/scripts/full.sql')
 	
     def test_acreate_flavor(self):
         path = str(os.getcwd()).split("/mono", 1)[0]
