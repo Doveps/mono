@@ -9,15 +9,15 @@ import psycopg2, json, sqlalchemy
  
 class TestDoveps(unittest.TestCase):
 
-    def setUp(self):
-        self.path = str(os.getcwd()).split("/mono", 1)[0]
-        self.db = testing.postgresql.Postgresql()
-        self.db_conf = self.db.dsn()
-        self.db_con = psycopg2.connect(**self.db_conf)
-        self.db_con.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
-        with self.db_con.cursor() as cur:
-            cur.execute(open("tests/full.sql", "r").read())
-            # cur.execute(slurp('db/scripts/full.sql'))
+    # def setUp(self):
+    #     self.path = str(os.getcwd()).split("/mono", 1)[0]
+    #     self.db = testing.postgresql.Postgresql()
+    #     self.db_conf = self.db.dsn()
+    #     self.db_con = psycopg2.connect(**self.db_conf)
+    #     self.db_con.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
+    #     with self.db_con.cursor() as cur:
+    #         cur.execute(open("tests/full.sql", "r").read())
+    #         # cur.execute(slurp('db/scripts/full.sql'))
 	
     def test_acreate_flavor(self):
         path = str(os.getcwd()).split("/mono", 1)[0]
