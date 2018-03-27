@@ -3,3 +3,4 @@ pyyaml
 requests-toolbelt
 Flask==0.10.1
 testing.postgresql
+mock

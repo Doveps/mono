@@ -13,7 +13,7 @@ def create_flavors():
     get_scanned.get_items(filenames)
     que_flavors = query.Query()
     que_flavors.record_flavors()
-    que_flavors.null_cases()
+    # que_flavors.null_cases()
 
     return jsonify({"Status" : "OK", "Message" : "Saved"})
 
@@ -35,7 +35,7 @@ def compare():
     with io.open(path + "/mono/savant/app/" + json_file, 'w', encoding='utf-8') as data:
         data.write(unicode(new_packages))
 
-    que_compare.null_cases()
+    # que_compare.null_cases()
 
     return new_packages
 

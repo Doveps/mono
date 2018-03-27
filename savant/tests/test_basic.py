@@ -5,7 +5,7 @@ from StringIO import StringIO
 from app import app
 from app.results import create_flavors, compare
 from app import query
-import psycopg2, json, sqlalchemy
+import psycopg2, json, sqlalchemy, mock
  
 class TestDoveps(unittest.TestCase):
 
@@ -18,8 +18,8 @@ class TestDoveps(unittest.TestCase):
     #     with self.db_con.cursor() as cur:
     #         cur.execute(open("tests/full.sql", "r").read())
     #         # cur.execute(slurp('db/scripts/full.sql'))
-	
-    def test_acreate_flavor(self):
+    @mock.patch('psycopg2.connect')
+    def test_acreate_flavor(self, mock_connect):
         path = str(os.getcwd()).split("/mono", 1)[0]
         tester = app.test_client(self)
         response = tester.post('/doveps/api/flavor/create/',
@@ -31,7 +31,8 @@ class TestDoveps(unittest.TestCase):
         })
         self.assertEqual(response.status_code, 200)
 
-    def test_compare(self):
+    @mock.patch('psycopg2.connect')
+    def test_compare(self, mock_connect):
         path = str(os.getcwd()).split("/mono", 1)[0]
         tester = app.test_client(self)
 
