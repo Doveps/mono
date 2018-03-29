@@ -1,5 +1,5 @@
 import sys
-import json, flask
+import json, flask, logging
 import os
 import psycopg2
 from sqlalchemy import create_engine
@@ -8,6 +8,9 @@ from app import get_scanned
 
 class Query:
     def __init__(self):
+
+        logging.basicConfig(filename='Row-outputs.log', level=logging.DEBUG,
+         format='%(asctime)s : %(levelname)s : %(message)s')
 
         with open('db_config.json', 'r') as db_file:
             db_info = json.load(db_file)
@@ -29,6 +32,8 @@ class Query:
         self.cur.executemany("select store_shadow(%s, %s, %s, %s, %s, %s, %s, %s, %s)", get_scanned.shadow)
         self.cur.executemany("select store_users(%s, %s, %s, %s,%s, %s, %s)", get_scanned.users)
         self.conn.commit()
+
+        self.count_rows()
 
     def record_knowledge(self, json_file, name, resource, action):
         self.cur.execute("select store_knowledge(%s, %s, %s)", (name, resource, action))
@@ -172,3 +177,20 @@ class Query:
         count = self.cur.fetchall()
 
         assert count == []
+
+    def count_rows(self):
+        ### Counts how many rows per table ###
+
+        self.cur.execute("select count(*) from debs")
+        debs_count = self.cur.fetchall()
+
+        self.cur.execute("select count(*) from groups")
+        groups_count = self.cur.fetchall()
+
+        self.cur.execute("select count(*) from shadow")
+        shadow_count = self.cur.fetchall()
+
+        self.cur.execute("select count(*) from users")
+        users_count = self.cur.fetchall()
+
+        logging.debug('\nDebs: {}\nGroups: {}\nShadow: {}\nGroups: {}'.format(debs_count, groups_count, shadow_count, users_count))
