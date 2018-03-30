@@ -1,26 +1,29 @@
 from flask import Flask, jsonify, request
-import sys, os
+import sys, os, logging
 from app import app
 from app import get_scanned, query
 import io, json, timeit, logging, datetime, psycopg2
+from pathlib2 import Path
 
 now = datetime.datetime.now()
 path = str(os.getcwd()).split("/mono", 1)[0]
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s : %(levelname)s : %(message)s')
 
 @app.route('/doveps/api/flavor/create/', methods=['POST'])
 def create_flavors():
-    filenames = request.files.getlist('files[]')
+    logging.debug('\nCreating\n')
+    filenames = request.files.getlist('data')
+    logging.debug('\nFilenames: {}'.format(filenames))
     get_scanned.get_items(filenames)
     que_flavors = query.Query()
     que_flavors.record_flavors()
-    # que_flavors.null_cases()
 
     return jsonify({"Status" : "OK", "Message" : "Saved"})
 
 @app.route('/doveps/api/flavor/compare/', methods=['GET', 'POST'])
 def compare():
+    logging.debug('\nComparing\n')
     filenames = request.files.getlist('files[]')
-
     get_scanned.get_items(filenames)
     que_compare = query.Query()
     que_compare.record_flavors()
@@ -34,8 +37,6 @@ def compare():
 
     with io.open(path + "/mono/savant/app/" + json_file, 'w', encoding='utf-8') as data:
         data.write(unicode(new_packages))
-
-    # que_compare.null_cases()
 
     return new_packages
 

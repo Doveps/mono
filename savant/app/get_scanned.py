@@ -4,6 +4,8 @@ import logging
 import logging.config
 # from app import record
 
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s : %(levelname)s : %(message)s')
+
 debs = [] 
 groups = []
 shadow = []
@@ -34,6 +36,8 @@ def get_items(filenames):
         elif "users" in str(filename.filename):
             get_users(filename)
 
+    logging.debug('\nBeen to get_items')
+
 def replace_blank(parts):
     for i in xrange(len(parts)):
         if parts[i] == '':
@@ -44,6 +48,7 @@ def replace_blank(parts):
 
 
 def get_debs(filename):
+    logging.debug('\nInside get_debs\n')
     del debs[:]
     content = []
 
@@ -58,8 +63,12 @@ def get_debs(filename):
         parts[0:4] = replace_blank(parts[0:4])
         debs.append(parts[0:4])
 
+    ### Shows the results of the scanned inputs ###
+    logging.debug('\nDebs: {}'.format(debs))
+
 
 def get_groups(filename):
+    logging.debug('\nInside get_groups')
     del groups[:]
     content = []
 
@@ -74,8 +83,12 @@ def get_groups(filename):
         parts[0:4] = replace_blank(parts[0:4])
         groups.append(parts[0:4])
 
+    ### Shows the results of the scanned inputs ###
+    logging.debug('\nGroups: {}'.format(groups))
+
 
 def get_shadow(filename):
+    logging.debug('\nInside get_shadow\n')
     del shadow[:]
     content = [] 
 
@@ -91,8 +104,12 @@ def get_shadow(filename):
         parts[0:9] = replace_blank(parts[0:9])
         shadow.append(parts[0:9])
 
+    ### Shows the results of the scanned inputs ###
+    logging.debug('\nShadow: {}'.format(shadow))
+
 
 def get_users(filename):
+    logging.debug('\nInside get_users\n')
     del users[:]
     content = []
 
@@ -107,3 +124,6 @@ def get_users(filename):
 
         parts[0:7] = replace_blank(parts[0:7])
         users.append(parts[0:7])
+
+    ### Shows the results of the scanned inputs ###
+    logging.debug('\nUsers: {}'.format(users))

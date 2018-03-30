@@ -9,8 +9,7 @@ from app import get_scanned
 class Query:
     def __init__(self):
 
-        logging.basicConfig(filename='Row-outputs.log', level=logging.DEBUG,
-         format='%(asctime)s : %(levelname)s : %(message)s')
+        logging.basicConfig(level=logging.DEBUG, format='%(asctime)s : %(levelname)s : %(message)s')
 
         with open('db_config.json', 'r') as db_file:
             db_info = json.load(db_file)
@@ -27,11 +26,13 @@ class Query:
     def record_flavors(self):
 
         self.cur.execute("select store_datetime()")
-        self.cur.executemany("select store_debs(%s, %s ,%s, %s)", get_scanned.debs)
-        self.cur.executemany("select store_groups(%s, %s, %s, %s)", get_scanned.groups)
-        self.cur.executemany("select store_shadow(%s, %s, %s, %s, %s, %s, %s, %s, %s)", get_scanned.shadow)
-        self.cur.executemany("select store_users(%s, %s, %s, %s,%s, %s, %s)", get_scanned.users)
+        exec_debs = self.cur.executemany("select store_debs(%s, %s ,%s, %s)", get_scanned.debs)
+        exec_groups = self.cur.executemany("select store_groups(%s, %s, %s, %s)", get_scanned.groups)
+        exec_shadow = self.cur.executemany("select store_shadow(%s, %s, %s, %s, %s, %s, %s, %s, %s)", get_scanned.shadow)
+        exec_users = self.cur.executemany("select store_users(%s, %s, %s, %s,%s, %s, %s)", get_scanned.users)
         self.conn.commit()
+
+        logging.debug('\nexec_debs: {}\nexec_groups: {}\nexec_shadow: {}\nexec_users: {}'.format(exec_debs, exec_groups, exec_shadow, exec_users))
 
         self.count_rows()
 
