@@ -23,18 +23,20 @@ def parse(scanner_directory):
         parser.parse()
 
 def get_items(filenames):
-    for filename in filenames:
-        if "debs" in str(filename.filename):
-            get_debs(filename)
+    logging.debug('filenames : {}'.format(filenames))
+    # for filename in filenames:
+    if "debs" in str(filenames):
+        logging.debug('\n\nHas debs in it \n\n')
+        get_debs(filenames)
 
-        elif "groups" in str(filename.filename):
-            get_groups(filename)
+        # elif "groups" in str(filename):
+        #     get_groups(filename)
 
-        elif "shadow" in str(filename.filename):
-            get_shadow(filename)
+        # elif "shadow" in str(filename):
+        #     get_shadow(filename)
 
-        elif "users" in str(filename.filename):
-            get_users(filename)
+        # elif "users" in str(filename):
+        #     get_users(filename)
 
     logging.debug('\nBeen to get_items')
 
@@ -52,7 +54,10 @@ def get_debs(filename):
     del debs[:]
     content = []
 
+    logging.debug('\n\File: {}\n\n'.format(filename))
+
     for line in filename:
+        logging.debug('\n\nLine: {}\n\n'.format(line))
         content.append(line)
 
     for data in content[5:]:
