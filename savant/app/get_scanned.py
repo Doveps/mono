@@ -48,15 +48,17 @@ def replace_blank(parts):
     return parts
 
 
-
 def get_debs(filename):
+
+    with open(filename.filename) as f:
+        lines = f.readlines()
     logging.debug('\nInside get_debs\n')
     del debs[:]
     content = []
 
     logging.debug('\n\File: {}\n\n'.format(filename))
 
-    for line in filename:
+    for line in lines:
         logging.debug('\n\nLine: {}\n\n'.format(line))
         content.append(line)
 
@@ -71,6 +73,29 @@ def get_debs(filename):
     ### Shows the results of the scanned inputs ###
     logging.debug('\nDebs: {}'.format(debs))
 
+
+
+# def get_debs(filename):
+#     logging.debug('\nInside get_debs\n')
+#     del debs[:]
+#     content = []
+
+#     logging.debug('\n\File: {}\n\n'.format(filename))
+
+#     for line in filename:
+#         logging.debug('\n\nLine: {}\n\n'.format(line))
+#         content.append(line)
+
+#     for data in content[5:]:
+#         parts = data.split()
+
+#         (stat, name, vers, arch) = parts[0:4]
+
+#         parts[0:4] = replace_blank(parts[0:4])
+#         debs.append(parts[0:4])
+
+#     ### Shows the results of the scanned inputs ###
+#     logging.debug('\nDebs: {}'.format(debs))
 
 def get_groups(filename):
     logging.debug('\nInside get_groups')
