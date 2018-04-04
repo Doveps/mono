@@ -32,8 +32,6 @@ class Query:
         exec_users = self.cur.executemany("select store_users(%s, %s, %s, %s,%s, %s, %s)", get_scanned.users)
         self.conn.commit()
 
-        logging.debug('\nexec_debs: {}\nexec_groups: {}\nexec_shadow: {}\nexec_users: {}'.format(exec_debs, exec_groups, exec_shadow, exec_users))
-
         self.count_rows()
 
     def record_knowledge(self, json_file, name, resource, action):

@@ -12,8 +12,7 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s : %(levelname)s : %
 @app.route('/doveps/api/flavor/create/', methods=['POST'])
 def create_flavors():
     logging.debug('\nCreating\n')
-    # filenames = request.files.getlist('file[]')
-    filenames = request.files['files[]']
+    filenames = request.files.getlist('files[]')
     logging.debug('\nFilenames: {}'.format(filenames))
     get_scanned.get_items(filenames)
     que_flavors = query.Query()

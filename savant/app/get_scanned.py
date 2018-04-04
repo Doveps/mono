@@ -24,19 +24,18 @@ def parse(scanner_directory):
 
 def get_items(filenames):
     logging.debug('filenames : {}'.format(filenames))
-    # for filename in filenames:
-    if "debs" in str(filenames):
-        logging.debug('\n\nHas debs in it \n\n')
-        get_debs(filenames)
+    for filename in filenames:
+        if "debs" in str(filename):
+            get_debs(filename)
 
-        # elif "groups" in str(filename):
-        #     get_groups(filename)
+        elif "groups" in str(filename):
+            get_groups(filename)
 
-        # elif "shadow" in str(filename):
-        #     get_shadow(filename)
+        elif "shadow" in str(filename):
+            get_shadow(filename)
 
-        # elif "users" in str(filename):
-        #     get_users(filename)
+        elif "users" in str(filename):
+            get_users(filename)
 
     logging.debug('\nBeen to get_items')
 
@@ -49,17 +48,14 @@ def replace_blank(parts):
 
 
 def get_debs(filename):
+    logging.debug('\n\File: {}\n\n'.format(filename))
 
     with open(filename.filename) as f:
         lines = f.readlines()
-    logging.debug('\nInside get_debs\n')
     del debs[:]
     content = []
 
-    logging.debug('\n\File: {}\n\n'.format(filename))
-
     for line in lines:
-        logging.debug('\n\nLine: {}\n\n'.format(line))
         content.append(line)
 
     for data in content[5:]:
@@ -74,35 +70,13 @@ def get_debs(filename):
     logging.debug('\nDebs: {}'.format(debs))
 
 
-
-# def get_debs(filename):
-#     logging.debug('\nInside get_debs\n')
-#     del debs[:]
-#     content = []
-
-#     logging.debug('\n\File: {}\n\n'.format(filename))
-
-#     for line in filename:
-#         logging.debug('\n\nLine: {}\n\n'.format(line))
-#         content.append(line)
-
-#     for data in content[5:]:
-#         parts = data.split()
-
-#         (stat, name, vers, arch) = parts[0:4]
-
-#         parts[0:4] = replace_blank(parts[0:4])
-#         debs.append(parts[0:4])
-
-#     ### Shows the results of the scanned inputs ###
-#     logging.debug('\nDebs: {}'.format(debs))
-
 def get_groups(filename):
-    logging.debug('\nInside get_groups')
+    with open(filename.filename) as f:
+        lines = f.readlines()
     del groups[:]
     content = []
 
-    for line in filename:
+    for line in lines:
         content.append(line)
 
     for data in content:
@@ -118,11 +92,12 @@ def get_groups(filename):
 
 
 def get_shadow(filename):
-    logging.debug('\nInside get_shadow\n')
+    with open(filename.filename) as f:
+        lines = f.readlines()
     del shadow[:]
     content = [] 
 
-    for line in filename:
+    for line in lines:
         content.append(line)
 
     for data in content:
@@ -139,12 +114,13 @@ def get_shadow(filename):
 
 
 def get_users(filename):
-    logging.debug('\nInside get_users\n')
+    with open(filename.filename) as f:
+        lines = f.readlines()
     del users[:]
     content = []
 
 
-    for line in filename:
+    for line in lines:
         content.append(line)
 
     for data in content:
