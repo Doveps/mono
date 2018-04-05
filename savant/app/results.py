@@ -45,6 +45,12 @@ def create_action(json_file, name, resource, action):
      
     return jsonify({"Status" : "OK", "Message" : "Linked"})
 
+@app.route('/doveps/api/count/', methods=['GET'])
+def flavor_count():
+    que_count = query.Query()
+
+    return jsonify({"Count" : que_count.null_cases()})
+
 @app.route('/doveps/api/debs/', methods=['GET'])
 def show_debs():
 

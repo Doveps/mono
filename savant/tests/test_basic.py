@@ -1,4 +1,4 @@
-import os
+import os, json
 import unittest, logging
 import testing.postgresql
 from StringIO import StringIO
@@ -39,6 +39,15 @@ class TestDoveps(unittest.TestCase):
                         (StringIO('My inputs'),(path + '/mono/savant/tests/Scanner_Files/33.33.33.51/find_users_stdout.log'))]
         })
         self.assertEqual(response.status_code, 200)
+
+    def test_nullcases(self):        
+        path = str(os.getcwd()).split("/mono", 1)[0]
+        tester = app.test_client(self)
+
+        resopnse = tester.get('/doveps/api/count/')
+        data = json.loads(resopnse.data)
+
+        self.assertEqual(data['Count'], [])
 
 if __name__ == '__main__':
     unittest.main()

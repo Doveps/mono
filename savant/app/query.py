@@ -175,7 +175,7 @@ class Query:
         self.conn.commit()
         count = self.cur.fetchall()
 
-        assert count == []
+        return count
 
     def count_rows(self):
         ### Counts how many rows per table ###
