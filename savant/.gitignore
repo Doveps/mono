@@ -7,3 +7,4 @@ profile.text
 app/db_config.json
 app/Comparison-*.json
 Row-outputs.log
+db_config.json
