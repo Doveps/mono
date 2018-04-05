@@ -7,13 +7,11 @@ from pathlib2 import Path
 
 now = datetime.datetime.now()
 path = str(os.getcwd()).split("/mono", 1)[0]
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s : %(levelname)s : %(message)s')
+logging.basicConfig(level=logging.WARNING, format='%(asctime)s : %(levelname)s : %(message)s')
 
 @app.route('/doveps/api/flavor/create/', methods=['POST'])
 def create_flavors():
-    logging.debug('\nCreating\n')
     filenames = request.files.getlist('files[]')
-    logging.debug('\nFilenames: {}'.format(filenames))
     get_scanned.get_items(filenames)
     que_flavors = query.Query()
     que_flavors.record_flavors()

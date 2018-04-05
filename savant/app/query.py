@@ -9,7 +9,7 @@ from app import get_scanned
 class Query:
     def __init__(self):
 
-        logging.basicConfig(level=logging.DEBUG, format='%(asctime)s : %(levelname)s : %(message)s')
+        logging.basicConfig(level=logging.WARNING, format='%(asctime)s : %(levelname)s : %(message)s')
 
         with open('db_config.json', 'r') as db_file:
             db_info = json.load(db_file)
