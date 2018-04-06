@@ -65,6 +65,8 @@ class Query:
                 self.cur.execute("select store_knowledge_users(%s, %s ,%s, %s, %s, %s, %s )",(self.nu["Username"], self.nu["Password"], self.nu["UID"], self.nu["GID"], self.nu["Description"], self.nu["Path"], self.nu["Shell"]))
         self.conn.commit()
 
+        
+
     def new_debs(self):
 
         self.debs = self.cur.execute("select get_debs_unique()")

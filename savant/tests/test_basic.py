@@ -1,14 +1,9 @@
 import os, json
-import unittest, logging
-import testing.postgresql
+import unittest, logging, glob
 from StringIO import StringIO
 from app import app
 from app.results import create_flavors, compare
 from app import query
-import psycopg2, json, sqlalchemy, mock
-from pathlib2 import Path
-from werkzeug.test import EnvironBuilder
-from werkzeug.wrappers import Request
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s : %(levelname)s : %(message)s')
 
@@ -48,6 +43,20 @@ class TestDoveps(unittest.TestCase):
         data = json.loads(resopnse.data)
 
         self.assertEqual(data['Count'], [])
+
+    def test_recordknowledge(self):
+        path = str(os.getcwd()).split("/mono", 1)[0]
+        tester = app.test_client(self)
+
+        list_of_files = glob.glob(path + '/mono/savant/app/Comparison-*')
+        print 'List of files: ', list_of_files
+        latest_file = max(list_of_files, key=os.path.getctime)
+        latest_file = latest_file.split("app/", 1)[1]
+
+        response = tester.get('/doveps/api/action/create/' + latest_file + '/debs/debs/save')
+        data = json.loads(response.data)
+
+        self.assertEqual(data['Message'], 'Linked')
 
 if __name__ == '__main__':
     unittest.main()

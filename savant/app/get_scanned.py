@@ -63,10 +63,6 @@ def get_debs(filename):
         parts[0:4] = replace_blank(parts[0:4])
         debs.append(parts[0:4])
 
-    ### Shows the results of the scanned inputs ###
-    logging.debug('Debs: %s', debs)
-
-
 def get_groups(filename):
     with open(filename.filename) as f:
         lines = f.readlines()
@@ -83,9 +79,6 @@ def get_groups(filename):
 
         parts[0:4] = replace_blank(parts[0:4])
         groups.append(parts[0:4])
-
-    ### Shows the results of the scanned inputs ###
-    logging.debug('Groups: %s', groups)
 
 
 def get_shadow(filename):
@@ -106,9 +99,6 @@ def get_shadow(filename):
         parts[0:9] = replace_blank(parts[0:9])
         shadow.append(parts[0:9])
 
-    ### Shows the results of the scanned inputs ###
-    logging.debug('Shadow: %s', shadow)
-
 
 def get_users(filename):
     with open(filename.filename) as f:
@@ -127,6 +117,3 @@ def get_users(filename):
 
         parts[0:7] = replace_blank(parts[0:7])
         users.append(parts[0:7])
-
-    ### Shows the results of the scanned inputs ###
-    logging.debug('Users: %s', users)
