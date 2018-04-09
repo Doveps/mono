@@ -78,22 +78,32 @@ def show_debs():
 @app.route('/doveps/api/flavors/', methods=['GET'])
 def show_flavors():
 
-    flavors = spcalls.spcall('get_flavors', ())
-    entries = []
-    print "length: ", len(flavors)
+    que_flavors = query.Query()
 
-    if 'Error' in str(flavors[0][0]):
-        return jsonify({'status': 'error',
-                        'message': flavors[0][0]})
+    debs_count = que_flavors.count_debs()
+    groups_count = que_flavors.count_groups()
+    shadow_count = que_flavors.count_shadow()
+    users_count = que_flavors.count_users()
 
-    elif len(flavors) != 0:
-        for f in flavors:
-            entries.append({"flavors": f[0]})
+    duplicates = que_flavors.null_cases()
 
-        return jsonify({"status": "OK", "message": "OK", "entries": entries, "count": len(entries)})
+    total_debs = que_flavors.total_saved_debs()
+    total_groups = que_flavors.total_saved_groups()
+    total_shadow = que_flavors.total_saved_shadow()
+    total_users = que_flavors.total_saved_users()
 
-    else:
-        return jsonify({"status": 'FAILED', "message": "Nothing Found"})
+    print "Debs count: ", debs_count
+    print "Groups count: ", groups_count
+    print "Shadow count: ", shadow_count
+    print "Users count: ", users_count
+
+    return jsonify({'Debs' : debs_count, 'Groups' : groups_count,
+                    'Shadow' : shadow_count, 'Users' : users_count,
+                    'Total Debs' : total_debs, 'Total Groups' : total_groups,
+                    'Total Shadow' : total_shadow, 'Total Users' : total_users,
+                    'Duplicates' : duplicates})
+
+
 
 @app.route('/doveps/api/ansible/', methods=['GET'])
 def show_ansible():

@@ -9,7 +9,7 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s : %(levelname)s : %
 
 class TestDoveps(unittest.TestCase):
 
-    def test_acreate_flavor(self):
+    def test_1_create_flavor(self):
         path = str(os.getcwd()).split("/mono", 1)[0]
         tester = app.test_client(self)
 
@@ -22,7 +22,21 @@ class TestDoveps(unittest.TestCase):
         })
         self.assertEqual(response.status_code, 200)
 
-    def test_compare(self):
+    def test_2_nullcases(self):        
+        path = str(os.getcwd()).split("/mono", 1)[0]
+        tester = app.test_client(self)
+
+        resopnse = tester.get('/doveps/api/flavors/')
+        data = json.loads(resopnse.data)
+
+        print "Data: ", data
+
+        self.assertEqual(data['Debs'][0][0], 362)
+        self.assertEqual(data['Groups'][0][0], 51)
+        self.assertEqual(data['Shadow'][0][0], 25)
+        self.assertEqual(data['Users'][0][0], 25)
+
+    def test_3_compare(self):
         path = str(os.getcwd()).split("/mono", 1)[0]
         tester = app.test_client(self)
 
@@ -35,16 +49,22 @@ class TestDoveps(unittest.TestCase):
         })
         self.assertEqual(response.status_code, 200)
 
-    def test_nullcases(self):        
+    def test_4_nullcases(self):        
         path = str(os.getcwd()).split("/mono", 1)[0]
         tester = app.test_client(self)
 
-        resopnse = tester.get('/doveps/api/count/')
+        resopnse = tester.get('/doveps/api/flavors/')
         data = json.loads(resopnse.data)
 
-        self.assertEqual(data['Count'], [])
+        print "Data: ", data
 
-    def test_recordknowledge(self):
+        self.assertNotEqual(data['Debs'][0], data['Total Debs'][0])
+        self.assertNotEqual(data['Groups'][0], data['Total Groups'][0])
+        self.assertNotEqual(data['Shadow'][0], data['Total Shadow'][0])
+        self.assertNotEqual(data['Users'][0], data['Users'][0])
+        self.assertEqual(data['Duplicates'], [])
+
+    def test_5_recordknowledge(self):
         path = str(os.getcwd()).split("/mono", 1)[0]
         tester = app.test_client(self)
 
@@ -59,4 +79,5 @@ class TestDoveps(unittest.TestCase):
         self.assertEqual(data['Message'], 'Linked')
 
 if __name__ == '__main__':
+
     unittest.main()

@@ -32,8 +32,6 @@ class Query:
         exec_users = self.cur.executemany("select store_users(%s, %s, %s, %s,%s, %s, %s)", get_scanned.users)
         self.conn.commit()
 
-        self.count_rows()
-
     def record_knowledge(self, json_file, name, resource, action):
         self.cur.execute("select store_knowledge(%s, %s, %s)", (name, resource, action))
         with open("app/" + json_file, 'r') as json_res:
@@ -179,19 +177,78 @@ class Query:
 
         return count
 
-    def count_rows(self):
+    def count_debs(self):
         ### Counts how many rows per table ###
 
         self.cur.execute("select count(*) from debs")
         debs_count = self.cur.fetchall()
 
+        return debs_count
+
+    def count_groups(self):
+
         self.cur.execute("select count(*) from groups")
         groups_count = self.cur.fetchall()
+
+        return groups_count
+
+    def count_shadow(self):
 
         self.cur.execute("select count(*) from shadow")
         shadow_count = self.cur.fetchall()
 
+        return shadow_count
+
+    def count_users(self):
+
         self.cur.execute("select count(*) from users")
         users_count = self.cur.fetchall()
 
-        logging.debug('\nDebs: {}\nGroups: {}\nShadow: {}\nGroups: {}'.format(debs_count, groups_count, shadow_count, users_count))
+        return users_count
+
+    def total_saved_debs(self):
+        self.cur.execute("select id, count(*) \
+                         from ScanDebs group by id \
+                          having count(*) > 1")
+
+        self.conn.commit()
+
+        total_debs = self.cur.fetchall()
+
+        return total_debs
+
+    def total_saved_groups(self):
+        self.cur.execute("select id, count(*) \
+                         from ScanGroups group by id \
+                          having count(*) > 1")
+
+        self.conn.commit()
+
+        total_groups = self.cur.fetchall()
+
+        return total_groups
+
+    def total_saved_shadow(self):    
+        self.cur.execute("select id, count(*) \
+                         from ScanShadow group by id \
+                          having count(*) > 1")
+
+        self.conn.commit()
+
+        total_shadow = self.cur.fetchall()
+
+        return total_shadow
+
+    def total_saved_users(self):
+        self.cur.execute("select id, count(*) \
+                         from ScanUsers group by id \
+                          having count(*) > 1")
+        
+        self.conn.commit()
+
+        total_users = self.cur.fetchall()
+
+        return total_users
+        
+
+        # logging.debug('\nDebs: {}\nGroups: {}\nShadow: {}\nGroups: {}'.format(debs_count, groups_count, shadow_count, users_count))
