@@ -207,9 +207,8 @@ class Query:
         return users_count
 
     def total_saved_debs(self):
-        self.cur.execute("select id, count(*) \
-                         from ScanDebs group by id \
-                          having count(*) > 1")
+        self.cur.execute("select max(id) \
+                         from ScanDebs")
 
         self.conn.commit()
 
@@ -218,9 +217,8 @@ class Query:
         return total_debs
 
     def total_saved_groups(self):
-        self.cur.execute("select id, count(*) \
-                         from ScanGroups group by id \
-                          having count(*) > 1")
+        self.cur.execute("select max(id) \
+                         from ScanGroups")
 
         self.conn.commit()
 
@@ -229,9 +227,8 @@ class Query:
         return total_groups
 
     def total_saved_shadow(self):    
-        self.cur.execute("select id, count(*) \
-                         from ScanShadow group by id \
-                          having count(*) > 1")
+        self.cur.execute("select max(id) \
+                         from ScanShadow")
 
         self.conn.commit()
 
@@ -240,9 +237,8 @@ class Query:
         return total_shadow
 
     def total_saved_users(self):
-        self.cur.execute("select id, count(*) \
-                         from ScanUsers group by id \
-                          having count(*) > 1")
+        self.cur.execute("select max(id) \
+                         from ScanUsers")
         
         self.conn.commit()
 

@@ -61,7 +61,7 @@ class TestDoveps(unittest.TestCase):
         self.assertNotEqual(data['Debs'][0], data['Total Debs'][0])
         self.assertNotEqual(data['Groups'][0], data['Total Groups'][0])
         self.assertNotEqual(data['Shadow'][0], data['Total Shadow'][0])
-        self.assertNotEqual(data['Users'][0], data['Users'][0])
+        self.assertNotEqual(data['Users'][0], data['Total Users'][0])
         self.assertEqual(data['Duplicates'], [])
 
     def test_5_recordknowledge(self):
