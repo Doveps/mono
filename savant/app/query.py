@@ -158,7 +158,7 @@ class Query:
         
         return self.new_users
 
-    def null_cases(self):
+    def check_duplicates(self):
         self.cur.execute("select stat, name, version, architecture, count(*) \
                          from Debs group by stat, name, version, architecture \
                           having count(*) > 1")
@@ -246,5 +246,3 @@ class Query:
 
         return total_users
         
-
-        # logging.debug('\nDebs: {}\nGroups: {}\nShadow: {}\nGroups: {}'.format(debs_count, groups_count, shadow_count, users_count))

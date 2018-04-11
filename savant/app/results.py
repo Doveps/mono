@@ -49,14 +49,13 @@ def create_action(json_file, name, resource, action):
 def flavor_count():
     que_count = query.Query()
 
-    return jsonify({"Count" : que_count.null_cases()})
+    return jsonify({"Count" : que_count.check_duplicates()})
 
 @app.route('/doveps/api/debs/', methods=['GET'])
 def show_debs():
 
     debs = spcalls.spcall('get_debs', ())
     entries = []
-    print "length: ", len(debs)
 
     if 'Error' in str(debs[0][0]):
         return jsonify({'status': 'error',
@@ -85,17 +84,12 @@ def show_flavors():
     shadow_count = que_flavors.count_shadow()
     users_count = que_flavors.count_users()
 
-    duplicates = que_flavors.null_cases()
+    duplicates = que_flavors.check_duplicates()
 
     total_debs = que_flavors.total_saved_debs()
     total_groups = que_flavors.total_saved_groups()
     total_shadow = que_flavors.total_saved_shadow()
     total_users = que_flavors.total_saved_users()
-
-    print "Debs count: ", debs_count
-    print "Groups count: ", groups_count
-    print "Shadow count: ", shadow_count
-    print "Users count: ", users_count
 
     return jsonify({'Debs' : debs_count, 'Groups' : groups_count,
                     'Shadow' : shadow_count, 'Users' : users_count,
@@ -110,7 +104,6 @@ def show_ansible():
 
     scanned_files = spcalls.spcall('get_ansible_files', ())
     entries = []
-    print "length: ", len(scanned_files)
 
     if 'Error' in str(scanned_files[0][0]):
         return jsonify({'status': 'error',

@@ -29,8 +29,6 @@ class TestDoveps(unittest.TestCase):
         resopnse = tester.get('/doveps/api/flavors/')
         data = json.loads(resopnse.data)
 
-        print "Data: ", data
-
         self.assertEqual(data['Debs'][0][0], 362)
         self.assertEqual(data['Groups'][0][0], 51)
         self.assertEqual(data['Shadow'][0][0], 25)
@@ -56,8 +54,6 @@ class TestDoveps(unittest.TestCase):
         resopnse = tester.get('/doveps/api/flavors/')
         data = json.loads(resopnse.data)
 
-        print "Data: ", data
-
         self.assertNotEqual(data['Debs'][0], data['Total Debs'][0])
         self.assertNotEqual(data['Groups'][0], data['Total Groups'][0])
         self.assertNotEqual(data['Shadow'][0], data['Total Shadow'][0])
@@ -69,7 +65,6 @@ class TestDoveps(unittest.TestCase):
         tester = app.test_client(self)
 
         list_of_files = glob.glob(path + '/mono/savant/app/Comparison-*')
-        print 'List of files: ', list_of_files
         latest_file = max(list_of_files, key=os.path.getctime)
         latest_file = latest_file.split("app/", 1)[1]
 
