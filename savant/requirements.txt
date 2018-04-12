@@ -5,3 +5,4 @@ Flask==0.10.1
 testing.postgresql
 mock
 psycopg2
+pathlib2
