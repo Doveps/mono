@@ -66,17 +66,26 @@ class TestDoveps(unittest.TestCase):
         })
         self.assertEqual(response.status_code, 200)
 
-    def test_2_nullcases(self):        
+    def test_2_flavor(self):        
         path = str(os.getcwd()).split("/mono", 1)[0]
         tester = app.test_client(self)
 
-        resopnse = tester.get('/doveps/api/flavors/')
-        data = json.loads(resopnse.data)
+        debs = tester.get('/doveps/api/count/debs/')
+        debs_data = json.loads(debs.data)
 
-        self.assertEqual(data['Debs'][0][0], 362)
-        self.assertEqual(data['Groups'][0][0], 51)
-        self.assertEqual(data['Shadow'][0][0], 25)
-        self.assertEqual(data['Users'][0][0], 25)
+        groups = tester.get('/doveps/api/count/groups/')
+        groups_data = json.loads(groups.data)
+
+        shadow = tester.get('/doveps/api/count/shadow/')
+        shadow_data = json.loads(shadow.data)
+
+        users = tester.get('/doveps/api/count/users/')
+        users_data = json.loads(users.data)
+
+        self.assertEqual(debs_data['Debs Count'][0][0], 362)
+        self.assertEqual(groups_data['Groups Count'][0][0], 51)
+        self.assertEqual(shadow_data['Shadow Count'][0][0], 25)
+        self.assertEqual(users_data['Users Count'][0][0], 25)
 
     def test_3_compare(self):
         path = str(os.getcwd()).split("/mono", 1)[0]
@@ -95,18 +104,30 @@ class TestDoveps(unittest.TestCase):
         path = str(os.getcwd()).split("/mono", 1)[0]
         tester = app.test_client(self)
 
-        resopnse = tester.get('/doveps/api/flavors/')
-        data = json.loads(resopnse.data)
+        flavor_resopnse = tester.get('/doveps/api/flavors/')
+        data = json.loads(flavor_resopnse.data)
+
+        debs = tester.get('/doveps/api/count/debs/')
+        debs_data = json.loads(debs.data)
+
+        groups = tester.get('/doveps/api/count/groups/')
+        groups_data = json.loads(groups.data)
+
+        shadow = tester.get('/doveps/api/count/shadow/')
+        shadow_data = json.loads(shadow.data)
+
+        users = tester.get('/doveps/api/count/users/')
+        users_data = json.loads(users.data)
 
         max_debs = max_saved_debs()
         max_groups = max_saved_groups()
         max_shadow = max_saved_shadow()
         max_users = max_saved_users()
 
-        self.assertNotEqual(data['Debs'][0], max_debs)
-        self.assertNotEqual(data['Groups'][0], max_groups)
-        self.assertNotEqual(data['Shadow'][0], max_shadow)
-        self.assertNotEqual(data['Users'][0], max_users)
+        self.assertNotEqual(debs_data['Debs Count'][0], max_debs)
+        self.assertNotEqual(groups_data['Groups Count'][0], max_groups)
+        self.assertNotEqual(shadow_data['Shadow Count'][0], max_shadow)
+        self.assertNotEqual(users_data['Users Count'][0], max_users)
         self.assertEqual(data['Duplicates'], [])
 
     def test_5_recordknowledge(self):

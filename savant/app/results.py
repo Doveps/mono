@@ -9,6 +9,9 @@ now = datetime.datetime.now()
 path = str(os.getcwd()).split("/mono", 1)[0]
 logging.basicConfig(level=logging.WARNING, format='%(asctime)s : %(levelname)s : %(message)s')
 
+with open('db_config.json', 'r') as db_file:
+    db_info = json.load(db_file)
+
 db_name = db_info["database"]["database_name"]
 username = db_info["database"]["username"]
 password = db_info["database"]["password"]
@@ -91,33 +94,33 @@ def show_flavors():
 
     return jsonify({'Duplicates' : duplicates})
 
-@app.route('/doveps/api/count/debs/')
+@app.route('/doveps/api/count/debs/', methods=['GET'])
 def count_debs():
     cur.execute("select count(*) from debs")
     debs_count = cur.fetchall()
 
-    return debs_count
+    return jsonify({'Debs Count' : debs_count})
 
-@app.route('/doveps/api/count/groups/')
+@app.route('/doveps/api/count/groups/', methods=['GET'])
 def count_groups():
     cur.execute("select count(*) from groups")
     groups_count = cur.fetchall()
 
-    return groups_count
+    return jsonify({'Groups Count' : groups_count})
 
-@app.route('/doveps/api/count/shadow/')
+@app.route('/doveps/api/count/shadow/', methods=['GET'])
 def count_shadow():
     cur.execute("select count(*) from shadow")
     shadow_count = cur.fetchall()
 
-    return shadow_count
+    return jsonify({'Shadow Count' : shadow_count})
 
-@app.route('/doveps/api/count/users/')
+@app.route('/doveps/api/count/users/', methods=['GET'])
 def count_users():
     cur.execute("select count(*) from users")
     users_count = cur.fetchall()
 
-    return users_count
+    return jsonify({'Users Count' : users_count})
 
 @app.route('/doveps/api/ansible/', methods=['GET'])
 def show_ansible():
