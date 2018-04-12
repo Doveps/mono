@@ -1,4 +1,4 @@
-import os, json
+import os, json, psycopg2   
 import unittest, logging, glob
 from StringIO import StringIO
 from app import app
@@ -6,6 +6,50 @@ from app.results import create_flavors, compare
 from app import query
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s : %(levelname)s : %(message)s')
+
+with open('db_config.json', 'r') as db_file:
+        db_info = json.load(db_file)
+
+db_name = db_info["database"]["database_name"]
+username = db_info["database"]["username"]
+password = db_info["database"]["password"]
+host = db_info["database"]["host"]
+engine_name = "postgresql://" + username + ":" + password + "@" + host + ":5432/" + db_name
+conn = psycopg2.connect(engine_name)
+cur = conn.cursor()
+
+
+def max_saved_debs():
+    cur.execute("select max(id) \
+                        from ScanDebs")
+
+    max_debs = cur.fetchall()
+
+    return max_debs
+
+def max_saved_groups():
+    cur.execute("select max(id) \
+                    from ScanGroups")
+
+    max_groups = cur.fetchall()
+
+    return max_groups
+
+def max_saved_shadow():    
+    cur.execute("select max(id) \
+                    from ScanShadow")
+
+    max_shadow = cur.fetchall()
+
+    return max_shadow
+
+def max_saved_users():
+    cur.execute("select max(id) \
+                    from ScanUsers")
+
+    max_users = cur.fetchall()
+
+    return max_users
 
 class TestDoveps(unittest.TestCase):
 
@@ -54,10 +98,15 @@ class TestDoveps(unittest.TestCase):
         resopnse = tester.get('/doveps/api/flavors/')
         data = json.loads(resopnse.data)
 
-        self.assertNotEqual(data['Debs'][0], data['Total Debs'][0])
-        self.assertNotEqual(data['Groups'][0], data['Total Groups'][0])
-        self.assertNotEqual(data['Shadow'][0], data['Total Shadow'][0])
-        self.assertNotEqual(data['Users'][0], data['Total Users'][0])
+        max_debs = max_saved_debs()
+        max_groups = max_saved_groups()
+        max_shadow = max_saved_shadow()
+        max_users = max_saved_users()
+
+        self.assertNotEqual(data['Debs'][0], max_debs)
+        self.assertNotEqual(data['Groups'][0], max_groups)
+        self.assertNotEqual(data['Shadow'][0], max_shadow)
+        self.assertNotEqual(data['Users'][0], max_users)
         self.assertEqual(data['Duplicates'], [])
 
     def test_5_recordknowledge(self):
