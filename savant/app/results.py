@@ -9,17 +9,6 @@ now = datetime.datetime.now()
 path = str(os.getcwd()).split("/mono", 1)[0]
 logging.basicConfig(level=logging.WARNING, format='%(asctime)s : %(levelname)s : %(message)s')
 
-with open('db_config.json', 'r') as db_file:
-    db_info = json.load(db_file)
-
-db_name = db_info["database"]["database_name"]
-username = db_info["database"]["username"]
-password = db_info["database"]["password"]
-host = db_info["database"]["host"]
-engine_name = "postgresql://" + username + ":" + password + "@" + host + ":5432/" + db_name
-conn = psycopg2.connect(engine_name)
-cur = conn.cursor()
-
 @app.route('/doveps/api/flavor/create/', methods=['POST'])
 def create_flavors():
     filenames = request.files.getlist('files[]')
@@ -96,29 +85,29 @@ def show_flavors():
 
 @app.route('/doveps/api/count/debs/', methods=['GET'])
 def count_debs():
-    cur.execute("select count(*) from debs")
-    debs_count = cur.fetchall()
+    que_debs = query.Query()
+    debs_count = que_debs.count_debs()
 
     return jsonify({'Debs Count' : debs_count})
 
 @app.route('/doveps/api/count/groups/', methods=['GET'])
 def count_groups():
-    cur.execute("select count(*) from groups")
-    groups_count = cur.fetchall()
+    que_groups = query.Query()
+    groups_count = que_groups.count_groups()
 
     return jsonify({'Groups Count' : groups_count})
 
 @app.route('/doveps/api/count/shadow/', methods=['GET'])
 def count_shadow():
-    cur.execute("select count(*) from shadow")
-    shadow_count = cur.fetchall()
+    que_shadow = query.Query()
+    shadow_count = que_shadow.count_shadow()
 
     return jsonify({'Shadow Count' : shadow_count})
 
 @app.route('/doveps/api/count/users/', methods=['GET'])
 def count_users():
-    cur.execute("select count(*) from users")
-    users_count = cur.fetchall()
+    que_users = query.Query()
+    users_count = que_users.count_users()
 
     return jsonify({'Users Count' : users_count})
 
