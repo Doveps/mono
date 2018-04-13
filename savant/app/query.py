@@ -177,4 +177,9 @@ class Query:
 
         return count
 
+    def __del__(self):
+        print "Close connection"
+        self.cur.close()
+        self.conn.close()
+
     
