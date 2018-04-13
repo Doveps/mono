@@ -177,38 +177,6 @@ class Query:
 
         return count
 
-    def max_saved_debs(self):
-        self.cur.execute("select max(id) \
-                            from ScanDebs")
-
-        max_debs = self.cur.fetchall()
-
-        return max_debs
-
-    def max_saved_groups(self):
-        self.cur.execute("select max(id) \
-                        from ScanGroups")
-
-        max_groups = self.cur.fetchall()
-
-        return max_groups
-
-    def max_saved_shadow(self):    
-        self.cur.execute("select max(id) \
-                        from ScanShadow")
-
-        max_shadow = self.cur.fetchall()
-
-        return max_shadow
-
-    def max_saved_users(self):
-        self.cur.execute("select max(id) \
-                        from ScanUsers")
-
-        max_users = self.cur.fetchall()
-
-        return max_users
-
     def __del__(self):
         print "Close connection"
         self.cur.close()
