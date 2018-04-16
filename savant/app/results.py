@@ -45,11 +45,6 @@ def create_action(json_file, name, resource, action):
      
     return jsonify({"Status" : "OK", "Message" : "Linked"})
 
-@app.route('/doveps/api/count/', methods=['GET'])
-def flavor_count():
-    que_count = query.Query()
-
-    return jsonify({"Count" : que_count.check_duplicates()})
 
 @app.route('/doveps/api/debs/', methods=['GET'])
 def show_debs():
@@ -83,33 +78,13 @@ def show_flavors():
 
     return jsonify({'Duplicates' : duplicates})
 
-@app.route('/doveps/api/count/debs/', methods=['GET'])
-def count_debs():
-    que_debs = query.Query()
-    debs_count = que_debs.count_debs()
+@app.route('/doveps/api/count/flavor/<flavor_name>', methods=['GET'])
+def count_flavors(flavor_name):
+    que_flavor = query.Query()
 
-    return jsonify({'Debs Count' : debs_count})
+    flavor_count = que_flavor.count_flavor(flavor_name)
 
-@app.route('/doveps/api/count/groups/', methods=['GET'])
-def count_groups():
-    que_groups = query.Query()
-    groups_count = que_groups.count_groups()
-
-    return jsonify({'Groups Count' : groups_count})
-
-@app.route('/doveps/api/count/shadow/', methods=['GET'])
-def count_shadow():
-    que_shadow = query.Query()
-    shadow_count = que_shadow.count_shadow()
-
-    return jsonify({'Shadow Count' : shadow_count})
-
-@app.route('/doveps/api/count/users/', methods=['GET'])
-def count_users():
-    que_users = query.Query()
-    users_count = que_users.count_users()
-
-    return jsonify({'Users Count' : users_count})
+    return jsonify({'' + flavor_name + ' count' : flavor_count})
 
 @app.route('/doveps/api/ansible/', methods=['GET'])
 def show_ansible():

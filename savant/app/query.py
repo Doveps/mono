@@ -177,34 +177,13 @@ class Query:
 
         return count
 
-    def count_debs(self):
+    def count_flavor(self, flavor):
         ### Counts how many rows per table ###
 
-        self.cur.execute("select count(*) from debs")
-        debs_count = self.cur.fetchall()
+        self.cur.execute("select count(*) from " + flavor)
+        flavor_count = self.cur.fetchall()
 
-        return debs_count
-
-    def count_groups(self):
-
-        self.cur.execute("select count(*) from groups")
-        groups_count = self.cur.fetchall()
-
-        return groups_count
-
-    def count_shadow(self):
-
-        self.cur.execute("select count(*) from shadow")
-        shadow_count = self.cur.fetchall()
-
-        return shadow_count
-
-    def count_users(self):
-
-        self.cur.execute("select count(*) from users")
-        users_count = self.cur.fetchall()
-
-        return users_count
+        return flavor_count
 
     def __del__(self):
         self.cur.close()
