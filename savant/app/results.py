@@ -3,7 +3,6 @@ import sys, os, logging, psycopg2
 from app import app
 from app import get_scanned, query
 import io, json, timeit, logging, datetime, psycopg2
-from pathlib2 import Path
 
 now = datetime.datetime.now()
 path = str(os.getcwd()).split("/mono", 1)[0]
@@ -36,7 +35,7 @@ def compare():
     with io.open(path + "/mono/savant/app/" + json_file, 'w', encoding='utf-8') as data:
         data.write(unicode(new_packages))
 
-    return new_packages
+    return jsonify({"File" : json_file, "New Packages" : new_packages})
 
 @app.route('/doveps/api/action/create/<json_file>/<name>/<resource>/<action>', methods=['GET'])
 def create_action(json_file, name, resource, action):
@@ -69,22 +68,23 @@ def show_debs():
     else:
         return jsonify({"status": 'FAILED', "message": "Nothing Found"})
 
-@app.route('/doveps/api/flavors/', methods=['GET'])
-def show_flavors():
+@app.route('/doveps/api/flavors-duplicates/', methods=['GET'])
+def show_duplicates():
 
-    que_flavors = query.Query()
+    que_dupl = query.Query()
 
-    duplicates = que_flavors.check_duplicates()
+    duplicates = que_dupl.check_duplicates()
 
     return jsonify({'Duplicates' : duplicates})
 
 @app.route('/doveps/api/count/flavor/<flavor_name>', methods=['GET'])
 def count_flavors(flavor_name):
     que_flavor = query.Query()
-
     flavor_count = que_flavor.count_flavor(flavor_name)
 
-    return jsonify({'' + flavor_name + ' count' : flavor_count})
+    name = '' + flavor_name + ' count'
+
+    return jsonify({name : flavor_count})
 
 @app.route('/doveps/api/ansible/', methods=['GET'])
 def show_ansible():

@@ -64,7 +64,12 @@ class TestDoveps(unittest.TestCase):
                         (StringIO('My inputs'),(path + '/mono/savant/tests/Scanner_Files/33.33.33.50/find_shadow_stdout.log')),
                         (StringIO('My inputs'),(path + '/mono/savant/tests/Scanner_Files/33.33.33.50/find_users_stdout.log'))]
         })
+
+        res_data = json.loads(response.data)
+
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(res_data["Status"], "OK")
+        self.assertEqual(res_data["Message"], "Saved")
 
     def test_2_flavor(self):        
         path = str(os.getcwd()).split("/mono", 1)[0]
@@ -98,13 +103,20 @@ class TestDoveps(unittest.TestCase):
                         (StringIO('My inputs'),(path + '/mono/savant/tests/Scanner_Files/33.33.33.51/find_shadow_stdout.log')),
                         (StringIO('My inputs'),(path + '/mono/savant/tests/Scanner_Files/33.33.33.51/find_users_stdout.log'))]
         })
+
+        list_of_files = glob.glob(path + '/mono/savant/app/Comparison-*')
+        latest_file = max(list_of_files, key=os.path.getctime)
+        latest_file = latest_file.split("app/", 1)[1]
+
+        data_res = json.loads(response.data)
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(data_res["File"], latest_file)
 
     def test_4_nullcases(self):        
         path = str(os.getcwd()).split("/mono", 1)[0]
         tester = app.test_client(self)
 
-        flavor_resopnse = tester.get('/doveps/api/flavors/')
+        flavor_resopnse = tester.get('/doveps/api/flavors-duplicates/')
         data = json.loads(flavor_resopnse.data)
 
         debs = tester.get('/doveps/api/count/flavor/debs')
